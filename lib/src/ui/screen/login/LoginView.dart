@@ -84,7 +84,7 @@ class _LoginViewState extends State<LoginView> {
                   children: [
                     Container(
                       // color: Colors.red,
-                      height: SizeConfig.blockHorizotal * 40,
+                      height: SizeConfig.blockHorizotal * 50,
                       width: double.infinity,
                       child: Stack(
                         children: [

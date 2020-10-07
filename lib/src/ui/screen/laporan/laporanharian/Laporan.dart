@@ -107,7 +107,7 @@ class _LaporanState extends State<Laporan> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Container(
-                    margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 25.0),
+                    margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -139,22 +139,23 @@ class _LaporanState extends State<Laporan> {
                   Container(
                       color: backgroundGreyColor,
                       margin:
-                          EdgeInsets.only(left: 20.0, right: 20.0, top: 20.0),
+                          EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
                       child: Column(
                         children: [
                           Visibility(
                               visible: _showDetail ? true : false,
-                              child: Card(
-                                  elevation: 10,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15.0),
-                                  ),
-                                  child: Wrap(
-                                    children: [
-                                      Calendar(
-                                          _markedDateMap, _currentDate, context)
-                                    ],
-                                  ))),
+                              child: Wrap(
+                                children: [
+                                  Card(
+                                      elevation: 10,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(15.0),
+                                      ),
+                                      child: Calendar(_markedDateMap,
+                                          _currentDate, context))
+                                ],
+                              )),
                           Visibility(
                               visible: _showDetail ? false : true,
                               child: Column(

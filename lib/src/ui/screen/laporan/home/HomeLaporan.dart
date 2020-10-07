@@ -50,9 +50,9 @@ class _HomeLaporanState extends State<HomeLaporan> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Align(
-                        alignment: Alignment.center,
-                        child: DetailNull(context)),
+                    // Align(
+                    //     alignment: Alignment.center,
+                    //     child: DetailNull(context)),
                     Text(
                       laporanhometextnull,
                       textAlign: TextAlign.center,

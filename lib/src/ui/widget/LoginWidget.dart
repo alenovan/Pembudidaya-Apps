@@ -21,6 +21,7 @@ Widget RightLiquid(BuildContext context) {
   final Widget svgIcon = Container(
     child: SvgPicture.asset(
       assetName,
+      width: SizeConfig.blockHorizotal * 40,
     ),
   );
   return svgIcon;
