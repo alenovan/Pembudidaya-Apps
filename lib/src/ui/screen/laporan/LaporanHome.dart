@@ -6,6 +6,8 @@ import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/LaporanWidget.dart';
 import 'package:intl/intl.dart' show DateFormat;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:lelenesia_pembudidaya/src/ui/widget/LoginWidget.dart';
 
 class LaporanHome extends StatefulWidget {
   LaporanHome({Key key}) : super(key: key);
@@ -15,6 +17,13 @@ class LaporanHome extends StatefulWidget {
 }
 
 class _LaporanHomeState extends State<LaporanHome> {
+  bool _showDetail = true;
+  void _toggleDetail() {
+    setState(() {
+      _showDetail = !_showDetail;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     DateTime _currentDate = DateTime(2020, 9, 3);
@@ -87,7 +96,7 @@ class _LaporanHomeState extends State<LaporanHome> {
 
     return Container(
       child: Scaffold(
-          backgroundColor: Colors.white,
+          backgroundColor: backgroundGreyColor,
           resizeToAvoidBottomPadding: false,
           appBar: AppbarForgot(context, "Monitoring", LoginView()),
           body: Container(
@@ -109,10 +118,20 @@ class _LaporanHomeState extends State<LaporanHome> {
                               letterSpacing: 0.25,
                               fontSize: subTitleLogin),
                         ),
-                        Icon(
-                          Icons.arrow_drop_up,
-                          color: purpleTextColor,
-                        ),
+                        InkWell(
+                            onTap: () {
+                              _toggleDetail();
+                              print(_showDetail);
+                            },
+                            child: Container(
+                                padding: EdgeInsets.only(left: 10.0),
+                                child: Icon(
+                                  _showDetail
+                                      ? FontAwesomeIcons.chevronUp
+                                      : FontAwesomeIcons.chevronDown,
+                                  color: purpleTextColor,
+                                  size: 14.0,
+                                ))),
                       ],
                     ),
                   ),
@@ -120,15 +139,73 @@ class _LaporanHomeState extends State<LaporanHome> {
                       color: backgroundGreyColor,
                       margin:
                           EdgeInsets.only(left: 20.0, right: 20.0, top: 20.0),
-                      child: Card(
-                          elevation: 10,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                          child: Container(
-                              height: 350.0,
-                              child: Calendar(
-                                  _markedDateMap, _currentDate, context))))
+                      child: Column(
+                        children: [
+                          Visibility(
+                              visible: _showDetail ? true : false,
+                              child: Card(
+                                  elevation: 10,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
+                                  child: Wrap(
+                                    children: [
+                                      Calendar(
+                                          _markedDateMap, _currentDate, context)
+                                    ],
+                                  ))),
+                          Visibility(
+                              visible: _showDetail ? false : true,
+                              child: Column(
+                                children: [
+                                  Container(
+                                      child: SingleChildScrollView(
+                                          scrollDirection: Axis.horizontal,
+                                          padding: EdgeInsets.fromLTRB(
+                                              10.0, 0.0, 10.0, 0.0),
+                                          child: Row(
+                                            children: [
+                                              CardInfo(context, "Ikan Mati",
+                                                  "80", "Ekor"),
+                                              CardInfo(context, "Pakan", "100",
+                                                  "Kg"),
+                                              CardInfo(context, "Berat", "1000",
+                                                  "Kg"),
+                                            ],
+                                          ))),
+                                  Container(
+                                      height: double.infinity,
+                                      child: SingleChildScrollView(
+                                          scrollDirection: Axis.vertical,
+                                          padding: EdgeInsets.fromLTRB(
+                                              10.0, 0.0, 10.0, 0.0),
+                                          child: Container(
+                                              child: Column(
+                                            children: [
+                                              CardDateLapora(
+                                                  context, "1 September 2020"),
+                                              CardDateLapora(
+                                                  context, "2 September 2020"),
+                                              CardDateLapora(
+                                                  context, "3 September 2020"),
+                                              CardDateLapora(
+                                                  context, "3 September 2020"),
+                                              CardDateLapora(
+                                                  context, "3 September 2020"),
+                                              CardDateLapora(
+                                                  context, "3 September 2020"),
+                                              CardDateLapora(
+                                                  context, "3 September 2020"),
+                                              CardDateLapora(
+                                                  context, "3 September 2020"),
+                                              CardDateLapora(
+                                                  context, "3 September 2020"),
+                                            ],
+                                          )))),
+                                ],
+                              ))
+                        ],
+                      ))
                 ],
               ))),
     );

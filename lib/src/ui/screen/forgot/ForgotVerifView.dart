@@ -30,7 +30,7 @@ class _ForgotVerifViewState extends State<ForgotVerifView> {
     Navigator.push(
         context,
         PageTransition(
-            type: PageTransitionType.leftToRight,
+            type: PageTransitionType.fade,
             // duration: Duration(microseconds: 1000),
             child: ForgotResetView()));
   }

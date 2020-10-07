@@ -49,7 +49,7 @@ class _ForgotResetViewState extends State<ForgotResetView> {
     Navigator.push(
         context,
         PageTransition(
-            type: PageTransitionType.leftToRight,
+            type: PageTransitionType.fade,
             // duration: Duration(microseconds: 1000),
             child: LoginView()));
   }
@@ -91,8 +91,8 @@ class _ForgotResetViewState extends State<ForgotResetView> {
           Container(
             // transform: Matrix4.translationValues(0.0, -20.0, 0.0),
             margin: EdgeInsets.only(
-                left: SizeConfig.blockVertical * 5,
-                right: SizeConfig.blockVertical * 5,
+                left: SizeConfig.blockVertical * 3,
+                right: SizeConfig.blockVertical * 3,
                 top: 20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -126,8 +126,8 @@ class _ForgotResetViewState extends State<ForgotResetView> {
           Container(
             // transform: Matrix4.translationValues(0.0, -10.0, 0.0),
             margin: EdgeInsets.only(
-                left: SizeConfig.blockVertical * 5,
-                right: SizeConfig.blockVertical * 5,
+                left: SizeConfig.blockVertical * 3,
+                right: SizeConfig.blockVertical * 3,
                 top: 20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -163,8 +163,8 @@ class _ForgotResetViewState extends State<ForgotResetView> {
             height: 45.0,
             width: MediaQuery.of(context).size.width,
             margin: EdgeInsets.only(
-                left: SizeConfig.blockVertical * 5,
-                right: SizeConfig.blockVertical * 5,
+                left: SizeConfig.blockVertical * 3,
+                right: SizeConfig.blockVertical * 3,
                 top: 15.0),
             child: CustomElevation(
                 height: 30.0,

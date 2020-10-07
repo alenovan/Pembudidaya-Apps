@@ -31,7 +31,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
     Navigator.push(
         context,
         PageTransition(
-            type: PageTransitionType.leftToRight,
+            type: PageTransitionType.fade,
             // duration: Duration(microseconds: 1000),
             child: ForgotVerifView()));
   }
@@ -49,7 +49,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
           Container(
               margin: EdgeInsets.only(top: 20.0),
               child: TitleText(context, titleForgotPassword, textAppBar, 30.0,
-                  20.0, 10.0, 0.0)),
+                  20.0, 30.0, 0.0)),
           Container(
             margin: EdgeInsets.only(left: 30.0, right: 20.0, top: 10.0),
             child: TextFormField(

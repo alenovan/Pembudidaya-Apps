@@ -78,7 +78,7 @@ class _RegisterViewState extends State<RegisterView> {
                       children: [
                         Container(
                           // color: Colors.red,
-                          height: SizeConfig.blockHorizotal * 60,
+                          height: SizeConfig.blockHorizotal * 40,
                           width: double.infinity,
                           child: Stack(
                             children: [
@@ -89,7 +89,7 @@ class _RegisterViewState extends State<RegisterView> {
                               )),
                               Container(
                                   margin: EdgeInsets.only(
-                                      left: SizeConfig.blockVertical * 5),
+                                      left: SizeConfig.blockVertical * 3),
                                   child: Align(
                                     alignment: Alignment.centerLeft,
                                     child: Logo(context),
@@ -99,9 +99,8 @@ class _RegisterViewState extends State<RegisterView> {
                         ),
                         Container(
                           margin: EdgeInsets.only(
-                              left: SizeConfig.blockVertical * 5,
-                              right: SizeConfig.blockVertical * 5),
-                          transform: Matrix4.translationValues(0.0, -60.0, 0.0),
+                              left: SizeConfig.blockVertical * 3,
+                              right: SizeConfig.blockVertical * 3),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -126,10 +125,10 @@ class _RegisterViewState extends State<RegisterView> {
                           ),
                         ),
                         Container(
-                          transform: Matrix4.translationValues(0.0, -40.0, 0.0),
                           margin: EdgeInsets.only(
-                              left: SizeConfig.blockVertical * 5,
-                              right: SizeConfig.blockVertical * 5),
+                              left: SizeConfig.blockVertical * 3,
+                              top: SizeConfig.blockVertical * 3,
+                              right: SizeConfig.blockVertical * 3),
                           child: TextFormField(
                             decoration: EditTextDecorationText(
                                 context, "Nama", 20.0, 0, 0, 0),
@@ -142,10 +141,10 @@ class _RegisterViewState extends State<RegisterView> {
                           ),
                         ),
                         Container(
-                          transform: Matrix4.translationValues(0.0, -30.0, 0.0),
                           margin: EdgeInsets.only(
-                              left: SizeConfig.blockVertical * 5,
-                              right: SizeConfig.blockVertical * 5),
+                              left: SizeConfig.blockVertical * 3,
+                              top: SizeConfig.blockVertical * 2,
+                              right: SizeConfig.blockVertical * 3),
                           child: TextFormField(
                             decoration: EditTextDecorationNumber(
                                 context, "Nomor Handphone"),
@@ -158,10 +157,10 @@ class _RegisterViewState extends State<RegisterView> {
                           ),
                         ),
                         Container(
-                          transform: Matrix4.translationValues(0.0, -20.0, 0.0),
                           margin: EdgeInsets.only(
-                              left: SizeConfig.blockVertical * 5,
-                              right: SizeConfig.blockVertical * 5),
+                              top: SizeConfig.blockVertical * 2,
+                              left: SizeConfig.blockVertical * 3,
+                              right: SizeConfig.blockVertical * 3),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -193,10 +192,10 @@ class _RegisterViewState extends State<RegisterView> {
                           ),
                         ),
                         Container(
-                          transform: Matrix4.translationValues(0.0, -10.0, 0.0),
                           margin: EdgeInsets.only(
-                              left: SizeConfig.blockVertical * 5,
-                              right: SizeConfig.blockVertical * 5),
+                              top: SizeConfig.blockVertical * 2,
+                              left: SizeConfig.blockVertical * 3,
+                              right: SizeConfig.blockVertical * 3),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -230,9 +229,10 @@ class _RegisterViewState extends State<RegisterView> {
                         ),
                         Container(
                           margin: EdgeInsets.only(
-                              left: SizeConfig.blockVertical * 5,
-                              right: SizeConfig.blockVertical * 5,
-                              top: 5.0),
+                            left: SizeConfig.blockVertical * 3,
+                            right: SizeConfig.blockVertical * 3,
+                            top: SizeConfig.blockVertical * 2,
+                          ),
                           child: RichText(
                             text: TextSpan(
                               children: <TextSpan>[
@@ -276,9 +276,10 @@ class _RegisterViewState extends State<RegisterView> {
                           height: 45.0,
                           width: MediaQuery.of(context).size.width,
                           margin: EdgeInsets.only(
-                              left: SizeConfig.blockVertical * 5,
-                              right: SizeConfig.blockVertical * 5,
-                              top: 10.0),
+                            left: SizeConfig.blockVertical * 3,
+                            right: SizeConfig.blockVertical * 3,
+                            top: SizeConfig.blockVertical * 2,
+                          ),
                           child: CustomElevation(
                               height: 30.0,
                               child: RaisedButton(
@@ -329,8 +330,7 @@ class _RegisterViewState extends State<RegisterView> {
                                     Navigator.push(
                                         context,
                                         PageTransition(
-                                            type:
-                                                PageTransitionType.rightToLeft,
+                                            type: PageTransitionType.fade,
                                             child: LoginView()));
                                   },
                                   child: Text(
@@ -350,9 +350,7 @@ class _RegisterViewState extends State<RegisterView> {
   }
 
   Future<bool> _onBackPressed() {
-    Navigator.push(
-        context,
-        PageTransition(
-            type: PageTransitionType.rightToLeft, child: LoginView()));
+    Navigator.push(context,
+        PageTransition(type: PageTransitionType.fade, child: LoginView()));
   }
 }

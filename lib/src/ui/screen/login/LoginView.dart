@@ -81,7 +81,7 @@ class _LoginViewState extends State<LoginView> {
                   children: [
                     Container(
                       // color: Colors.red,
-                      height: SizeConfig.blockHorizotal * 60,
+                      height: SizeConfig.blockHorizotal * 40,
                       width: double.infinity,
                       child: Stack(
                         children: [
@@ -92,7 +92,7 @@ class _LoginViewState extends State<LoginView> {
                           )),
                           Container(
                               margin: EdgeInsets.only(
-                                  left: SizeConfig.blockVertical * 5),
+                                  left: SizeConfig.blockVertical * 3),
                               child: Align(
                                 alignment: Alignment.centerLeft,
                                 child: Logo(context),
@@ -102,9 +102,8 @@ class _LoginViewState extends State<LoginView> {
                     ),
                     Container(
                       margin: EdgeInsets.only(
-                          left: SizeConfig.blockVertical * 5,
-                          right: SizeConfig.blockVertical * 5),
-                      transform: Matrix4.translationValues(0.0, -50.0, 0.0),
+                          left: SizeConfig.blockVertical * 3,
+                          right: SizeConfig.blockVertical * 3),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -129,10 +128,10 @@ class _LoginViewState extends State<LoginView> {
                       ),
                     ),
                     Container(
-                      transform: Matrix4.translationValues(0.0, -30.0, 0.0),
                       margin: EdgeInsets.only(
-                          left: SizeConfig.blockVertical * 5,
-                          right: SizeConfig.blockVertical * 5),
+                          left: SizeConfig.blockVertical * 3,
+                          top: SizeConfig.blockVertical * 3,
+                          right: SizeConfig.blockVertical * 3),
                       child: TextFormField(
                         controller: nohpController,
                         decoration: EditTextDecorationNumber(
@@ -146,10 +145,10 @@ class _LoginViewState extends State<LoginView> {
                       ),
                     ),
                     Container(
-                      transform: Matrix4.translationValues(0.0, -10.0, 0.0),
                       margin: EdgeInsets.only(
-                          left: SizeConfig.blockVertical * 5,
-                          right: SizeConfig.blockVertical * 5),
+                          left: SizeConfig.blockVertical * 3,
+                          top: SizeConfig.blockVertical * 2,
+                          right: SizeConfig.blockVertical * 3),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -170,7 +169,7 @@ class _LoginViewState extends State<LoginView> {
                                 Navigator.push(
                                     context,
                                     PageTransition(
-                                        type: PageTransitionType.leftToRight,
+                                        type: PageTransitionType.fade,
                                         // duration: Duration(microseconds: 1000),
                                         child: ForgotPasswordView()));
                               },
@@ -192,9 +191,9 @@ class _LoginViewState extends State<LoginView> {
                       height: 45.0,
                       width: MediaQuery.of(context).size.width,
                       margin: EdgeInsets.only(
-                          left: SizeConfig.blockVertical * 5,
-                          right: SizeConfig.blockVertical * 5,
-                          top: 10.0),
+                          left: SizeConfig.blockVertical * 3,
+                          right: SizeConfig.blockVertical * 3,
+                          top: SizeConfig.blockVertical * 3),
                       child: CustomElevation(
                           height: 30.0,
                           child: RaisedButton(
@@ -220,8 +219,8 @@ class _LoginViewState extends State<LoginView> {
                     ),
                     Container(
                       margin: EdgeInsets.only(
-                          left: SizeConfig.blockVertical * 5,
-                          right: SizeConfig.blockVertical * 5,
+                          left: SizeConfig.blockVertical * 3,
+                          right: SizeConfig.blockVertical * 3,
                           top: 15.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -259,8 +258,8 @@ class _LoginViewState extends State<LoginView> {
                       height: 45.0,
                       width: MediaQuery.of(context).size.width,
                       margin: EdgeInsets.only(
-                          left: SizeConfig.blockVertical * 5,
-                          right: SizeConfig.blockVertical * 5,
+                          left: SizeConfig.blockVertical * 3,
+                          right: SizeConfig.blockVertical * 3,
                           top: 15.0),
                       child: CustomElevation(
                           height: 30.0,
@@ -328,7 +327,7 @@ class _LoginViewState extends State<LoginView> {
                                 Navigator.push(
                                     context,
                                     PageTransition(
-                                        type: PageTransitionType.leftToRight,
+                                        type: PageTransitionType.fade,
                                         // duration: Duration(microseconds: 100),
                                         child: RegisterView()));
                               },

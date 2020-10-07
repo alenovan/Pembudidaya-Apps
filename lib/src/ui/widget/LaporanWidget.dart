@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanDetail.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
@@ -93,23 +94,21 @@ Widget Calendar(EventList<Event> _markedDateMap, DateTime _currentDate,
 Widget AppbarForgot(BuildContext context, String title, Widget page) {
   SizeConfig().init(context);
   final Widget appBar = AppBar(
-    backgroundColor: Colors.transparent,
+    toolbarHeight: 100.0,
+    backgroundColor: Colors.white,
     elevation: 0.0,
     title: Container(
-        margin: EdgeInsets.only(
-          top: 30.0,
-        ),
         child: Text(
-          title,
-          style: TextStyle(
-              color: appBarTextColor,
-              fontWeight: FontWeight.w500,
-              fontFamily: 'poppins',
-              letterSpacing: 0.15,
-              fontSize: textAppBar),
-        )),
+      title,
+      style: TextStyle(
+          color: appBarTextColor,
+          fontWeight: FontWeight.w500,
+          fontFamily: 'poppins',
+          letterSpacing: 0.15,
+          fontSize: textAppBar),
+    )),
     leading: Container(
-        margin: EdgeInsets.only(top: 30.0, left: 20.0),
+        margin: EdgeInsets.only(left: 20.0),
         child: GestureDetector(
           onTap: () {
             Navigator.push(
@@ -149,4 +148,88 @@ Widget TitleText(BuildContext context, String title, double sizex, double leftx,
   );
 
   return titlex;
+}
+
+Widget CardInfo(
+    BuildContext context, String title, String number, String satuan) {
+  final Widget svgIcon = Container(
+    child: Card(
+        elevation: 2,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        child: Container(
+            padding: EdgeInsets.all(15.0),
+            width: 150.0,
+            child: Column(
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                      color: appBarTextColor,
+                      fontWeight: FontWeight.w700,
+                      fontFamily: 'lato',
+                      letterSpacing: 0.4,
+                      fontSize: subTitleLogin),
+                ),
+                Container(
+                    margin: EdgeInsets.only(top: 10.0),
+                    child: RichText(
+                        text: TextSpan(children: <TextSpan>[
+                      TextSpan(
+                        text: number,
+                        style: TextStyle(
+                            color: purpleTextColor,
+                            fontFamily: 'lato',
+                            letterSpacing: 0.4,
+                            fontSize: cardNumber),
+                      ),
+                      TextSpan(
+                        text: satuan,
+                        style: TextStyle(
+                            color: purpleTextColor,
+                            fontFamily: 'lato',
+                            letterSpacing: 0.4,
+                            fontSize: textsubTitleLogin),
+                      ),
+                    ]))),
+              ],
+            ))),
+  );
+  return svgIcon;
+}
+
+Widget CardDateLapora(BuildContext context, String title) {
+  final Widget svgIcon = Container(
+    height: SizeConfig.blockVertical * 11,
+    child: Card(
+        elevation: 2,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        child: Container(
+            padding: EdgeInsets.all(15.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                      color: appBarTextColor,
+                      fontWeight: FontWeight.w700,
+                      fontFamily: 'lato',
+                      letterSpacing: 0.4,
+                      fontSize: subTitleLogin),
+                ),
+                Container(
+                    alignment: Alignment.centerRight,
+                    child: Icon(
+                      FontAwesomeIcons.chevronCircleRight,
+                      color: purpleTextColor,
+                      size: SizeConfig.blockHorizotal * 6,
+                    ))
+              ],
+            ))),
+  );
+  return svgIcon;
 }

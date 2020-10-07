@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
+import 'package:lelenesia_pembudidaya/src/LelenesiaText.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 
@@ -19,7 +21,6 @@ Widget RightLiquid(BuildContext context) {
   final Widget svgIcon = Container(
     child: SvgPicture.asset(
       assetName,
-      height: SizeConfig.blockVertical * 29,
     ),
   );
   return svgIcon;
@@ -30,10 +31,25 @@ Widget Logo(BuildContext context) {
   SizeConfig().init(context);
   final String assetName = "assets/svg/logo_placeholder.svg";
   final Widget svgIcon = Container(
-    child: SvgPicture.asset(
-      assetName,
-      height: SizeConfig.blockVertical * 10,
-      width: SizeConfig.blockHorizotal * 10,
+    child: Row(
+      children: [
+        SvgPicture.asset(
+          assetName,
+          height: SizeConfig.blockVertical * 8,
+          width: SizeConfig.blockHorizotal * 8,
+        ),
+        Container(
+            padding: EdgeInsets.only(left: 10),
+            child: Text(
+              "LELENESIA",
+              style: TextStyle(
+                  color: purpleTextColor,
+                  fontWeight: FontWeight.w700,
+                  fontFamily: 'lato',
+                  letterSpacing: 2.75,
+                  fontSize: 16.0),
+            )),
+      ],
     ),
   );
   return svgIcon;
@@ -56,7 +72,7 @@ InputDecoration EditTextDecorationNumber(BuildContext context, String label) {
                 color: greyTextColor,
                 fontFamily: 'lato',
                 letterSpacing: 0.25,
-                fontSize: 17.0),
+                fontSize: 15.0),
           ),
         )),
     fillColor: editTextBgColor,
