@@ -233,3 +233,73 @@ Widget CardDateLapora(BuildContext context, String title) {
   );
   return svgIcon;
 }
+
+Widget CardLelang(
+    BuildContext context, String title, String number, String date) {
+  final Widget svgIcon = Container(
+    height: SizeConfig.blockVertical * 11,
+    child: Card(
+        elevation: 2,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        child: Container(
+            padding: EdgeInsets.only(left: 15.0, right: 15.0, top: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      date,
+                      style: TextStyle(
+                          color: greyTextColor,
+                          fontFamily: 'lato',
+                          letterSpacing: 0.4,
+                          fontSize: 10.0),
+                    ),
+                    Container(
+                        margin: EdgeInsets.only(top: 5.0),
+                        child: Text(
+                          title,
+                          style: TextStyle(
+                              color: appBarTextColor,
+                              fontWeight: FontWeight.w700,
+                              fontFamily: 'lato',
+                              letterSpacing: 0.4,
+                              fontSize: subTitleLogin),
+                        ))
+                  ],
+                ),
+                Container(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      number,
+                      style: TextStyle(
+                          color: appBarTextColor,
+                          fontWeight: FontWeight.w700,
+                          fontFamily: 'lato',
+                          letterSpacing: 0.4,
+                          fontSize: subTitleLogin),
+                    ))
+              ],
+            ))),
+  );
+  return svgIcon;
+}
+
+// ignore: non_constant_identifier_names
+Widget DetailNull(BuildContext context) {
+  SizeConfig().init(context);
+  final String assetName = "assets/svg/detail.svg";
+  final Widget svgIcon = Container(
+    child: SvgPicture.asset(
+      assetName,
+      height: SizeConfig.blockVertical * 30,
+      width: SizeConfig.blockHorizotal * 30,
+    ),
+  );
+  return svgIcon;
+}

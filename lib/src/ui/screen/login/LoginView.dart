@@ -6,6 +6,7 @@ import 'package:lelenesia_pembudidaya/src/bloc/LoginBloc.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/forgot/ForgotPasswordView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanHome.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/TabsPageLaporan.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/test.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/register/RegisterView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/CustomElevation.dart';
@@ -46,9 +47,11 @@ class _LoginViewState extends State<LoginView> {
       Navigator.push(
           context,
           PageTransition(
-              type: PageTransitionType.leftToRight,
-              // duration: Duration(microseconds: 1000),
-              child: TabsPageLaporan(page: 2)));
+              type: PageTransitionType.fade,
+              child: Test(
+                page: 2,
+                laporan_page: "home",
+              )));
     } else {
       Toast.show(status.toString(), context,
           duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);

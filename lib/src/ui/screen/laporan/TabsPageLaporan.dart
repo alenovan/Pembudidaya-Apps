@@ -14,7 +14,7 @@ class _TabsPageLaporanState extends State<TabsPageLaporan> {
   int _currentIndex = 0;
   @override
   Widget build(BuildContext context) {
-    // _currentIndex = widget.page == 0 ? _currentIndex : widget.page;
+    _currentIndex = widget.page == 0 ? _currentIndex : widget.page;
     return Scaffold(
       body: IndexedStack(
         index: _currentIndex,

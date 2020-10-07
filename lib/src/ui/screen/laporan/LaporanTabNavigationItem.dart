@@ -7,6 +7,7 @@ class LaporanTabNavigationItem {
   final Widget page;
   final Widget title;
   final Icon icon;
+  int active;
 
   LaporanTabNavigationItem({
     @required this.page,
@@ -16,7 +17,9 @@ class LaporanTabNavigationItem {
 
   static List<LaporanTabNavigationItem> get items => [
         LaporanTabNavigationItem(
-          page: LaporanHome(),
+          page: LaporanHome(
+            active: 0,
+          ),
           icon: Icon(Icons.home),
           title: Text(
             "Detail Kolam",
@@ -25,7 +28,9 @@ class LaporanTabNavigationItem {
           ),
         ),
         LaporanTabNavigationItem(
-          page: LaporanHome(),
+          page: LaporanHome(
+            active: 1,
+          ),
           icon: Icon(
             Icons.store,
           ),
@@ -36,7 +41,9 @@ class LaporanTabNavigationItem {
           ),
         ),
         LaporanTabNavigationItem(
-          page: LaporanHome(),
+          page: LaporanHome(
+            active: 2,
+          ),
           icon: Icon(Icons.calendar_today),
           title: Text(
             "Laporan",

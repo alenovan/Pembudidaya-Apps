@@ -33,3 +33,7 @@ const String titleVerifForgotPassword = "Periksa Pesan anda";
 const String subTitleVerifForgotPassword =
     "kode verif sudah terkirim ke +6209188212922 masukkan kode tersebut ke dalam form dibawah ini";
 const String titleResetForgotPassword = "Reset kata sandi anda";
+
+// laporanhome
+const String laporanhometextnull =
+    "ups maaf , anda harus mengisi penentuan panen agar dapat melihat fitur ini";
