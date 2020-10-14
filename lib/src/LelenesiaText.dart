@@ -37,3 +37,11 @@ const String titleResetForgotPassword = "Reset kata sandi anda";
 // laporanhome
 const String laporanhometextnull =
     "ups maaf , anda harus mengisi penentuan panen agar dapat melihat fitur ini";
+
+//otptext
+const String appBarOtp = "Kode OTP";
+const String titleVerifOtp = "Periksa Sms anda";
+
+//firstviewdashboard
+const String textNullFirst = "Anda belum punya berapa kolam ? ";
+const String subTextNullFirst = "Daftarkan kolam anda sendiri untuk menjadi pemasok tetap pakan bangsa indonesia";

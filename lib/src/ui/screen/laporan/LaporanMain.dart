@@ -2,21 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/home/HomeLaporan.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/laporanharian/Laporan.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/laporanharian/PageFour.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/laporanharian/PageOne.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/laporanharian/PageThree.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/laporanharian/PageTwo.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/lelang/LelangView.dart';
 
-class Test extends StatefulWidget {
+class LaporanMain extends StatefulWidget {
   final int page;
   final String laporan_page;
-  Test({Key key, this.page, this.laporan_page}) : super(key: key);
+  LaporanMain({Key key, this.page, this.laporan_page}) : super(key: key);
 
   @override
-  _TestState createState() => _TestState();
+  _LaporanMainState createState() => _LaporanMainState();
 }
 
-class _TestState extends State<Test> {
+class _LaporanMainState extends State<LaporanMain> {
   int _selectedIndex = 0;
   bool _statusSelected = true;
   var _widgetOptions;
@@ -31,9 +32,13 @@ class _TestState extends State<Test> {
       laporanPage = PageTwo();
     } else if (widget.laporan_page == "tiga") {
       laporanPage = PageThree();
+    } else if (widget.laporan_page == "empat") {
+      laporanPage = PageFour();
+    }else{
+      laporanPage = Laporan();
     }
     _widgetOptions = [
-      HomeLaporan,
+      HomeLaporan(),
       LelangView(),
       laporanPage,
     ];

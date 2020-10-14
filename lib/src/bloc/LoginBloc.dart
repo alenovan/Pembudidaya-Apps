@@ -1,14 +1,22 @@
+import 'dart:convert';
+import 'package:flutter_session/flutter_session.dart';
 import 'package:lelenesia_pembudidaya/src/resource/Repository.dart';
 import 'package:rxdart/rxdart.dart';
-
 class LoginBloc {
   final _repository = Repository();
-
-  bool funLogin(_nohp, _password) {
+  Future<bool> funLogin(_nohp) async {
+    var status;
     print("Login");
-    return _repository.login(_nohp, _password);
+    var val = await _repository.login(_nohp);
+    Map<String, dynamic> responseJson = json.decode(val.body);
+    if(responseJson['status'] == 200){
+      await FlutterSession().set("token", responseJson['token']);
+        status = true;
+    }else {
+        status = false;
+    }
+    return status;
   }
-
   dispose() {}
 }
 

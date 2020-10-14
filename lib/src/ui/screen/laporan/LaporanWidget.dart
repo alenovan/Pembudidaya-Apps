@@ -25,67 +25,71 @@ class LaporanWidget extends StatelessWidget {
 Widget Calendar(EventList<Event> _markedDateMap, DateTime _currentDate,
     BuildContext context) {
   return Container(
-    margin: EdgeInsets.symmetric(horizontal: 16.0),
-    child: CalendarCarousel<Event>(
-      onDayPressed: (DateTime date, List<Event> events) {
-        Navigator.push(
-            context,
-            PageTransition(
-                type: PageTransitionType.leftToRight,
-                // duration: Duration(microseconds: 1000),
-                child: LaporanDetail()));
-      },
-      weekendTextStyle: TextStyle(
-        color: Colors.black,
-      ),
-      // showWeekDays: null,
-      iconColor: Colors.black,
+    margin: EdgeInsets.all(16.0),
+    child: Wrap(
+      children: [
+        CalendarCarousel<Event>(
+          onDayPressed: (DateTime date, List<Event> events) {
+            Navigator.push(
+                context,
+                PageTransition(
+                    type: PageTransitionType.leftToRight,
+                    // duration: Duration(microseconds: 1000),
+                    child: LaporanDetail()));
+          },
+          weekendTextStyle: TextStyle(
+            color: Colors.black,
+          ),
+          // showWeekDays: null,
+          iconColor: Colors.black,
 
-      /// for pass null when you do not want to render weekDays
-      headerText: 'September',
-      headerTextStyle: TextStyle(
-          color: purpleTextColor,
-          fontWeight: FontWeight.w500,
-          fontFamily: 'poppins',
-          letterSpacing: 0.14,
-          fontSize: 18.02),
-      thisMonthDayBorderColor: Colors.transparent,
-      customDayBuilder: (
-        bool isSelectable,
-        int index,
-        bool isSelectedDay,
-        bool isToday,
-        bool isPrevMonthDay,
-        TextStyle textStyle,
-        bool isNextMonthDay,
-        bool isThisMonthDay,
-        DateTime day,
-      ) {
-        // if (day.day == 15) {
-        //   return Center(
-        //     child: Icon(Icons.local_airport),
-        //   );
-        // } else {
-        //   return null;
-        // }
-      },
-      todayButtonColor: purpleTextColor,
-      todayBorderColor: purpleTextColor,
-      selectedDayBorderColor: Colors.red,
-      selectedDayButtonColor: Colors.red,
-      weekFormat: false,
-      weekdayTextStyle: TextStyle(
-          color: Colors.black,
-          fontWeight: FontWeight.w500,
-          fontFamily: 'lato',
-          letterSpacing: 0.36,
-          fontSize: 11.81),
-      markedDatesMap: _markedDateMap,
-      height: 420.0,
-      selectedDateTime: _currentDate,
-      daysHaveCircularBorder: false,
+          /// for pass null when you do not want to render weekDays
+          headerText: 'September',
+          headerTextStyle: TextStyle(
+              color: purpleTextColor,
+              fontWeight: FontWeight.w500,
+              fontFamily: 'poppins',
+              letterSpacing: 0.14,
+              fontSize: 18.02),
+          thisMonthDayBorderColor: Colors.transparent,
+          customDayBuilder: (
+              bool isSelectable,
+              int index,
+              bool isSelectedDay,
+              bool isToday,
+              bool isPrevMonthDay,
+              TextStyle textStyle,
+              bool isNextMonthDay,
+              bool isThisMonthDay,
+              DateTime day,
+              ) {
+            // if (day.day == 15) {
+            //   return Center(
+            //     child: Icon(Icons.local_airport),
+            //   );
+            // } else {
+            //   return null;
+            // }
+          },
+          todayButtonColor: purpleTextColor,
+          todayBorderColor: purpleTextColor,
+          selectedDayBorderColor: Colors.red,
+          selectedDayButtonColor: Colors.red,
+          weekFormat: false,
+          weekdayTextStyle: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.w500,
+              fontFamily: 'lato',
+              letterSpacing: 0.36,
+              fontSize: 11.81),
+          markedDatesMap: _markedDateMap,
+          height: SizeConfig.blockHorizotal * 90,
+          selectedDateTime: _currentDate,
+          daysHaveCircularBorder: false,
 
-      /// null for not rendering any border, true for circular border, false for rectangular border
+          /// null for not rendering any border, true for circular border, false for rectangular border
+        )
+      ],
     ),
   );
 }
@@ -94,7 +98,7 @@ Widget Calendar(EventList<Event> _markedDateMap, DateTime _currentDate,
 Widget AppbarForgot(BuildContext context, String title, Widget page) {
   SizeConfig().init(context);
   final Widget appBar = AppBar(
-    toolbarHeight: 100.0,
+    toolbarHeight: 80.0,
     backgroundColor: Colors.white,
     elevation: 0.0,
     title: Container(

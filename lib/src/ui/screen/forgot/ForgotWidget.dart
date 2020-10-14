@@ -18,15 +18,13 @@ class LoginWidget extends StatelessWidget {
 }
 
 // ignore: non_constant_identifier_names
-Widget AppbarForgot(BuildContext context, String title, Widget page) {
+Widget AppbarForgot(BuildContext context, String title, Widget page,Color color) {
   SizeConfig().init(context);
   final Widget appBar = AppBar(
-    backgroundColor: Colors.transparent,
+    backgroundColor: color,
+
     elevation: 0.0,
     title: Container(
-        margin: EdgeInsets.only(
-          top: 30.0,
-        ),
         child: Text(
           title,
           style: TextStyle(
@@ -37,7 +35,7 @@ Widget AppbarForgot(BuildContext context, String title, Widget page) {
               fontSize: textAppBar),
         )),
     leading: Container(
-        margin: EdgeInsets.only(top: 30.0, left: 20.0),
+        margin: EdgeInsets.only(left: 20.0),
         child: GestureDetector(
           onTap: () {
             Navigator.push(

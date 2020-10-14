@@ -5,12 +5,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lelenesia_pembudidaya/src/bloc/LoginBloc.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/forgot/ForgotPasswordView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanHome.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/TabsPageLaporan.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/test.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanMain.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/otp/OtpView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/register/RegisterView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/CustomElevation.dart';
-import 'package:lelenesia_pembudidaya/src/ui/widget/LoginWidget.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginWidget.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaText.dart';
@@ -28,6 +28,7 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   bool _showPassword = true;
   bool _clickLogin = true;
+  bool _statusLogin = false;
   TextEditingController nohpController = new TextEditingController();
   TextEditingController sandiController = new TextEditingController();
   void _togglevisibility() {
@@ -36,25 +37,22 @@ class _LoginViewState extends State<LoginView> {
     });
   }
 
-  void _toggleButtonLogin() {
-    // setState(() {
-    //   _clickLogin = !_clickLogin;
-    // });
-    bool status = bloc.funLogin(
-        nohpController.text.toString(), sandiController.text.toString());
-
-    if (status) {
+  void _toggleButtonLogin() async {
+    var status = await bloc.funLogin(nohpController.text.toString());
+    print(status);
+    if(status){
+      setState(() {
+        _statusLogin = false;
+      });
       Navigator.push(
           context,
           PageTransition(
               type: PageTransitionType.fade,
-              child: Test(
-                page: 2,
-                laporan_page: "home",
-              )));
-    } else {
-      Toast.show(status.toString(), context,
-          duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+              child: OtpView()));
+    }else{
+      setState(() {
+        _statusLogin = true;
+      });
     }
   }
 
@@ -135,61 +133,40 @@ class _LoginViewState extends State<LoginView> {
                           left: SizeConfig.blockVertical * 3,
                           top: SizeConfig.blockVertical * 3,
                           right: SizeConfig.blockVertical * 3),
-                      child: TextFormField(
-                        controller: nohpController,
-                        decoration: EditTextDecorationNumber(
-                            context, "Nomor Handphone"),
-                        keyboardType: TextInputType.number,
-                        style: TextStyle(
-                            color: blackTextColor,
-                            fontFamily: 'lato',
-                            letterSpacing: 0.4,
-                            fontSize: subTitleLogin),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(
-                          left: SizeConfig.blockVertical * 3,
-                          top: SizeConfig.blockVertical * 2,
-                          right: SizeConfig.blockVertical * 3),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           TextFormField(
-                            controller: sandiController,
-                            obscureText: _showPassword,
-                            decoration: EditTextPaswordDecoration(
-                                context, "Sandi", gspassword),
-                            keyboardType: TextInputType.visiblePassword,
+                            controller: nohpController,
+                            decoration: EditTextDecorationNumber(
+                                context, "Nomor Handphone"),
+                            keyboardType: TextInputType.number,
                             style: TextStyle(
                                 color: blackTextColor,
                                 fontFamily: 'lato',
                                 letterSpacing: 0.4,
                                 fontSize: subTitleLogin),
                           ),
-                          InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    PageTransition(
-                                        type: PageTransitionType.fade,
-                                        // duration: Duration(microseconds: 1000),
-                                        child: ForgotPasswordView()));
-                              },
-                              child: Container(
-                                  margin:
-                                      EdgeInsets.only(left: 12.0, top: 10.0),
-                                  child: Text(
-                                    lupaKataSandiText,
-                                    style: TextStyle(
-                                        color: purpleTextColor,
-                                        fontFamily: 'lato',
-                                        letterSpacing: 0.4,
-                                        fontSize: textsubTitleLogin),
-                                  )))
                         ],
                       ),
                     ),
+                    Visibility(
+                      visible: _statusLogin? true : false,
+                      child:  Container(
+                        margin: EdgeInsets.only(
+                            left: SizeConfig.blockVertical * 5,
+                            top: SizeConfig.blockVertical * 1,
+                            right: SizeConfig.blockVertical * 3),
+                        child: Text(
+                          "Nomor handphone anda belum terdaftar",
+                          style: TextStyle(
+                              color: Colors.red,
+                              fontFamily: 'lato',
+                              letterSpacing: 0.4,
+                              fontSize: 12.0),
+                        ),
+                      ),
+                    ),
+
                     Container(
                       height: 45.0,
                       width: MediaQuery.of(context).size.width,
@@ -221,90 +198,43 @@ class _LoginViewState extends State<LoginView> {
                           )),
                     ),
                     Container(
-                      margin: EdgeInsets.only(
-                          left: SizeConfig.blockVertical * 3,
-                          right: SizeConfig.blockVertical * 3,
-                          top: 15.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Flexible(
-                              flex: 1,
-                              child: Container(
-                                color: greyLineColor,
-                                height: 1.0,
-                                child: null,
-                              )),
-                          Container(
-                              child: Container(
-                                  padding:
-                                      EdgeInsets.only(left: 10.0, right: 10.0),
-                                  child: Text(
-                                    changeButtonText,
-                                    style: TextStyle(
-                                        color: greyTextColor,
-                                        fontFamily: 'lato',
-                                        letterSpacing: 0.4,
-                                        fontSize: textsubTitleLogin),
-                                  ))),
-                          Flexible(
-                              flex: 1,
-                              child: Container(
-                                color: greyLineColor,
-                                height: 1.0,
-                                child: null,
-                              )),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      height: 45.0,
-                      width: MediaQuery.of(context).size.width,
-                      margin: EdgeInsets.only(
-                          left: SizeConfig.blockVertical * 3,
-                          right: SizeConfig.blockVertical * 3,
-                          top: 15.0),
-                      child: CustomElevation(
-                          height: 30.0,
-                          child: RaisedButton(
-                            color: editTextBgColor,
-                            onPressed: () => "",
-                            child: Stack(
+                        margin: EdgeInsets.only(
+                            left: SizeConfig.blockVertical * 3,
+                            right: SizeConfig.blockVertical * 3,
+                            top: SizeConfig.blockVertical * 3),
+                        child: new Align(
+                            alignment: FractionalOffset.centerLeft,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Container(
-                                    padding: EdgeInsets.only(left: 10.0),
-                                    child: Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: SvgPicture.asset(
-                                        "assets/svg/google_icon.svg",
-                                      ),
-                                    )),
-                                Container(
-                                    child: Align(
-                                  alignment: Alignment.center,
-                                  child: Center(
+                                Text(
+                                  "Belum punya akun ?",
+                                  style: TextStyle(
+                                      color: greyTextColor,
+                                      fontFamily: 'lato',
+                                      letterSpacing: 0.4,
+                                      fontSize: subTitleLogin),
+                                ),
+                                InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          PageTransition(
+                                              type: PageTransitionType.fade,
+                                              // duration: Duration(microseconds: 100),
+                                              child: RegisterView()));
+                                    },
                                     child: Text(
-                                      buttonGoogleText,
+                                      " Daftar",
                                       style: TextStyle(
+                                          fontWeight: FontWeight.w700,
                                           color: colorPrimary,
-                                          fontWeight: FontWeight.w500,
-                                          fontFamily: 'poppins',
-                                          letterSpacing: 1.25,
+                                          fontFamily: 'lato',
+                                          letterSpacing: 0.25,
                                           fontSize: subTitleLogin),
-                                    ),
-                                  ),
-                                )),
+                                    ))
                               ],
-                            ),
-                            shape: new RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(30.0),
-                              side: BorderSide(
-                                width: 1,
-                                color: colorPrimary,
-                              ),
-                            ),
-                          )),
-                    ),
+                            )))
                   ],
                 ),
               ),
@@ -318,7 +248,7 @@ class _LoginViewState extends State<LoginView> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "Buat Akun ?",
+                            "Hubungi admin ?",
                             style: TextStyle(
                                 color: greyTextColor,
                                 fontFamily: 'lato',

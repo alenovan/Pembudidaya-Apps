@@ -3,6 +3,9 @@ import 'ApiProvider.dart';
 
 class Repository {
   final todoApiProvider = ApiProvider();
-  bool login(String nohp, String password) =>
-      todoApiProvider.login(nohp, password);
+  Future login(String nohp) =>
+      todoApiProvider.login(nohp);
+
+  Future register(String nama,String nohp) =>
+      todoApiProvider.register(nama,nohp);
 }

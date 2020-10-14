@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/forgot/ForgotPasswordView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/forgot/ForgotResetView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/forgot/ForgotVerifView.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/TabsPageLaporan.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginView.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/register/RegisterView.dart';
@@ -21,11 +20,6 @@ import 'package:lelenesia_pembudidaya/src/ui/screen/register/RegisterView.dart';
 void main() {
   runApp(MaterialApp(initialRoute: '/', routes: <String, WidgetBuilder>{
     '/': (context) => LoginView(),
-    'forgot': (context) => ForgotPasswordView(),
-    '/forgotreset': (context) => ForgotResetView(),
-    '/forgotverif': (context) => ForgotVerifView(),
-    '/register': (context) => RegisterView(),
-    '/pagelaporan': (context) => TabsPageLaporan(),
   }));
 }
 

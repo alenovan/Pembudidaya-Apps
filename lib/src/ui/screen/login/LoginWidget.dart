@@ -28,6 +28,19 @@ Widget RightLiquid(BuildContext context) {
 }
 
 // ignore: non_constant_identifier_names
+Widget LeftLiquid(BuildContext context) {
+  SizeConfig().init(context);
+  final String assetName = "assets/svg/login/liquidleft.svg";
+  final Widget svgIcon = Container(
+    child: SvgPicture.asset(
+      assetName,
+      width: SizeConfig.blockHorizotal * 40,
+    ),
+  );
+  return svgIcon;
+}
+
+// ignore: non_constant_identifier_names
 Widget Logo(BuildContext context) {
   SizeConfig().init(context);
   final String assetName = "assets/svg/logo_placeholder.svg";

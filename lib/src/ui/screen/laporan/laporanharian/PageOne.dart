@@ -5,16 +5,15 @@ import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaText.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanHome.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/TabsPageLaporan.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/laporanharian/PageOne.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/test.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanMain.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/CustomElevation.dart';
-import 'package:lelenesia_pembudidaya/src/ui/widget/LaporanWidget.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanWidget.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:lelenesia_pembudidaya/src/ui/widget/LoginWidget.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginWidget.dart';
 import 'package:page_transition/page_transition.dart';
 
 class PageOne extends StatefulWidget {
@@ -90,7 +89,7 @@ class _PageOneState extends State<PageOne> {
                                               PageTransition(
                                                   type: PageTransitionType.fade,
                                                   // duration: Duration(microseconds: 1000),
-                                                  child: Test(
+                                                  child: LaporanMain(
                                                     page: 2,
                                                     laporan_page: "dua",
                                                   )))

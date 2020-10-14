@@ -4,11 +4,13 @@ import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaText.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanHome.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/laporanharian/PageOne.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanMain.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
+import 'package:lelenesia_pembudidaya/src/ui/widget/AcceptanceDialog.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/CustomElevation.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanWidget.dart';
 import 'package:intl/intl.dart' show DateFormat;
@@ -16,14 +18,14 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginWidget.dart';
 import 'package:page_transition/page_transition.dart';
 
-class PageThree extends StatefulWidget {
-  PageThree({Key key}) : super(key: key);
+class PageFour extends StatefulWidget {
+  PageFour({Key key}) : super(key: key);
 
   @override
-  _PageThreeState createState() => _PageThreeState();
+  _PageFourState createState() => _PageFourState();
 }
 
-class _PageThreeState extends State<PageThree> {
+class _PageFourState extends State<PageFour> {
   bool _showDetail = true;
   void _toggleDetail() {
     setState(() {
@@ -61,7 +63,7 @@ class _PageThreeState extends State<PageThree> {
                                 Container(
                                   margin: EdgeInsets.only(top: 10.0),
                                   child: Text(
-                                    "Berapa ikan yang mati pada hari ini ?",
+                                    "Berapa berat ikan yang anda timbang pada hari ini ? (opsional)",
                                     textAlign: TextAlign.start,
                                     style: TextStyle(
                                         color: blackTextColor,
@@ -85,7 +87,7 @@ class _PageThreeState extends State<PageThree> {
                                 ),
                                 Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  MainAxisAlignment.spaceBetween,
                                   children: [
                                     Container(
                                       height: 45.0,
@@ -97,7 +99,7 @@ class _PageThreeState extends State<PageThree> {
                                           height: 30.0,
                                           child: RaisedButton(
                                             highlightColor:
-                                                colorPrimary, //Replace with actual colors
+                                            colorPrimary, //Replace with actual colors
                                             color: redTextColor,
                                             onPressed: () => {
                                               Navigator.pop(context,true)
@@ -113,8 +115,8 @@ class _PageThreeState extends State<PageThree> {
                                             ),
                                             shape: new RoundedRectangleBorder(
                                               borderRadius:
-                                                  new BorderRadius.circular(
-                                                      30.0),
+                                              new BorderRadius.circular(
+                                                  30.0),
                                             ),
                                           )),
                                     ),
@@ -128,19 +130,14 @@ class _PageThreeState extends State<PageThree> {
                                             height: 30.0,
                                             child: RaisedButton(
                                               highlightColor:
-                                                  colorPrimary, //Replace with actual colors
+                                              colorPrimary, //Replace with actual colors
                                               color: colorPrimary,
                                               onPressed: () => {
-                                                Navigator.push(
-                                                    context,
-                                                    PageTransition(
-                                                        type: PageTransitionType
-                                                            .fade,
-                                                        // duration: Duration(microseconds: 1000),
-                                                        child: LaporanMain(
-                                                          page: 2,
-                                                          laporan_page: "empat",
-                                                        )))
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (BuildContext context) =>
+                                                      AlertSuccess(context,DashboardView()),
+                                                )
                                               },
                                               child: Text(
                                                 "Next",
@@ -153,8 +150,8 @@ class _PageThreeState extends State<PageThree> {
                                               ),
                                               shape: new RoundedRectangleBorder(
                                                 borderRadius:
-                                                    new BorderRadius.circular(
-                                                        30.0),
+                                                new BorderRadius.circular(
+                                                    30.0),
                                               ),
                                             ))),
                                   ],

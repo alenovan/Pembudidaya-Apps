@@ -2,10 +2,11 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lelenesia_pembudidaya/src/bloc/RegisterBloc.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/CustomElevation.dart';
-import 'package:lelenesia_pembudidaya/src/ui/widget/LoginWidget.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginWidget.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaText.dart';
@@ -23,46 +24,37 @@ class _RegisterViewState extends State<RegisterView> {
   bool _showPassword = true;
   bool _showRePassword = true;
   bool _clickLogin = true;
-  void _togglevisibility() {
-    setState(() {
-      _showPassword = !_showPassword;
-    });
-  }
 
-  void _toggleButtonLogin() {
-    setState(() {
-      _clickLogin = !_clickLogin;
-    });
-  }
+  bool _statusRegister = false;
+  TextEditingController nohpController = new TextEditingController();
+  TextEditingController namaController = new TextEditingController();
 
-  void _togglevisibilityRePassword() {
-    setState(() {
-      _showRePassword = !_showRePassword;
-    });
+  void _toggleButtonRegister() async {
+    var status = await bloc.funRegister(
+        namaController.text.toString(), nohpController.text.toString());
+    // print(status);
+    if (status == 1) {
+      setState(() {
+        _statusRegister = false;
+      });
+      Navigator.push(
+          context,
+          PageTransition(
+              type: PageTransitionType.fade,
+              child: LoginView()));
+    } else {
+      setState(() {
+        _statusRegister = true;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
 
-    GestureDetector gsRepassword = GestureDetector(
-        onTap: () {
-          _togglevisibilityRePassword();
-        },
-        child: Icon(
-          _showRePassword ? Icons.visibility : Icons.visibility_off,
-          color: greyIconColor,
-        ));
-    GestureDetector gspassword = GestureDetector(
-        onTap: () {
-          _togglevisibility();
-        },
-        child: Icon(
-          _showPassword ? Icons.visibility : Icons.visibility_off,
-          color: greyIconColor,
-        ));
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: colorPrimary,
+      statusBarColor: Colors.transparent,
     ));
     return WillPopScope(
         onWillPop: _onBackPressed,
@@ -130,6 +122,7 @@ class _RegisterViewState extends State<RegisterView> {
                               top: SizeConfig.blockVertical * 3,
                               right: SizeConfig.blockVertical * 3),
                           child: TextFormField(
+                            controller: namaController,
                             decoration: EditTextDecorationText(
                                 context, "Nama", 20.0, 0, 0, 0),
                             keyboardType: TextInputType.number,
@@ -146,6 +139,7 @@ class _RegisterViewState extends State<RegisterView> {
                               top: SizeConfig.blockVertical * 2,
                               right: SizeConfig.blockVertical * 3),
                           child: TextFormField(
+                            controller: nohpController,
                             decoration: EditTextDecorationNumber(
                                 context, "Nomor Handphone"),
                             keyboardType: TextInputType.number,
@@ -156,75 +150,21 @@ class _RegisterViewState extends State<RegisterView> {
                                 fontSize: subTitleLogin),
                           ),
                         ),
-                        Container(
-                          margin: EdgeInsets.only(
-                              top: SizeConfig.blockVertical * 2,
-                              left: SizeConfig.blockVertical * 3,
-                              right: SizeConfig.blockVertical * 3),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              TextFormField(
-                                obscureText: _showPassword,
-                                decoration: EditTextPaswordDecoration(
-                                    context, "Password", gspassword),
-                                keyboardType: TextInputType.visiblePassword,
-                                style: TextStyle(
-                                    color: blackTextColor,
-                                    fontFamily: 'lato',
-                                    letterSpacing: 0.4,
-                                    fontSize: subTitleLogin),
-                              ),
-                              Visibility(
-                                  visible: false,
-                                  child: Container(
-                                      margin:
-                                          EdgeInsets.only(left: 20.0, top: 5.0),
-                                      child: Text(
-                                        passwordValidasiText,
-                                        style: TextStyle(
-                                            color: redTextColor,
-                                            fontFamily: 'lato',
-                                            letterSpacing: 0.4,
-                                            fontSize: textValdaisiDaftar),
-                                      )))
-                            ],
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(
-                              top: SizeConfig.blockVertical * 2,
-                              left: SizeConfig.blockVertical * 3,
-                              right: SizeConfig.blockVertical * 3),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              TextFormField(
-                                obscureText: _showRePassword,
-                                decoration: EditTextPaswordDecoration(
-                                    context, "Ulangi Password", gsRepassword),
-                                keyboardType: TextInputType.visiblePassword,
-                                style: TextStyle(
-                                    color: blackTextColor,
-                                    fontFamily: 'lato',
-                                    letterSpacing: 0.4,
-                                    fontSize: subTitleLogin),
-                              ),
-                              Visibility(
-                                visible: false,
-                                child: Container(
-                                    margin:
-                                        EdgeInsets.only(left: 20.0, top: 10.0),
-                                    child: Text(
-                                      rePasswordValidasiText,
-                                      style: TextStyle(
-                                          color: redTextColor,
-                                          fontFamily: 'lato',
-                                          letterSpacing: 0.4,
-                                          fontSize: textValdaisiDaftar),
-                                    )),
-                              )
-                            ],
+                        Visibility(
+                          visible: _statusRegister? true : false,
+                          child:  Container(
+                            margin: EdgeInsets.only(
+                                left: SizeConfig.blockVertical * 5,
+                                top: SizeConfig.blockVertical * 1,
+                                right: SizeConfig.blockVertical * 3),
+                            child: Text(
+                              "Nomor handphone anda telah terdaftar",
+                              style: TextStyle(
+                                  color: Colors.red,
+                                  fontFamily: 'lato',
+                                  letterSpacing: 0.4,
+                                  fontSize: 12.0),
+                            ),
                           ),
                         ),
                         Container(
@@ -283,12 +223,12 @@ class _RegisterViewState extends State<RegisterView> {
                           child: CustomElevation(
                               height: 30.0,
                               child: RaisedButton(
-                                highlightColor:
-                                    colorPrimary, //Replace with actual colors
+                                highlightColor: colorPrimary,
+                                //Replace with actual colors
                                 color: _clickLogin
                                     ? colorPrimary
                                     : editTextBgColor,
-                                onPressed: () => _toggleButtonLogin(),
+                                onPressed: () => _toggleButtonRegister(),
                                 child: Text(
                                   buttonDaftarText,
                                   style: TextStyle(

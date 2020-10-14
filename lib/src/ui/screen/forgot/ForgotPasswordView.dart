@@ -7,8 +7,8 @@ import 'package:lelenesia_pembudidaya/src/ui/screen/forgot/ForgotVerifView.dart'
 import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/CustomElevation.dart';
-import 'package:lelenesia_pembudidaya/src/ui/widget/ForgotWidget.dart';
-import 'package:lelenesia_pembudidaya/src/ui/widget/LoginWidget.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/forgot/ForgotWidget.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginWidget.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaText.dart';
@@ -41,7 +41,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomPadding: false,
-      appBar: AppbarForgot(context, appBarForgotPassword, LoginView()),
+      appBar: AppbarForgot(context, appBarForgotPassword, LoginView(),Colors.white),
       body: Container(
           child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

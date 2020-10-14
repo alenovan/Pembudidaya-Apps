@@ -8,10 +8,10 @@ import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/laporanharian/PageOn
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/laporanharian/PageThree.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/laporanharian/PageTwo.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginView.dart';
-import 'package:lelenesia_pembudidaya/src/ui/widget/LaporanWidget.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanWidget.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:lelenesia_pembudidaya/src/ui/widget/LoginWidget.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginWidget.dart';
 
 class LaporanHome extends StatefulWidget {
   int active;
