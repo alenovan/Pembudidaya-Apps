@@ -17,6 +17,11 @@ class LoginBloc {
     }
     return status;
   }
+
+  Future<String> getToken() async {
+    dynamic token =   await FlutterSession().get("token");
+    return token;
+  }
   dispose() {}
 }
 

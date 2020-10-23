@@ -1,0 +1,146 @@
+import 'dart:ffi';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_calendar_carousel/classes/event.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanDetail.dart';
+import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
+import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
+import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
+import 'package:lelenesia_pembudidaya/src/LelenesiaText.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart'
+    show CalendarCarousel, EventList;
+
+class ProfileWidget extends StatelessWidget {
+  const ProfileWidget({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return null;
+  }
+}
+
+// ignore: non_constant_identifier_names
+Widget AppbarProfile(BuildContext context, String title, Widget page) {
+  SizeConfig().init(context);
+  final Widget appBar = AppBar(
+    toolbarHeight: 180.0,
+    backgroundColor: Colors.white,
+    elevation: 0.0,
+    title: Text('My App'),
+    actions: <Widget>[
+      IconButton(
+        icon: Icon(
+          Icons.settings,
+          color: Colors.black,
+        ),
+        onPressed: () {
+          // do something
+        },
+      )
+    ],
+  );
+  return appBar;
+}
+
+
+// ignore: non_constant_identifier_names
+Widget AppbarForgot(BuildContext context, String title, Widget page,Color color) {
+  SizeConfig().init(context);
+  final Widget appBar = AppBar(
+    backgroundColor: color,
+
+    elevation: 0.0,
+    title: Container(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                  color: appBarTextColor,
+                  fontWeight: FontWeight.w500,
+                  fontFamily: 'poppins',
+                  letterSpacing: 0.15,
+                  fontSize: textAppBar),
+            ),
+            Text(
+              "*harap isi sesuai dengan KTP",
+              style: TextStyle(
+                  color: redTextColor,
+                  fontFamily: 'poppins',
+                  letterSpacing: 0.15,
+                  fontSize: 13.0),
+            )
+          ],
+        )),
+    leading: Container(
+        margin: EdgeInsets.only(left: 20.0),
+        child: GestureDetector(
+          onTap: () {
+            Navigator.push(
+                context,
+                PageTransition(
+                    type: PageTransitionType.rightToLeft, child: page));
+            /* Write listener code here */
+          },
+          child: IconTheme(
+            data: IconThemeData(color: appBarTextColor),
+            child: Icon(Icons.arrow_back),
+          ),
+        )),
+  );
+  return appBar;
+}
+// ignore: non_constant_identifier_names
+Widget ProfileMenu(BuildContext context, String title, Widget page) {
+  SizeConfig().init(context);
+  final Widget appBar = Container(
+      child: GestureDetector(
+    onTap: () => {
+      Navigator.push(
+          context, PageTransition(type: PageTransitionType.fade, child: page))
+    },
+    child: Container(
+        height: 50.0,
+        padding: EdgeInsets.only(left: 20.0, right: 20.0),
+        color: Colors.white,
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                    child: Text(
+                  title,
+                  style: TextStyle(
+                      color: appBarTextColor,
+                      fontFamily: 'lato',
+                      letterSpacing: 0.4,
+                      fontSize: 18.0),
+                )),
+                Row(
+                  children: [
+                    IconButton(
+                      onPressed: () => {},
+                      tooltip: MaterialLocalizations.of(context)
+                          .openAppDrawerTooltip,
+                      icon: Icon(FontAwesomeIcons.chevronRight,
+                          size: 17.0, color: colorPrimary),
+                    )
+                  ],
+                )
+              ],
+            ),
+            Container(
+              margin: EdgeInsets.only(right: 20.0),
+              color: greyLineColor,
+              height: 0.5,
+            ),
+          ],
+        )),
+  ));
+  return appBar;
+}

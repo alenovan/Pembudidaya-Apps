@@ -6,6 +6,7 @@ import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanDetail.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/profile/ProfileScreen.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
@@ -40,7 +41,7 @@ Widget CardKolam(
     color = Colors.redAccent;
   }
   final Widget svgIcon = Container(
-    transform: Matrix4.translationValues(0.0, -20.0, 0.0),
+
     height: 120,
     child: Card(
         elevation: 2,
@@ -48,7 +49,6 @@ Widget CardKolam(
           borderRadius: BorderRadius.circular(15.0),
         ),
         child: Container(
-
             padding: EdgeInsets.only(left: 15.0, right: 15.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -128,3 +128,68 @@ Widget DetailNull(BuildContext context) {
   return svgIcon;
 }
 
+// ignore: non_constant_identifier_names
+Widget Drawers(BuildContext context) {
+  SizeConfig().init(context);
+  final Widget drawer = Drawer(
+    child: Drawer(
+      child: Container(
+          color: Colors.white,
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Container(
+                    margin: EdgeInsets.only(
+                        top: SizeConfig.blockVertical * 5,
+                        left: SizeConfig.blockHorizotal * 3,
+                        bottom: SizeConfig.blockVertical * 5),
+                    child: Icon(
+                      FontAwesomeIcons.times,
+                      size: 30.0,
+                    )),
+              ),
+              ListTile(
+                title: Text('Akun'),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      PageTransition(
+                          type: PageTransitionType.fade,
+                          child: ProfileScreen()));
+                },
+              ),
+              ListTile(
+                title: Text('Tambah Kolam'),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          )),
+    ), // We'll populate the Drawer in the next step!
+  );
+  return drawer;
+}
+
+InputDecoration EditTextSearch(BuildContext context, String label, double leftx,
+    double rightx, double topx, double bottomx, GestureDetector gs) {
+  SizeConfig().init(context);
+  final InputDecoration decoration = InputDecoration(
+    contentPadding: EdgeInsets.only(left: leftx, right: rightx),
+    hintText: label,
+    filled: true,
+    fillColor: Colors.white,
+    hintStyle: TextStyle(
+      color: greyTextColor,
+    ),
+    enabledBorder: new OutlineInputBorder(
+      borderRadius: new BorderRadius.circular(25.0),
+      borderSide: const BorderSide(color: Colors.grey, width: 0.0),
+    ),
+    border: const OutlineInputBorder(),
+    suffixIcon: gs,
+  );
+  return decoration;
+}

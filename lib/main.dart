@@ -7,6 +7,8 @@ import 'package:lelenesia_pembudidaya/src/ui/screen/forgot/ForgotVerifView.dart'
 import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginView.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/register/RegisterView.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/splash/SplashScreen.dart';
+import 'package:lelenesia_pembudidaya/src/ui/tools/AuthLoadingScreen.dart';
 
 // end
 

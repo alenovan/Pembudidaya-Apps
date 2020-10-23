@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lelenesia_pembudidaya/src/bloc/LoginBloc.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/otp/OtpView.dart';
@@ -43,6 +44,8 @@ class _DashboardFirstViewState extends State<DashboardFirstView> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+    final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
     GestureDetector gspassword = GestureDetector(
         onTap: () {
           _togglevisibility();
@@ -55,7 +58,10 @@ class _DashboardFirstViewState extends State<DashboardFirstView> {
       statusBarColor: Colors.transparent,
     ));
     return Scaffold(
+        key: _scaffoldKey,
+        backgroundColor: Colors.white,
         resizeToAvoidBottomPadding: false,
+      drawer: Drawers(context),
         body: Stack(
           children: [
             new Positioned(
@@ -65,31 +71,41 @@ class _DashboardFirstViewState extends State<DashboardFirstView> {
                   children: [
                     Container(
                       // color: Colors.red,
-                      height: SizeConfig.blockHorizotal * 50,
+                      height: SizeConfig.blockHorizotal * 40,
                       width: double.infinity,
                       child: Stack(
                         children: [
                           Container(
                               child: Align(
-                            alignment: Alignment.topLeft,
-                            child: LeftLiquid(context),
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                                margin: EdgeInsets.only(
+                                    left: SizeConfig.blockVertical * 3,
+                                    bottom: SizeConfig.blockVertical * 3),
+                              child:IconButton(
+                                onPressed: () => _scaffoldKey.currentState.openDrawer(),
+                                tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+                                  icon: Icon(FontAwesomeIcons.bars,
+                                color: colorPrimary,
+                                size: 30.0),
+                              )
+                            ),
                           )),
                           Container(
                               margin: EdgeInsets.only(
-                                  top: SizeConfig.blockVertical * 3,
-                                  right: SizeConfig.blockVertical * 3,
+                                  right: SizeConfig.blockVertical * 5,
                                   bottom: SizeConfig.blockVertical * 3),
                               child: Align(
-                                alignment: Alignment.topRight,
-                                child: CircleAvatar(
-                                  radius: 40,
-                                  backgroundColor: greyLineColor,
-                                  child: CircleAvatar(
-                                    radius: 40,
-                                    backgroundImage: NetworkImage(
-                                        'https://via.placeholder.com/150'),
-                                    backgroundColor: Colors.transparent,
-                                  ),
+                                alignment: Alignment.centerRight,
+                                child: Container(
+                                    child:IconButton(
+                                      onPressed: () => _scaffoldKey.currentState.openDrawer(),
+                                      tooltip: "Notifikasi",
+                                      icon: Icon(
+                                        FontAwesomeIcons.solidBell,
+                                      color: colorPrimary,
+                                      size: 30.0,
+                                    ))
                                 ),
                               )),
                         ],
@@ -98,8 +114,7 @@ class _DashboardFirstViewState extends State<DashboardFirstView> {
                     Container(
                         margin: EdgeInsets.only(
                             left: SizeConfig.blockVertical * 3,
-                            right: SizeConfig.blockVertical * 3,
-                            bottom: SizeConfig.blockVertical * 3),
+                            right: SizeConfig.blockVertical * 3),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,

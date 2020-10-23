@@ -12,6 +12,7 @@ import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaText.dart';
 import 'package:flutter/services.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 
 class RegisterView extends StatefulWidget {
   RegisterView({Key key}) : super(key: key);
@@ -24,7 +25,7 @@ class _RegisterViewState extends State<RegisterView> {
   bool _showPassword = true;
   bool _showRePassword = true;
   bool _clickLogin = true;
-
+  ProgressDialog pr;
   bool _statusRegister = false;
   TextEditingController nohpController = new TextEditingController();
   TextEditingController namaController = new TextEditingController();
@@ -32,7 +33,7 @@ class _RegisterViewState extends State<RegisterView> {
   void _toggleButtonRegister() async {
     var status = await bloc.funRegister(
         namaController.text.toString(), nohpController.text.toString());
-    // print(status);
+    pr.show();
     if (status == 1) {
       setState(() {
         _statusRegister = false;
@@ -42,17 +43,32 @@ class _RegisterViewState extends State<RegisterView> {
           PageTransition(
               type: PageTransitionType.fade,
               child: LoginView()));
+      pr.hide();
     } else {
       setState(() {
         _statusRegister = true;
       });
+      pr.hide();
     }
   }
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-
+    pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
+    pr.style(
+      message: 'Menunggu...',
+      borderRadius: 10.0,
+      backgroundColor: Colors.white,
+      elevation: 10.0,
+      insetAnimCurve: Curves.easeInOut,
+      progress: 0.0,
+      maxProgress: 100.0,
+      progressTextStyle: TextStyle(
+          color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+      messageTextStyle: TextStyle(
+          color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600),
+    );
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
     ));

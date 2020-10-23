@@ -1,7 +1,9 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_session/flutter_session.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lelenesia_pembudidaya/src/bloc/LoginBloc.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardFirstView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/forgot/ForgotResetView.dart';
@@ -25,6 +27,7 @@ class OtpView extends StatefulWidget {
 
 class _OtpViewState extends State<OtpView> {
   bool _clickForgot = true;
+  String _token = "";
   void _toggleButtonForgot() {
     setState(() {
       _clickForgot = !_clickForgot;
@@ -36,9 +39,15 @@ class _OtpViewState extends State<OtpView> {
             // duration: Duration(microseconds: 1000),
             child: DashboardFirstView()));
   }
-
+  void getToken() async {
+    var token = await bloc.getToken();
+    setState(() {
+      _token = token;
+    });
+  }
   @override
   Widget build(BuildContext context) {
+    getToken();
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomPadding: false,

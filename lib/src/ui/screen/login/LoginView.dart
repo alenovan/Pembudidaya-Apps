@@ -16,6 +16,7 @@ import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaText.dart';
 import 'package:flutter/services.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:toast/toast.dart';
 
 class LoginView extends StatefulWidget {
@@ -28,6 +29,7 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   bool _showPassword = true;
   bool _clickLogin = true;
+  ProgressDialog pr;
   bool _statusLogin = false;
   TextEditingController nohpController = new TextEditingController();
   TextEditingController sandiController = new TextEditingController();
@@ -40,6 +42,7 @@ class _LoginViewState extends State<LoginView> {
   void _toggleButtonLogin() async {
     var status = await bloc.funLogin(nohpController.text.toString());
     print(status);
+    await pr.show();
     if(status){
       setState(() {
         _statusLogin = false;
@@ -49,16 +52,33 @@ class _LoginViewState extends State<LoginView> {
           PageTransition(
               type: PageTransitionType.fade,
               child: OtpView()));
+
     }else{
       setState(() {
         _statusLogin = true;
       });
+      await pr.hide();
     }
+
   }
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+    pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
+    pr.style(
+      message: 'Menunggu...',
+      borderRadius: 10.0,
+      backgroundColor: Colors.white,
+      elevation: 10.0,
+      insetAnimCurve: Curves.easeInOut,
+      progress: 0.0,
+      maxProgress: 100.0,
+      progressTextStyle: TextStyle(
+          color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+      messageTextStyle: TextStyle(
+          color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600),
+    );
     GestureDetector gspassword = GestureDetector(
         onTap: () {
           _togglevisibility();

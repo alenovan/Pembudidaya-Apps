@@ -39,6 +39,7 @@ dependencies:
   image_picker: ^0.6.7+11
   dotted_border: ^1.0.6
   flutter_session: ^0.1.1
+  progress_dialog: ^1.2.4
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -57,6 +58,7 @@ flutter:
     - assets/svg/login/liquidright.svg
     - assets/svg/login/liquidleft.svg
     - assets/svg/logo_placeholder.svg
+    - assets/svg/img_logo_white.svg
     - assets/svg/google_icon.svg
     - assets/svg/detail.svg
     - assets/svg/fishing.svg
