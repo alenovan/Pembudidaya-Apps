@@ -6,12 +6,18 @@ import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/laporanharian/PageFo
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/laporanharian/PageOne.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/laporanharian/PageThree.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/laporanharian/PageTwo.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/lelang/DetailLelangView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/lelang/LelangView.dart';
 
 class LaporanMain extends StatefulWidget {
   final int page;
   final String laporan_page;
-  LaporanMain({Key key, this.page, this.laporan_page}) : super(key: key);
+  final int tgl;
+  final int bulan;
+  final int tahun;
+  final String idKolam;
+  final String idLelang;
+  LaporanMain({Key key, this.page, this.laporan_page, this.idKolam, this.tgl, this.bulan, this.tahun, this.idLelang}) : super(key: key);
 
   @override
   _LaporanMainState createState() => _LaporanMainState();
@@ -24,22 +30,44 @@ class _LaporanMainState extends State<LaporanMain> {
   @override
   Widget build(BuildContext context) {
     var laporanPage;
+    var laporanLelang;
     if (widget.laporan_page == "home") {
-      laporanPage = Laporan();
+      laporanPage = Laporan(idKolam: widget.idKolam.toString(),);
     } else if (widget.laporan_page == "satu") {
-      laporanPage = PageOne();
+      laporanPage = PageOne(
+        idKolam: widget.idKolam.toString(),
+        tgl: widget.tgl,
+        bulan: widget.bulan,
+        tahun: widget.tahun,);
     } else if (widget.laporan_page == "dua") {
-      laporanPage = PageTwo();
+      laporanPage = PageTwo(idKolam: widget.idKolam.toString(),
+        tgl: widget.tgl,
+        bulan: widget.bulan,
+        tahun: widget.tahun,);
     } else if (widget.laporan_page == "tiga") {
-      laporanPage = PageThree();
+      laporanPage = PageThree(idKolam: widget.idKolam.toString(),
+        tgl: widget.tgl,
+        bulan: widget.bulan,
+        tahun: widget.tahun,);
     } else if (widget.laporan_page == "empat") {
-      laporanPage = PageFour();
+      laporanPage = PageFour(idKolam: widget.idKolam.toString(),
+        tgl: widget.tgl,
+        bulan: widget.bulan,
+        tahun: widget.tahun,);
     }else{
-      laporanPage = Laporan();
+      laporanPage = Laporan(idKolam: widget.idKolam.toString());
     }
+
+    if (widget.laporan_page == "detail_lelang") {
+      laporanLelang =  DetailLelangView(idKolam: widget.idKolam.toString(),idLelang: widget.idLelang.toString(),);
+    }else {
+      laporanLelang = LelangView(idKolam: widget.idKolam.toString());
+    }
+
+
     _widgetOptions = [
-      HomeLaporan(),
-      LelangView(),
+      HomeLaporan(idKolam: widget.idKolam.toString()),
+      laporanLelang,
       laporanPage,
     ];
     if (_statusSelected) {

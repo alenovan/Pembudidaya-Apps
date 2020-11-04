@@ -73,10 +73,12 @@ Widget Logo(BuildContext context) {
 InputDecoration EditTextDecorationNumber(BuildContext context, String label) {
   SizeConfig().init(context);
   final InputDecoration decoration = InputDecoration(
-    contentPadding: const EdgeInsets.only(left: 20.0,top:12),
+    isDense: true,
+    contentPadding: EdgeInsets.only(left: 20.0,top:30),
     hintText: label,
     filled: true,
     prefixIcon: Container(
+        transform: Matrix4.translationValues(0.0, -2.0, 0.0),
         width: 20.0,
         child: Align(
           alignment: Alignment.center,

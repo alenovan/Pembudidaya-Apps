@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+const image_link = "http://pabrik.lelenesia.panen-panen.com/";
 // logintext
 const String titleLoginText = "Pembudidaya";
 const String subTitleLoginText =

@@ -1,11 +1,18 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaText.dart';
+import 'package:lelenesia_pembudidaya/src/typography.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardView.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/forgot/ForgotWidget.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanHome.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/laporanharian/PageOne.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/lelang/TambahLelang.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/CustomElevation.dart';
@@ -16,7 +23,9 @@ import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginWidget.dart';
 import 'package:page_transition/page_transition.dart';
 
 class LelangView extends StatefulWidget {
-  LelangView({Key key}) : super(key: key);
+  final String idKolam;
+  final String halaman;
+  LelangView({Key key, this.idKolam, this.halaman}) : super(key: key);
 
   @override
   _LelangViewState createState() => _LelangViewState();
@@ -24,6 +33,7 @@ class LelangView extends StatefulWidget {
 
 class _LelangViewState extends State<LelangView> {
   bool _showDetail = true;
+
   void _toggleDetail() {
     setState(() {
       _showDetail = !_showDetail;
@@ -32,81 +42,102 @@ class _LelangViewState extends State<LelangView> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        statusBarIconBrightness: Brightness.dark,
+      ),
       child: Scaffold(
-          backgroundColor: backgroundGreyColor,
           resizeToAvoidBottomPadding: false,
-          appBar: AppbarForgot(context, "Lelang", LoginView()),
-          body: Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-                margin: EdgeInsets.only(
-                    top: SizeConfig.blockVertical * 3,
-                    left: SizeConfig.blockVertical * 3,
-                    right: SizeConfig.blockVertical * 3,
-                    bottom: SizeConfig.blockVertical * 3),
-                color: backgroundGreyColor,
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "History Lelang",
-                          style: TextStyle(
-                              color: appBarTextColor,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'lato',
-                              letterSpacing: 0.4,
-                              fontSize: 18.0),
+          backgroundColor: backgroundGreyColor,
+          body: Column(
+            children: [
+              AppBarContainer(context, "Lelang", DashboardView(), Colors.white),
+              Container(
+                  padding: EdgeInsets.only(
+                      left: SizeConfig.blockVertical * 3,
+                      right: SizeConfig.blockVertical * 3),
+                  child: Column(
+                    children: [
+                      Container(
+                          width: double.infinity,
+                          margin: EdgeInsets.only(
+                            top: SizeConfig.blockVertical * 3,
+                          ),
+                          child: CustomElevation(
+                              height: 40.0,
+                              child: RaisedButton(
+                                highlightColor: colorPrimary,
+                                //Replace with actual colors
+                                color: colorPrimary,
+                                onPressed: () => {
+                                  Navigator.push(
+                                      context,
+                                      PageTransition(
+                                          type: PageTransitionType.fade,
+                                          // duration: Duration(microseconds: 1000),
+                                          child: TambahLelang()))
+                                },
+                                child: Text(
+                                  "Lelang",
+                                  style: subtitle2.copyWith(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                                shape: new RoundedRectangleBorder(
+                                  borderRadius: new BorderRadius.circular(30.0),
+                                ),
+                              ))),
+                      Container(
+                          margin: EdgeInsets.only(
+                              top: SizeConfig.blockVertical * 3,
+                              left: SizeConfig.blockHorizotal * 2),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "Lelang Berlangsung",
+                              style: subtitle2,
+                            ),
+                          )),
+                      Container(
+                        margin: EdgeInsets.only(
+                          top: SizeConfig.blockVertical * 3,
                         ),
-                        Wrap(
+                        child: Column(
                           children: [
-                            Container(
-                              height: 30.0,
-                              child: CustomElevation(
-                                  height: 30.0,
-                                  child: RaisedButton(
-                                    highlightColor:
-                                        colorPrimary, //Replace with actual colors
-                                    color: colorPrimary,
-                                    onPressed: () => {},
-                                    child: Text(
-                                      "lelang",
-                                      style: TextStyle(
-                                          color: backgroundColor,
-                                          fontWeight: FontWeight.w500,
-                                          fontFamily: 'poppins',
-                                          letterSpacing: 1.25,
-                                          fontSize: 10.0),
-                                    ),
-                                    shape: new RoundedRectangleBorder(
-                                      borderRadius:
-                                          new BorderRadius.circular(30.0),
-                                    ),
-                                  )),
-                            )
+                            CardLelangBerlangsung(context,
+                                "Lele catfish blackie", "09 Juni 2012"),
                           ],
                         ),
-                      ],
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(
-                        top: SizeConfig.blockVertical * 3,
                       ),
-                      child: Column(
-                        children: [
-                          CardLelang(context, "Lele catfish blackie", "180.000",
-                              "09 Juni 2012"),
-                          CardLelang(context, "Lele catfish blackie", "180.000",
-                              "09 Juni 2012"),
-                          CardLelang(context, "Lele catfish blackie", "180.000",
-                              "09 Juni 2012")
-                        ],
-                      ),
-                    )
-                  ],
-                )),
+                      Container(
+                          margin: EdgeInsets.only(
+                              top: SizeConfig.blockVertical * 3,
+                              left: SizeConfig.blockHorizotal * 2),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "History Lelang",
+                              style: subtitle2,
+                            ),
+                          )),
+                      Container(
+                        margin: EdgeInsets.only(
+                          top: SizeConfig.blockVertical * 3,
+                        ),
+                        child: Column(
+                          children: [
+                            CardLelang(context, "Lele catfish blackie",
+                                "180.000", "09 Juni 2012"),
+                            CardLelang(context, "Lele catfish blackie",
+                                "180.000", "09 Juni 2012"),
+                            CardLelang(context, "Lele catfish blackie",
+                                "180.000", "09 Juni 2012")
+                          ],
+                        ),
+                      )
+                    ],
+                  ))
+            ],
           )),
     );
   }

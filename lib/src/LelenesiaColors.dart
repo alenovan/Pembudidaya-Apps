@@ -24,3 +24,10 @@ const greyLineColor = Color(0xFFC4C4C4);
 const greyIconColor = Color(0xFF8F9497);
 const editTextBgColor = Color(0xFFF4F4F4);
 const uploadColor = Color(0xFFF4F4F4);
+
+
+// edit text
+const editText = Color(0xFFF4F4F4);
+const editTextField = Color(0xFFE7E7E7);
+const editTextIcon = Color(0xFF8F9497);
+const editTextCursor = Color(0xFF3C968B);

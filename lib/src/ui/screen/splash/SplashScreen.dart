@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
-import 'package:lelenesia_pembudidaya/src/bloc/LoginBloc.dart';
+import 'package:lelenesia_pembudidaya/src/bloc/KolamBloc.dart';
+import 'package:lelenesia_pembudidaya/src/bloc/LoginBloc.dart' as logBloc;
 import 'package:lelenesia_pembudidaya/src/typography.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardFirstView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginView.dart';
 import 'package:page_transition/page_transition.dart';
@@ -14,40 +16,61 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  var loop = 0;
   @override
   void initState() {
-    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     super.initState();
   }
 
   @override
   void dispose() {
-    SystemChrome.setEnabledSystemUIOverlays(
-        [SystemUiOverlay.top, SystemUiOverlay.bottom]);
     super.dispose();
   }
 
   void getToken() async {
-    var token = await bloc.getToken();
-    if (token != "") {
-      Navigator.push(
-          context,
-          PageTransition(
-              type: PageTransitionType.fade,
-              child: DashboardView()));
+    var token = await logBloc.bloc.getToken();
+   try{
+     if (token != "") {
+       bool status = await bloc.getCheckKolam();
+       print(status);
+       if(status){
+         Navigator.push(
+             context,
+             PageTransition(
+                 type: PageTransitionType.fade,
+                 child: DashboardFirstView()));
+       }else{
+         Navigator.push(
+             context,
+             PageTransition(
+                 type: PageTransitionType.fade,
+                 child: DashboardView()));
+       }
 
-    } else {
-      Navigator.push(
-          context,
-          PageTransition(
-              type: PageTransitionType.fade,
-              child: LoginView()));
+     } else {
+       Navigator.push(
+           context,
+           PageTransition(
+               type: PageTransitionType.fade,
+               child: LoginView()));
 
-    }
+     }
+   }catch(e){
+     Navigator.push(
+         context,
+         PageTransition(
+             type: PageTransitionType.fade,
+             child: LoginView()));
+   }
   }
 
   @override
   Widget build(BuildContext context) {
+    if(loop == 0){
+      getToken();
+    }
+    loop = 1;
+
     final double _screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: colorPrimary,

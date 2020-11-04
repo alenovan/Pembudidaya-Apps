@@ -9,7 +9,7 @@ class LoginBloc {
     print("Login");
     var val = await _repository.login(_nohp);
     Map<String, dynamic> responseJson = json.decode(val.body);
-    if(responseJson['status'] == 200){
+    if(val.statusCode == 200){
       await FlutterSession().set("token", responseJson['token']);
         status = true;
     }else {

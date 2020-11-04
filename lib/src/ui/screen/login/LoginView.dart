@@ -3,12 +3,14 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lelenesia_pembudidaya/src/bloc/LoginBloc.dart';
+import 'package:lelenesia_pembudidaya/src/typography.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/forgot/ForgotPasswordView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanHome.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanMain.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/otp/OtpView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/register/RegisterView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
+import 'package:lelenesia_pembudidaya/src/ui/widget/AcceptanceDialog.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/CustomElevation.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginWidget.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
@@ -40,24 +42,29 @@ class _LoginViewState extends State<LoginView> {
   }
 
   void _toggleButtonLogin() async {
+    Navigator.of(context).push(new MaterialPageRoute<Null>(
+        builder: (BuildContext context) {
+          return LoadingShow(context);
+        },
+        fullscreenDialog: true));
     var status = await bloc.funLogin(nohpController.text.toString());
-    print(status);
-    await pr.show();
     if(status){
       setState(() {
         _statusLogin = false;
       });
+      Navigator.of(context).pop();
       Navigator.push(
           context,
           PageTransition(
               type: PageTransitionType.fade,
-              child: OtpView()));
-
+              child: OtpView(
+                no_phone: nohpController.text.toString(),
+              )));
     }else{
+      Navigator.of(context).pop();
       setState(() {
         _statusLogin = true;
       });
-      await pr.hide();
     }
 
   }
@@ -65,32 +72,12 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
-    pr.style(
-      message: 'Menunggu...',
-      borderRadius: 10.0,
-      backgroundColor: Colors.white,
-      elevation: 10.0,
-      insetAnimCurve: Curves.easeInOut,
-      progress: 0.0,
-      maxProgress: 100.0,
-      progressTextStyle: TextStyle(
-          color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
-      messageTextStyle: TextStyle(
-          color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600),
-    );
-    GestureDetector gspassword = GestureDetector(
-        onTap: () {
-          _togglevisibility();
-        },
-        child: Icon(
-          _showPassword ? Icons.visibility : Icons.visibility_off,
-          color: greyIconColor,
-        ));
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-    ));
-    return Scaffold(
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle(
+        statusBarIconBrightness: Brightness.dark,
+    ),
+    child:Scaffold(
         resizeToAvoidBottomPadding: false,
         backgroundColor: Colors.white,
         body: Stack(
@@ -122,6 +109,7 @@ class _LoginViewState extends State<LoginView> {
                       ),
                     ),
                     Container(
+                      transform: Matrix4.translationValues(0.0, -20.0, 0.0),
                       margin: EdgeInsets.only(
                           left: SizeConfig.blockVertical * 3,
                           right: SizeConfig.blockVertical * 3),
@@ -130,25 +118,17 @@ class _LoginViewState extends State<LoginView> {
                         children: [
                           Text(
                             titleLoginText,
-                            style: TextStyle(
-                                color: blackTextColor,
-                                fontWeight: FontWeight.w700,
-                                fontFamily: 'poppins',
-                                letterSpacing: 0.25,
-                                fontSize: titleLogin),
+                            style:h1,
                           ),
                           Text(
                             subTitleLoginText,
-                            style: TextStyle(
-                                color: greyTextColor,
-                                fontFamily: 'lato',
-                                letterSpacing: 0.4,
-                                fontSize: subTitleLogin),
+                            style: caption,
                           )
                         ],
                       ),
                     ),
                     Container(
+                      transform: Matrix4.translationValues(0.0, -20.0, 0.0),
                       margin: EdgeInsets.only(
                           left: SizeConfig.blockVertical * 3,
                           top: SizeConfig.blockVertical * 3,
@@ -172,6 +152,7 @@ class _LoginViewState extends State<LoginView> {
                     Visibility(
                       visible: _statusLogin? true : false,
                       child:  Container(
+                        transform: Matrix4.translationValues(0.0, -20.0, 0.0),
                         margin: EdgeInsets.only(
                             left: SizeConfig.blockVertical * 5,
                             top: SizeConfig.blockVertical * 1,
@@ -188,6 +169,7 @@ class _LoginViewState extends State<LoginView> {
                     ),
 
                     Container(
+                      transform: Matrix4.translationValues(0.0, -20.0, 0.0),
                       height: 45.0,
                       width: MediaQuery.of(context).size.width,
                       margin: EdgeInsets.only(
@@ -218,22 +200,19 @@ class _LoginViewState extends State<LoginView> {
                           )),
                     ),
                     Container(
+                        transform: Matrix4.translationValues(0.0, -20.0, 0.0),
                         margin: EdgeInsets.only(
                             left: SizeConfig.blockVertical * 3,
                             right: SizeConfig.blockVertical * 3,
                             top: SizeConfig.blockVertical * 3),
                         child: new Align(
-                            alignment: FractionalOffset.centerLeft,
+                            alignment: FractionalOffset.center,
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
                                   "Belum punya akun ?",
-                                  style: TextStyle(
-                                      color: greyTextColor,
-                                      fontFamily: 'lato',
-                                      letterSpacing: 0.4,
-                                      fontSize: subTitleLogin),
+                                  style: body2,
                                 ),
                                 InkWell(
                                     onTap: () {
@@ -246,12 +225,7 @@ class _LoginViewState extends State<LoginView> {
                                     },
                                     child: Text(
                                       " Daftar",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w700,
-                                          color: colorPrimary,
-                                          fontFamily: 'lato',
-                                          letterSpacing: 0.25,
-                                          fontSize: subTitleLogin),
+                                      style: body2.copyWith(color: colorPrimary),
                                     ))
                               ],
                             )))
@@ -269,11 +243,7 @@ class _LoginViewState extends State<LoginView> {
                         children: [
                           Text(
                             "Hubungi admin ?",
-                            style: TextStyle(
-                                color: greyTextColor,
-                                fontFamily: 'lato',
-                                letterSpacing: 0.4,
-                                fontSize: subTitleLogin),
+                            style: body2,
                           ),
                           InkWell(
                               onTap: () {
@@ -297,6 +267,6 @@ class _LoginViewState extends State<LoginView> {
                       ))),
             )
           ],
-        ));
+        )));
   }
 }

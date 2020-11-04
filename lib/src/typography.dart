@@ -23,6 +23,8 @@ const TextStyle h1 = TextStyle(
 TextStyle h1Inv = h1.copyWith(color: textPrimaryInverted);
 TextStyle h1Accent = h1.copyWith(color: textSecondary);
 
+
+
 const TextStyle h2 = TextStyle(
   fontFamily: _fontPoppins,
   fontSize: 26.0,
@@ -67,7 +69,7 @@ TextStyle subtitle2Accent = subtitle2.copyWith(color: textSecondary);
 
 const TextStyle caption = TextStyle(
   fontFamily: _fontLato,
-  fontSize: 14.0,
+  fontSize: 13.0,
   fontWeight: FontWeight.normal,
   color: textPrimary,
 );
@@ -77,7 +79,7 @@ TextStyle body1Accent = body1.copyWith(color: textSecondary);
 
 const TextStyle body2 = TextStyle(
   fontFamily: _fontLato,
-  fontSize: 16.0,
+  fontSize: 14.0,
   fontWeight: FontWeight.w400,
   color: textPrimary,
 );

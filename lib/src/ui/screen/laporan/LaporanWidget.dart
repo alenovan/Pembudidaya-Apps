@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:lelenesia_pembudidaya/src/typography.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanDetail.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanMain.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
@@ -24,6 +26,7 @@ class LaporanWidget extends StatelessWidget {
 
 Widget Calendar(EventList<Event> _markedDateMap, DateTime _currentDate,
     BuildContext context) {
+  var month = 0;
   return Container(
     margin: EdgeInsets.all(16.0),
     child: Wrap(
@@ -40,11 +43,7 @@ Widget Calendar(EventList<Event> _markedDateMap, DateTime _currentDate,
           weekendTextStyle: TextStyle(
             color: Colors.black,
           ),
-          // showWeekDays: null,
           iconColor: Colors.black,
-
-          /// for pass null when you do not want to render weekDays
-          headerText: 'September',
           headerTextStyle: TextStyle(
               color: purpleTextColor,
               fontWeight: FontWeight.w500,
@@ -53,23 +52,25 @@ Widget Calendar(EventList<Event> _markedDateMap, DateTime _currentDate,
               fontSize: 18.02),
           thisMonthDayBorderColor: Colors.transparent,
           customDayBuilder: (
-              bool isSelectable,
-              int index,
-              bool isSelectedDay,
-              bool isToday,
-              bool isPrevMonthDay,
-              TextStyle textStyle,
-              bool isNextMonthDay,
-              bool isThisMonthDay,
-              DateTime day,
-              ) {
-            // if (day.day == 15) {
-            //   return Center(
-            //     child: Icon(Icons.local_airport),
-            //   );
-            // } else {
-            //   return null;
-            // }
+            bool isSelectable,
+            int index,
+            bool isSelectedDay,
+            bool isToday,
+            bool isPrevMonthDay,
+            TextStyle textStyle,
+            bool isNextMonthDay,
+            bool isThisMonthDay,
+            DateTime day,
+          ) {
+            // this.month = day.month;
+            if (day.day > 15) {
+              return Center(
+                  child: Text(day.day.toString(),
+                      style: body2.copyWith(color: Colors.grey)));
+            } else {
+              return Center(child: Text(index.toString(), style: body2));
+            }
+
           },
           todayButtonColor: purpleTextColor,
           todayBorderColor: purpleTextColor,
@@ -248,7 +249,7 @@ Widget CardLelang(
           borderRadius: BorderRadius.circular(15.0),
         ),
         child: Container(
-            padding: EdgeInsets.only(left: 15.0, right: 15.0, top: 10),
+            padding: EdgeInsets.only(left: 15.0, right: 15.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -262,18 +263,13 @@ Widget CardLelang(
                           color: greyTextColor,
                           fontFamily: 'lato',
                           letterSpacing: 0.4,
-                          fontSize: 10.0),
+                          fontSize: 12.0),
                     ),
                     Container(
                         margin: EdgeInsets.only(top: 5.0),
                         child: Text(
                           title,
-                          style: TextStyle(
-                              color: appBarTextColor,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'lato',
-                              letterSpacing: 0.4,
-                              fontSize: subTitleLogin),
+                          style: subtitle2.copyWith(color:Colors.black),
                         ))
                   ],
                 ),
@@ -281,18 +277,73 @@ Widget CardLelang(
                     alignment: Alignment.centerRight,
                     child: Text(
                       number,
-                      style: TextStyle(
-                          color: appBarTextColor,
-                          fontWeight: FontWeight.w700,
-                          fontFamily: 'lato',
-                          letterSpacing: 0.4,
-                          fontSize: subTitleLogin),
+                      style: subtitle2.copyWith(color:Colors.black),
                     ))
               ],
             ))),
   );
   return svgIcon;
 }
+
+
+Widget CardLelangBerlangsung(
+    BuildContext context, String title, String date) {
+  final Widget svgIcon = Container(
+    height: SizeConfig.blockVertical * 11,
+    child: Card(
+        elevation: 2,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        child: InkWell(
+          onTap: (){
+            Navigator.push(
+                context,
+                PageTransition(
+                    type: PageTransitionType.fade,
+                    child: LaporanMain(
+                      page: 1, laporan_page: "detail_lelang",idKolam: "20",idLelang: "2",)));
+          },
+          child: Container(
+              padding: EdgeInsets.only(left: 15.0, right: 15.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        date,
+                        style: TextStyle(
+                            color: greyTextColor,
+                            fontFamily: 'lato',
+                            letterSpacing: 0.4,
+                            fontSize: 12.0),
+                      ),
+                      Container(
+                          margin: EdgeInsets.only(top: 5.0),
+                          child: Text(
+                            title,
+                            style: subtitle2.copyWith(color:Colors.black),
+                          ))
+                    ],
+                  ),
+                  Container(
+                      alignment: Alignment.centerRight,
+                      child:  Icon(
+                        FontAwesomeIcons.chevronCircleRight,
+                        color: purpleTextColor,
+                        size: SizeConfig.blockHorizotal * 8,
+                      ))
+                ],
+              )),
+        )),
+  );
+  return svgIcon;
+}
+
+
 
 // ignore: non_constant_identifier_names
 Widget DetailNull(BuildContext context) {

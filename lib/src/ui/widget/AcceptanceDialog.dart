@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanMain.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/CustomElevation.dart';
+import 'package:lelenesia_pembudidaya/src/ui/widget/EmptyAppBar.dart';
 import 'package:page_transition/page_transition.dart';
 
 class AcceptanceDialog extends StatelessWidget {
@@ -114,15 +117,6 @@ Widget Alertquestion(BuildContext context, Widget success) {
 
 Widget AlertSuccess(BuildContext context, Widget success) {
   Widget data;
-  new Future.delayed(const Duration(seconds: 500), () {
-    print("aaa");
-    Navigator.push(
-        context,
-        PageTransition(
-            type: PageTransitionType.fade,
-            // duration: Duration(microseconds: 1000),
-            child:success));
-  });
   data = Container(
     child: Dialog(
       shape: RoundedRectangleBorder(
@@ -134,7 +128,7 @@ Widget AlertSuccess(BuildContext context, Widget success) {
         child:
         AnimatedOpacity(
           opacity: 1.0 ,
-          duration: Duration(milliseconds: 500),
+          duration: Duration(milliseconds: 100),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -161,4 +155,38 @@ Widget AlertSuccess(BuildContext context, Widget success) {
     ),
   );
   return data;
+}
+
+
+Widget LoadingShow(BuildContext context) {
+  final double _screenWidth = MediaQuery.of(context).size.width;
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+  ));
+  return Scaffold(
+    primary: true,
+    appBar:  EmptyAppBar(),
+    backgroundColor: Colors.white,
+    body: Stack(
+      children: [
+        Center(
+          child: SizedBox(
+              width: _screenWidth * (35 / 100),
+              height: _screenWidth * (35 / 100),
+              child: CircularProgressIndicator(
+                backgroundColor: textSecondaryInverted,
+                valueColor:
+                new AlwaysStoppedAnimation<Color>(colorPrimary),
+                strokeWidth: 2,
+              )),
+        ),
+        Center(
+          child: SvgPicture.asset(
+            "assets/svg/logo_placeholder.svg",
+            width: _screenWidth * (25 / 100),
+          ),
+        ),
+      ],
+    ),
+  );
 }

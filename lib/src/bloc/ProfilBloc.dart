@@ -21,6 +21,19 @@ class ProfilBloc {
     return status;
   }
 
+  Future<bool> funUpdateProfileKtp(noKtp,ktp,selfie) async {
+    var status;
+    print("Update Profile Ktp");
+    var val = await _repository.updateKtpProfile(noKtp,ktp,selfie);
+    Map<String, dynamic> map = val.data;
+    if(val.statusCode == 200){
+      status = true;
+    }else {
+      status = false;
+    }
+    return status;
+  }
+
    getProfile() async {
     var todo = await _repository.getProfile();
     return jsonDecode(todo);

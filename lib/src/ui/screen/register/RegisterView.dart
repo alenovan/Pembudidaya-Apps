@@ -1,10 +1,16 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lelenesia_pembudidaya/src/Models/RegisterModels.dart';
 import 'package:lelenesia_pembudidaya/src/bloc/RegisterBloc.dart';
+import 'package:lelenesia_pembudidaya/src/resource/Repository.dart';
+import 'package:lelenesia_pembudidaya/src/typography.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
+import 'package:lelenesia_pembudidaya/src/ui/widget/AcceptanceDialog.dart';
+import 'package:lelenesia_pembudidaya/src/ui/widget/BottomSheetFeedback.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/CustomElevation.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginWidget.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
@@ -22,34 +28,48 @@ class RegisterView extends StatefulWidget {
 }
 
 class _RegisterViewState extends State<RegisterView> {
-  bool _showPassword = true;
-  bool _showRePassword = true;
   bool _clickLogin = true;
   ProgressDialog pr;
-  bool _statusRegister = false;
+  var nama = " ";
+  var phone = " ";
   TextEditingController nohpController = new TextEditingController();
   TextEditingController namaController = new TextEditingController();
 
+
+
   void _toggleButtonRegister() async {
-    var status = await bloc.funRegister(
+    var  dialogContext = Navigator.of(context).push(new MaterialPageRoute<Null>(
+        builder: (BuildContext context) {
+          return LoadingShow(context);
+        },
+        fullscreenDialog: true));
+    var data = await bloc.funRegister(
         namaController.text.toString(), nohpController.text.toString());
-    pr.show();
+    var status = data['status'];
+
+    setState(() {
+      nama = data['data']['nama'].toString() == "null" ? " " : data['data']['nama'].toString();
+      phone =
+          data['data']['phone'].toString() == "null" ? " " : data['data']['phone'].toString();
+    });
+    print(status);
     if (status == 1) {
-      setState(() {
-        _statusRegister = false;
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertSuccess(context, LoginView()),
+      );
+      Timer(const Duration(seconds: 2), () {
+        Navigator.push(context,
+            PageTransition(type: PageTransitionType.fade, child: LoginView()));
       });
-      Navigator.push(
-          context,
-          PageTransition(
-              type: PageTransitionType.fade,
-              child: LoginView()));
-      pr.hide();
-    } else {
-      setState(() {
-        _statusRegister = true;
-      });
-      pr.hide();
+    } else if (status == 2) {
+      var message  = data['data']['message'].toString();
+      Navigator.of(context).pop();
+      BottomSheetFeedback.show(context, title: "Mohon Maaf", description: message);
+    }else{
+      Navigator.of(context).pop();
     }
+
   }
 
   @override
@@ -114,20 +134,11 @@ class _RegisterViewState extends State<RegisterView> {
                             children: [
                               Text(
                                 titleDaftarText,
-                                style: TextStyle(
-                                    color: blackTextColor,
-                                    fontWeight: FontWeight.w700,
-                                    fontFamily: 'poppins',
-                                    letterSpacing: 0.25,
-                                    fontSize: titleLogin),
+                                style: h1,
                               ),
                               Text(
                                 subTitleDaftarText,
-                                style: TextStyle(
-                                    color: greyTextColor,
-                                    fontFamily: 'lato',
-                                    letterSpacing: 0.4,
-                                    fontSize: subTitleLogin),
+                                style: caption,
                               )
                             ],
                           ),
@@ -141,7 +152,7 @@ class _RegisterViewState extends State<RegisterView> {
                             controller: namaController,
                             decoration: EditTextDecorationText(
                                 context, "Nama", 20.0, 0, 0, 0),
-                            keyboardType: TextInputType.number,
+                            keyboardType: TextInputType.text,
                             style: TextStyle(
                                 color: blackTextColor,
                                 fontFamily: 'lato',
@@ -149,6 +160,23 @@ class _RegisterViewState extends State<RegisterView> {
                                 fontSize: subTitleLogin),
                           ),
                         ),
+                        // Visibility(
+                        //   visible: nama != "-" ? true : false,
+                        //   child: Container(
+                        //     margin: EdgeInsets.only(
+                        //         left: SizeConfig.blockVertical * 5,
+                        //         top: SizeConfig.blockVertical * 1,
+                        //         right: SizeConfig.blockVertical * 3),
+                        //     child: Text(
+                        //       nama,
+                        //       style: TextStyle(
+                        //           color: Colors.red,
+                        //           fontFamily: 'lato',
+                        //           letterSpacing: 0.4,
+                        //           fontSize: 12.0),
+                        //     ),
+                        //   ),
+                        // ),
                         Container(
                           margin: EdgeInsets.only(
                               left: SizeConfig.blockVertical * 3,
@@ -167,14 +195,14 @@ class _RegisterViewState extends State<RegisterView> {
                           ),
                         ),
                         Visibility(
-                          visible: _statusRegister? true : false,
-                          child:  Container(
+                          visible: phone!="-" ? true : false,
+                          child: Container(
                             margin: EdgeInsets.only(
                                 left: SizeConfig.blockVertical * 5,
                                 top: SizeConfig.blockVertical * 1,
                                 right: SizeConfig.blockVertical * 3),
                             child: Text(
-                              "Nomor handphone anda telah terdaftar",
+                              phone,
                               style: TextStyle(
                                   color: Colors.red,
                                   fontFamily: 'lato',
@@ -186,8 +214,8 @@ class _RegisterViewState extends State<RegisterView> {
                         Container(
                           margin: EdgeInsets.only(
                             left: SizeConfig.blockVertical * 3,
+                            top: SizeConfig.blockHorizotal * 3,
                             right: SizeConfig.blockVertical * 3,
-                            top: SizeConfig.blockVertical * 2,
                           ),
                           child: RichText(
                             text: TextSpan(
@@ -244,7 +272,7 @@ class _RegisterViewState extends State<RegisterView> {
                                 color: _clickLogin
                                     ? colorPrimary
                                     : editTextBgColor,
-                                onPressed: () => _toggleButtonRegister(),
+                                onPressed: () => {_toggleButtonRegister()},
                                 child: Text(
                                   buttonDaftarText,
                                   style: TextStyle(
@@ -309,4 +337,6 @@ class _RegisterViewState extends State<RegisterView> {
     Navigator.push(context,
         PageTransition(type: PageTransitionType.fade, child: LoginView()));
   }
+
+
 }

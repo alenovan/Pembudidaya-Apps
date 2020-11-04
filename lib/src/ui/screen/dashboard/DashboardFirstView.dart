@@ -1,13 +1,16 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:lelenesia_pembudidaya/src/bloc/LoginBloc.dart';
+import 'package:lelenesia_pembudidaya/src/bloc/KolamBloc.dart';
+import 'package:lelenesia_pembudidaya/src/typography.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/otp/OtpView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/AcceptanceDialog.dart';
+import 'package:lelenesia_pembudidaya/src/ui/widget/BottomSheetFeedback.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/CustomElevation.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardWidget.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginWidget.dart';
@@ -26,42 +29,51 @@ class DashboardFirstView extends StatefulWidget {
 }
 
 class _DashboardFirstViewState extends State<DashboardFirstView> {
-  bool _showPassword = true;
-  bool _clickLogin = true;
-  TextEditingController nohpController = new TextEditingController();
-  TextEditingController sandiController = new TextEditingController();
-
-  void _togglevisibility() {
-    setState(() {
-      _showPassword = !_showPassword;
-    });
+  TextEditingController countController = new TextEditingController();
+  final GlobalKey<ScaffoldState> _scaffoldKey =
+  new GlobalKey<ScaffoldState>();
+  @override
+  void initState() {
+    countController.text = "3";
+    super.initState();
   }
 
-  void _toggleButtonLogin() {
-
+  void _btnTambahKolam() async {
+    Navigator.of(context).push(new MaterialPageRoute<Null>(
+        builder: (BuildContext context) {
+          return LoadingShow(context);
+        },
+        fullscreenDialog: true));
+    var status = await bloc.funInsertKolam(countController.text.toString());
+    Navigator.of(context).pop();
+    print(status);
+    if (status) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) =>
+            AlertSuccess(context, DashboardView()),
+      );
+      Timer(const Duration(seconds: 1), () {
+        Navigator.push(
+            context,
+            PageTransition(
+                type: PageTransitionType.fade, child: DashboardView()));
+      });
+    } else {
+      BottomSheetFeedback.show(context,
+          title: "Mohon Maaf", description: "Pastikan data terisi semua");
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-    GestureDetector gspassword = GestureDetector(
-        onTap: () {
-          _togglevisibility();
-        },
-        child: Icon(
-          _showPassword ? Icons.visibility : Icons.visibility_off,
-          color: greyIconColor,
-        ));
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-    ));
     return Scaffold(
         key: _scaffoldKey,
         backgroundColor: Colors.white,
         resizeToAvoidBottomPadding: false,
-      drawer: Drawers(context),
+        drawer: Drawers(context),
         body: Stack(
           children: [
             new Positioned(
@@ -82,14 +94,14 @@ class _DashboardFirstViewState extends State<DashboardFirstView> {
                                 margin: EdgeInsets.only(
                                     left: SizeConfig.blockVertical * 3,
                                     bottom: SizeConfig.blockVertical * 3),
-                              child:IconButton(
-                                onPressed: () => _scaffoldKey.currentState.openDrawer(),
-                                tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+                                child: IconButton(
+                                  onPressed: () =>
+                                      _scaffoldKey.currentState.openDrawer(),
+                                  tooltip: MaterialLocalizations.of(context)
+                                      .openAppDrawerTooltip,
                                   icon: Icon(FontAwesomeIcons.bars,
-                                color: colorPrimary,
-                                size: 30.0),
-                              )
-                            ),
+                                      color: colorPrimary, size: 30.0),
+                                )),
                           )),
                           Container(
                               margin: EdgeInsets.only(
@@ -98,15 +110,16 @@ class _DashboardFirstViewState extends State<DashboardFirstView> {
                               child: Align(
                                 alignment: Alignment.centerRight,
                                 child: Container(
-                                    child:IconButton(
-                                      onPressed: () => _scaffoldKey.currentState.openDrawer(),
-                                      tooltip: "Notifikasi",
-                                      icon: Icon(
-                                        FontAwesomeIcons.solidBell,
-                                      color: colorPrimary,
-                                      size: 30.0,
-                                    ))
-                                ),
+                                    child: IconButton(
+                                        onPressed: () => _scaffoldKey
+                                            .currentState
+                                            .openDrawer(),
+                                        tooltip: "Notifikasi",
+                                        icon: Icon(
+                                          FontAwesomeIcons.solidBell,
+                                          color: colorPrimary,
+                                          size: 30.0,
+                                        ))),
                               )),
                         ],
                       ),
@@ -125,16 +138,13 @@ class _DashboardFirstViewState extends State<DashboardFirstView> {
                             Text(
                               textNullFirst,
                               textAlign: TextAlign.center,
-                              style: TextStyle(
+                              style: h3.copyWith(
                                   color: blackTextColor,
-                                  fontFamily: 'poppins',
-                                  fontWeight: FontWeight.w700,
-                                  letterSpacing: 0.25,
-                                  fontSize: 18.0),
+                                  fontWeight: FontWeight.w700),
                             ),
                             Container(
                               margin: EdgeInsets.only(
-                                  top: SizeConfig.blockVertical * 3),
+                                  top: SizeConfig.blockVertical * 2),
                               child: Text(
                                 subTextNullFirst,
                                 textAlign: TextAlign.center,
@@ -154,6 +164,7 @@ class _DashboardFirstViewState extends State<DashboardFirstView> {
                                   padding:
                                       EdgeInsets.only(left: 30.0, right: 30.0),
                                   child: TextFormField(
+                                    controller: countController,
                                     textAlign: TextAlign.center,
                                     decoration: EditTextDecorationText(
                                         context, "", 0, 0, 0, 0),
@@ -183,7 +194,8 @@ class _DashboardFirstViewState extends State<DashboardFirstView> {
                                       showDialog(
                                         context: context,
                                         builder: (BuildContext context) =>
-                                            Alertquestion(context,DashboardView()),
+                                            AlertquestionInsert(
+                                                context, DashboardView()),
                                       )
                                     },
                                     child: Text(
@@ -209,5 +221,91 @@ class _DashboardFirstViewState extends State<DashboardFirstView> {
             ),
           ],
         ));
+  }
+
+  Widget AlertquestionInsert(BuildContext context, Widget success) {
+    final Widget data = Container(
+      child: Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        elevation: 0.0,
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                "Apakah Anda Yakin ? ",
+                style: TextStyle(
+                    color: blackTextColor,
+                    fontFamily: 'poppins',
+                    letterSpacing: 0.25,
+                    fontSize: 15.0),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                      height: 35.0,
+                      margin: EdgeInsets.only(
+                          left: SizeConfig.blockVertical * 1,
+                          right: SizeConfig.blockVertical * 1,
+                          top: SizeConfig.blockVertical * 3),
+                      child: CustomElevation(
+                          height: 35.0,
+                          child: RaisedButton(
+                            highlightColor: colorPrimary,
+                            //Replace with actual colors
+                            color: colorPrimary,
+                            onPressed: () => {_btnTambahKolam()},
+                            child: Text(
+                              "Ya",
+                              style: TextStyle(
+                                  color: backgroundColor,
+                                  fontWeight: FontWeight.w500,
+                                  fontFamily: 'poppins',
+                                  letterSpacing: 1.25,
+                                  fontSize: subTitleLogin),
+                            ),
+                            shape: new RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(30.0),
+                            ),
+                          ))),
+                  Container(
+                    height: 35.0,
+                    margin: EdgeInsets.only(
+                        left: SizeConfig.blockVertical * 1,
+                        right: SizeConfig.blockVertical * 1,
+                        top: SizeConfig.blockVertical * 3),
+                    child: CustomElevation(
+                        height: 35.0,
+                        child: RaisedButton(
+                          highlightColor: colorPrimary,
+                          //Replace with actual colors
+                          color: redTextColor,
+                          onPressed: () => {Navigator.pop(context, true)},
+                          child: Text(
+                            "Tidak",
+                            style: TextStyle(
+                                color: backgroundColor,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'poppins',
+                                letterSpacing: 1.25,
+                                fontSize: subTitleLogin),
+                          ),
+                          shape: new RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(30.0),
+                          ),
+                        )),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+    return data;
   }
 }

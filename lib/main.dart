@@ -1,28 +1,26 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/forgot/ForgotPasswordView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/forgot/ForgotResetView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/forgot/ForgotVerifView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginView.dart';
-import 'package:device_preview/device_preview.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/register/RegisterView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/splash/SplashScreen.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/AuthLoadingScreen.dart';
 
-// end
+void main() async {
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
 
-// void main() => runApp(
-//       DevicePreview(
-//         enabled: !kReleaseMode,
-//         builder: (context) => MyApp(),
-//       ),
-//     );
-
-void main() {
-  runApp(MaterialApp(initialRoute: '/', routes: <String, WidgetBuilder>{
-    '/': (context) => LoginView(),
-  }));
+  runApp(new MaterialApp(
+    theme: ThemeData(
+      accentColor: colorPrimary,
+      visualDensity: VisualDensity.adaptivePlatformDensity,
+      //change the color for CircularProgressIndicator color here
+    ),
+    home: SplashScreen(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -51,6 +49,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return null;
+    return Text("aaa");
   }
 }

@@ -2,6 +2,7 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lelenesia_pembudidaya/src/typography.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
@@ -21,21 +22,23 @@ class LoginWidget extends StatelessWidget {
 Widget AppbarForgot(BuildContext context, String title, Widget page,Color color) {
   SizeConfig().init(context);
   final Widget appBar = AppBar(
+    brightness: Brightness.dark,
+    toolbarHeight: 100.0,
     backgroundColor: color,
-
     elevation: 0.0,
     title: Container(
-        child: Text(
-          title,
-          style: TextStyle(
-              color: appBarTextColor,
-              fontWeight: FontWeight.w500,
-              fontFamily: 'poppins',
-              letterSpacing: 0.15,
-              fontSize: textAppBar),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: h3,
+            ),
+          ],
         )),
     leading: Container(
-        margin: EdgeInsets.only(left: 20.0),
+        margin: EdgeInsets.only(
+            left: SizeConfig.blockHorizotal*5),
         child: GestureDetector(
           onTap: () {
             Navigator.push(
@@ -64,15 +67,51 @@ Widget TitleText(BuildContext context, String title, double sizex, double leftx,
       children: [
         Text(
           title,
-          style: TextStyle(
-              color: blackTextColor,
-              fontWeight: FontWeight.w500,
-              fontFamily: 'poppins',
-              fontSize: sizex),
+          style: h3,
         ),
       ],
     ),
   );
   ;
   return titlex;
+}
+
+// ignore: non_constant_identifier_names
+Widget AppBarContainer(BuildContext context, String title, Widget page,Color color) {
+  SizeConfig().init(context);
+  final Widget appBar = Container(
+    padding: EdgeInsets.only(top:SizeConfig.blockVertical*4,bottom:SizeConfig.blockVertical*2,),
+    color: color,
+    child: Row(
+      children: [
+        Container(
+            margin: EdgeInsets.only(
+              top: SizeConfig.blockHorizotal*3,
+                left: SizeConfig.blockHorizotal*5),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    PageTransition(
+                        type: PageTransitionType.rightToLeft, child: page));
+                /* Write listener code here */
+              },
+              child: IconTheme(
+                data: IconThemeData(color: appBarTextColor),
+                child: Icon(Icons.arrow_back),
+              ),
+            )),
+       Container(
+         margin: EdgeInsets.only(
+             top: SizeConfig.blockHorizotal*3,
+             left: SizeConfig.blockHorizotal*5),
+         child:  Text(
+           title,
+           style: h3,
+         ),
+       )
+      ],
+    ),
+  );
+  return appBar;
 }

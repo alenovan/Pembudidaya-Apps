@@ -3,8 +3,10 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_carousel/classes/event.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:lelenesia_pembudidaya/src/typography.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanDetail.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/profile/ProfileScreen.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
@@ -24,27 +26,29 @@ class DashboardWidget extends StatelessWidget {
   }
 }
 Widget CardKolam(
-    BuildContext context, String title, String sub, int status) {
+    BuildContext context, String title, String sub, String status) {
   var text;
   var color;
-  if(status == 1){
+  if(status == "0"){
+    text = "Belum Aktif";
+    color = Colors.red;
+  }else if(status == "1"){
+    text = "Kosong";
+    color = Colors.redAccent;
+  }else if(status == "2"){
+    text = "Sedang Panen";
+    color = Colors.lightBlueAccent;
+  }else if(status == "3"){
     text = "Siap Panen";
     color = Colors.green;
-  }else if(status == 2){
-    text = "Sedang Proses";
-    color = Colors.lightBlueAccent;
-  }else if(status == 3){
-    text = "Belum Teraktifasi";
-    color = Colors.redAccent;
   }else{
-    text = "Kosong";
+    text = status;
     color = Colors.redAccent;
   }
   final Widget svgIcon = Container(
-
     height: 120,
     child: Card(
-        elevation: 2,
+        elevation: 4,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15.0),
         ),
@@ -68,11 +72,7 @@ Widget CardKolam(
                            margin: EdgeInsets.only(left: 5.0),
                          child: Text(
                            text,
-                           style: TextStyle(
-                               color: color,
-                               fontFamily: 'lato',
-                               letterSpacing: 0.4,
-                               fontSize: 13.0),
+                           style: caption.copyWith(color:color),
                          )
                        )
                       ],
@@ -81,21 +81,13 @@ Widget CardKolam(
                         margin: EdgeInsets.only(top: 5.0,left: 20),
                         child: Text(
                           title,
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontFamily: 'lato',
-                              letterSpacing: 0.4,
-                              fontSize: subTitleLogin),
+                          style: subtitle1,
                         )),
                     Container(
                         margin: EdgeInsets.only(top: 5.0,left: 20),
                         child: Text(
                           sub,
-                          style: TextStyle(
-                              color: greyTextColor,
-                              fontFamily: 'lato',
-                              letterSpacing: 0.4,
-                              fontSize: 12.0),
+                          style: overline,
                         )),
 
                   ],
@@ -146,12 +138,12 @@ Widget Drawers(BuildContext context) {
                         left: SizeConfig.blockHorizotal * 3,
                         bottom: SizeConfig.blockVertical * 5),
                     child: Icon(
-                      FontAwesomeIcons.times,
+                      MaterialIcons.close,
                       size: 30.0,
                     )),
               ),
               ListTile(
-                title: Text('Akun'),
+                title: Text('Akun',style: subtitle1,),
                 onTap: () {
                   Navigator.push(
                       context,
@@ -161,7 +153,7 @@ Widget Drawers(BuildContext context) {
                 },
               ),
               ListTile(
-                title: Text('Tambah Kolam'),
+                title: Text('Tambah Kolam',style: subtitle1),
                 onTap: () {
                   Navigator.pop(context);
                 },

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
+import 'package:lelenesia_pembudidaya/src/typography.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanDetail.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
@@ -23,7 +25,8 @@ class KolamWidget extends StatelessWidget {
 }
 
 Widget CardPenentuanPakan(
-    BuildContext context, String title, String sub, int status) {
+    BuildContext context, String title, String rating, String kilo,int price,String image) {
+  final formatter = new NumberFormat("#,###");
   final Widget svgIcon = Container(
     height: 110,
     child: Card(
@@ -43,7 +46,14 @@ Widget CardPenentuanPakan(
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8.0),
                         child: Image.network(
-                          'https://via.placeholder.com/300',
+                          image_link+image,
+                          fit: BoxFit.cover,
+                          height: 60.0,
+                          errorBuilder: (BuildContext context, Object exception, StackTrace stackTrace) {
+                            return Image.network(
+                               "https://via.placeholder.com/300"
+                            );
+                          },
                         ),
                       ),
                     ),
@@ -56,11 +66,7 @@ Widget CardPenentuanPakan(
                           Container(
                               child: Text(
                             title,
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontFamily: 'poppins',
-                                letterSpacing: 0.4,
-                                fontSize: subTitleLogin),
+                            style: subtitle2,
                           )),
                           Container(
                               margin: EdgeInsets.only(top: 5.0),
@@ -76,12 +82,8 @@ Widget CardPenentuanPakan(
                                       Container(
                                         margin: EdgeInsets.only(left: 5.0),
                                         child: Text(
-                                          "5.0",
-                                          style: TextStyle(
-                                              color: greyTextColor,
-                                              fontFamily: 'lato',
-                                              letterSpacing: 0.4,
-                                              fontSize: 12.0),
+                                          rating,
+                                          style: caption,
                                         ),
                                       )
                                     ],
@@ -96,12 +98,8 @@ Widget CardPenentuanPakan(
                                   Container(
                                     margin: EdgeInsets.only(left: 3.0),
                                     child: Text(
-                                      "20 Km",
-                                      style: TextStyle(
-                                          color: greyTextColor,
-                                          fontFamily: 'lato',
-                                          letterSpacing: 0.4,
-                                          fontSize: 12.0),
+                                      kilo,
+                                      style: caption,
                                     ),
                                   )
                                 ],
@@ -114,12 +112,8 @@ Widget CardPenentuanPakan(
                 Container(
                     alignment: Alignment.centerRight,
                     child: Text(
-                      "50.000/KG",
-                      style: TextStyle(
-                          color: purpleTextColor,
-                          fontFamily: 'poppins',
-                          letterSpacing: 0.4,
-                          fontSize: subTitleLogin),
+                      formatter.format(price)+"/KG",
+                      style: subtitle2.copyWith(color:colorPrimary),
                     )),
               ],
             ))),

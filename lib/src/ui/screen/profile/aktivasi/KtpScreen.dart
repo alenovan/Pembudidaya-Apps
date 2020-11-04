@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lelenesia_pembudidaya/src/bloc/ProfilBloc.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/forgot/ForgotResetView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/forgot/ForgotVerifView.dart';
@@ -14,6 +16,8 @@ import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginWidget.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/profile/ProfileScreen.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/profile/ProfileWidget.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
+import 'package:lelenesia_pembudidaya/src/ui/widget/AcceptanceDialog.dart';
+import 'package:lelenesia_pembudidaya/src/ui/widget/BottomSheetFeedback.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/CustomElevation.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
@@ -31,33 +35,53 @@ class KtpScreen extends StatefulWidget {
 
 class _KtpScreenState extends State<KtpScreen> {
   bool _clickForgot = true;
+  String base64ImageKtp;
+  String base64ImageSelfie;
 
-  void _toggleButtonForgot() {
-    setState(() {
-      _clickForgot = !_clickForgot;
-    });
-    Navigator.push(
-        context,
-        PageTransition(
-            type: PageTransitionType.fade,
-            // duration: Duration(microseconds: 1000),
-            child: PenentuanPanenView()));
+  TextEditingController noKtpController = TextEditingController();
+
+  void _toggleButtonForgot() async {
+    if(base64ImageKtp != null || base64ImageSelfie != null){
+      Navigator.of(context).push(new MaterialPageRoute<Null>(
+          builder: (BuildContext context) {
+            return LoadingShow(context);
+          },
+          fullscreenDialog: true));
+      var status = await bloc.funUpdateProfileKtp(
+          noKtpController.text.toString(),base64ImageKtp,base64ImageSelfie);
+      Navigator.of(context).pop();
+      if(status){
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => AlertSuccess(context, ProfileScreen()),
+        );
+        Timer(const Duration(seconds: 1), () {
+          Navigator.push(context,
+              PageTransition(type: PageTransitionType.fade, child: ProfileScreen()));
+        });
+      }else{
+        BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Pastikan data terisi semua");
+      }
+    }else{
+      BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Pastikan data terisi semua");
+    }
   }
 
+  File _imageKtp;
+  File _imageSelfie;
 
-  File _image;
   _imgFromCamera() async {
     File image;
-    try{
+    try {
       image = await ImagePicker.pickImage(
           source: ImageSource.camera, imageQuality: 50);
     } catch (e) {
       print(e);
     }
 
-
     setState(() {
-      _image = image;
+      base64ImageKtp = image.path;
+      _imageKtp = image;
     });
   }
 
@@ -66,29 +90,58 @@ class _KtpScreenState extends State<KtpScreen> {
         source: ImageSource.gallery, imageQuality: 50);
 
     setState(() {
-      _image = image;
+      base64ImageKtp = image.path;
+      _imageKtp = image;
     });
   }
 
+  _imgFromCameraSelfie() async {
+    File image;
+    try {
+      image = await ImagePicker.pickImage(
+          source: ImageSource.camera, imageQuality: 50);
+    } catch (e) {
+      print(e);
+    }
+
+    setState(() {
+      base64ImageSelfie = image.path;
+      _imageSelfie = image;
+    });
+  }
+
+  _imgFromGallerySelfie() async {
+    File image = await ImagePicker.pickImage(
+        source: ImageSource.gallery, imageQuality: 50);
+
+    setState(() {
+      base64ImageSelfie = image.path;
+      _imageSelfie = image;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle(
+        statusBarIconBrightness: Brightness.dark,
+    ),
+    child:Scaffold(
         backgroundColor: Colors.white,
         resizeToAvoidBottomPadding: false,
-        appBar:
-        AppbarForgot(context, "Aktivasi KTP", ProfileScreen(), Colors.white),
-        body: Stack(
+        body: Column(
           children: [
-          SingleChildScrollView(
-          child: Container(
-              child: Column(
+            AppbarForgot(
+                context, "Aktivasi Akun ", ProfileScreen(), Colors.white),
+            Expanded(child:
+            SingleChildScrollView(
+                physics: new BouncingScrollPhysics(),
+                child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
                     margin: EdgeInsets.only(
                         left: SizeConfig.blockVertical * 5,
-                        top: SizeConfig.blockVertical * 5,
                         right: SizeConfig.blockVertical * 5),
                     child: Text(
                       "No KTP",
@@ -105,8 +158,9 @@ class _KtpScreenState extends State<KtpScreen> {
                         top: SizeConfig.blockVertical * 1,
                         right: SizeConfig.blockVertical * 5),
                     child: TextFormField(
+                      controller: noKtpController,
                       decoration:
-                      EditTextDecorationText(context, "", 20.0, 0, 0, 0),
+                          EditTextDecorationText(context, "", 20.0, 0, 0, 0),
                       keyboardType: TextInputType.number,
                       style: TextStyle(
                           color: blackTextColor,
@@ -115,14 +169,13 @@ class _KtpScreenState extends State<KtpScreen> {
                           fontSize: subTitleLogin),
                     ),
                   ),
-
                   Container(
                     margin: EdgeInsets.only(
                         left: SizeConfig.blockVertical * 5,
                         top: SizeConfig.blockVertical * 2,
                         right: SizeConfig.blockVertical * 5),
                     child: Text(
-                      "Foto Kolam",
+                      "Foto Ktp",
                       style: TextStyle(
                           color: appBarTextColor,
                           fontFamily: 'lato',
@@ -139,10 +192,9 @@ class _KtpScreenState extends State<KtpScreen> {
                       onTap: () {
                         _showPicker(context);
                       },
-                      child: roundedRectBorderWidget(context, _image),
+                      child: roundedRectBorderWidget(context, _imageKtp),
                     ),
                   ),
-
                   Container(
                     margin: EdgeInsets.only(
                         left: SizeConfig.blockVertical * 5,
@@ -164,12 +216,11 @@ class _KtpScreenState extends State<KtpScreen> {
                         right: SizeConfig.blockVertical * 5),
                     child: GestureDetector(
                       onTap: () {
-                        _showPicker(context);
+                        _showPickerSelfie(context);
                       },
-                      child: roundedRectBorderWidget(context, _image),
+                      child: roundedRectBorderWidget(context, _imageSelfie),
                     ),
                   ),
-
                   Container(
                       margin: EdgeInsets.only(bottom: 20.0),
                       child: Column(
@@ -204,7 +255,7 @@ class _KtpScreenState extends State<KtpScreen> {
                                   ),
                                   shape: new RoundedRectangleBorder(
                                     borderRadius:
-                                    new BorderRadius.circular(30.0),
+                                        new BorderRadius.circular(30.0),
                                   ),
                                 )),
                           ),
@@ -237,19 +288,17 @@ class _KtpScreenState extends State<KtpScreen> {
                                   ),
                                   shape: new RoundedRectangleBorder(
                                     borderRadius:
-                                    new BorderRadius.circular(30.0),
+                                        new BorderRadius.circular(30.0),
                                   ),
                                 )),
                           ),
                         ],
                       ))
-
                 ],
               )),
-          )
-
+            )
           ],
-        ));
+        )));
   }
 
   void _showPicker(context) {
@@ -281,6 +330,36 @@ class _KtpScreenState extends State<KtpScreen> {
           );
         });
   }
+
+  void _showPickerSelfie(context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return SafeArea(
+            child: Container(
+              child: new Wrap(
+                children: <Widget>[
+                  new ListTile(
+                      leading: new Icon(Icons.photo_library),
+                      title: new Text('Photo Library'),
+                      onTap: () {
+                        _imgFromGallerySelfie();
+                        Navigator.of(context).pop();
+                      }),
+                  new ListTile(
+                    leading: new Icon(Icons.photo_camera),
+                    title: new Text('Camera'),
+                    onTap: () {
+                      _imgFromCameraSelfie();
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
 }
 
 Widget roundedRectBorderWidget(BuildContext context, File _image) {
@@ -294,38 +373,39 @@ Widget roundedRectBorderWidget(BuildContext context, File _image) {
     child: ClipRRect(
       borderRadius: BorderRadius.all(Radius.circular(12)),
       child: Container(
-        height: 150,
+        height: 200,
         width: MediaQuery.of(context).size.width,
         color: Colors.grey[100],
         child: _image != null
             ? Image.file(
-          _image,
-          fit: BoxFit.fill,
-          height: 100.0,
-        )
+                _image,
+                fit: BoxFit.fitWidth,
+                height: 100.0,
+              )
             : Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              FontAwesomeIcons.upload,
-              color: Colors.grey[400],
-              size: 26.0,
-            ),
-            Container(
-                margin: EdgeInsets.only(top: 10),
-                child: Text(
-                  "Unggah Gambar",
-                  style: TextStyle(
-                      color: Colors.grey[600],
-                      fontWeight: FontWeight.w500,
-                      fontFamily: 'poppins',
-                      letterSpacing: 1.25,
-                      fontSize: 15.0),
-                ))
-          ],
-        ),
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    FontAwesomeIcons.upload,
+                    color: Colors.grey[400],
+                    size: 26.0,
+                  ),
+                  Container(
+                      margin: EdgeInsets.only(top: 10),
+                      child: Text(
+                        "Unggah Gambar",
+                        style: TextStyle(
+                            color: Colors.grey[600],
+                            fontWeight: FontWeight.w500,
+                            fontFamily: 'poppins',
+                            letterSpacing: 1.25,
+                            fontSize: 15.0),
+                      ))
+                ],
+              ),
       ),
     ),
   );
 }
+
 

@@ -1,11 +1,17 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_session/flutter_session.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:lelenesia_pembudidaya/src/bloc/ProfilBloc.dart';
+import 'package:lelenesia_pembudidaya/src/typography.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardView.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/forgot/ForgotWidget.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/kolam/KolamWidget.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/kolam/TambahKolam.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanMain.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/profile/ProfileWidget.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/profile/aktivasi/BiodataScreen.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
@@ -24,12 +30,41 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  String _noHp = "-";
+  String _nama = "-";
+  String _ktp_number = " ";
+  String _ktp_photo = " ";
+  var loop = 0;
+  var blox;
+  final GlobalKey<ScaffoldState> _scaffoldKey =
+  new GlobalKey<ScaffoldState>();
+  void update() async {
+    blox = await bloc.getProfile();
+    setState(() {
+      _noHp = blox['data']['phone_number'].toString() == "null"
+          ? " "
+          : blox['data']['phone_number'].toString();
+      _nama = blox['data']['name'].toString() == "null"
+          ? " "
+          : blox['data']['name'].toString();
+      _ktp_number = blox['data']['ktp_number'].toString() == "null"
+          ? " "
+          : blox['data']['ktp_number'].toString();
+      _ktp_photo = blox['data']['ktp_photo'].toString() == "null"
+          ? " "
+          : blox['data']['ktp_photo'].toString();
+    });
+  }
+
+  @override
+  void initState() {
+    update();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    final GlobalKey<ScaffoldState> _scaffoldKey =
-        new GlobalKey<ScaffoldState>();
-
     GestureDetector gs = GestureDetector(
         onTap: () {
           // _togglevisibility();
@@ -61,36 +96,52 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: Stack(
                       children: [
                         Container(
-                            child: Align(
-                          alignment: Alignment.topLeft,
-                          child: Container(
-                              margin: EdgeInsets.only(
-                                  top: SizeConfig.blockHorizotal * 5,
-                                  left: SizeConfig.blockVertical * 3),
-                              child: IconButton(
-                                onPressed: () =>
-                                    _scaffoldKey.currentState.openDrawer(),
-                                tooltip: MaterialLocalizations.of(context)
-                                    .openAppDrawerTooltip,
-                                icon: Icon(FontAwesomeIcons.arrowLeft,
-                                    size: 20.0),
-                              )),
-                        )),
-                        Container(
-                            margin: EdgeInsets.only(
-                                top: SizeConfig.blockHorizotal * 10,
-                                right: SizeConfig.blockVertical * 5),
-                            child: Align(
-                              alignment: Alignment.topRight,
-                              child: Text(
-                                "EDIT",
-                                style: TextStyle(
-                                    color: colorPrimary,
-                                    fontFamily: 'lato',
-                                    letterSpacing: 0.4,
-                                    fontSize: subTitleLogin),
-                              ),
-                            )),
+                    margin: EdgeInsets.only(
+                                top: SizeConfig.blockHorizotal * 3,
+                      bottom: SizeConfig.blockHorizotal * 3,),
+                          child:  AppBarContainer(
+                              context, "", DashboardView(), Colors.white),
+                        ),
+                      //   Container(
+                      //       child: Align(
+                      //     alignment: Alignment.topLeft,
+                      //     child: Container(
+                      //         margin: EdgeInsets.only(
+                      //             top: SizeConfig.blockHorizotal * 5,
+                      //             left: SizeConfig.blockVertical * 3),
+                      //         child: IconButton(
+                      //           onPressed: () =>
+                      //           {
+                      //             Navigator.push(
+                      //                 context,
+                      //                 PageTransition(
+                      //                     type:
+                      //                     PageTransitionType.fade,
+                      //                     child: DashboardView()))
+                      //           },
+                      //           tooltip: MaterialLocalizations.of(context)
+                      //               .openAppDrawerTooltip,
+                      //           icon: Icon(FontAwesomeIcons.arrowLeft,
+                      //               size: 20.0),
+                      //         )),
+                      //   )),
+                      //   Container(
+                      //       margin: EdgeInsets.only(
+                      //           top: SizeConfig.blockHorizotal * 10,
+                      //           right: SizeConfig.blockVertical * 5),
+                      //       child: Align(
+                      //         alignment: Alignment.topRight,
+                      //         child: Container(
+                      //           child: Text(
+                      //             "EDIT",
+                      //             style: TextStyle(
+                      //                 color: colorPrimary,
+                      //                 fontFamily: 'lato',
+                      //                 letterSpacing: 0.4,
+                      //                 fontSize: subTitleLogin),
+                      //           ),
+                      //         ),
+                      //       )),
                         Container(
                             margin: EdgeInsets.only(
                                 top: SizeConfig.blockVertical * 10),
@@ -111,20 +162,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       margin: EdgeInsets.only(
                                           top: SizeConfig.blockVertical * 2),
                                       child: Text(
-                                        "Alenovan Wiradhika Putra",
-                                        style: TextStyle(
-                                            fontFamily: 'lato',
-                                            letterSpacing: 0.15,
-                                            fontSize: 20.0),
+                                        _nama,
+                                        style: subtitle1,
                                       )),
                                   Container(
                                       child: Text(
-                                    "081334367717",
-                                    style: TextStyle(
-                                        color: colorPrimary,
-                                        fontFamily: 'lato',
-                                        letterSpacing: 0.15,
-                                        fontSize: 16.0),
+                                    _noHp,
+                                    style:
+                                        caption.copyWith(color: colorPrimary),
                                   ))
                                 ],
                               ),
@@ -136,60 +181,78 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     color: colorGreyBackground,
                     height: 40.0,
                   ),
-                  Container(
-                      child: Container(
-                          height: 50.0,
-                          padding: EdgeInsets.only(left: 20.0, right: 20.0),
-                          color: Colors.white,
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                  Visibility(
+                    visible: _ktp_photo == " "?true:false,
+                      child: Column(
+                    children: [
+                      Container(
+                          child: Container(
+                              height: 50.0,
+                              padding: EdgeInsets.only(left: 20.0, right: 20.0),
+                              color: Colors.white,
+                              child: Column(
                                 children: [
-                                  Container(
-                                      child: Text(
-                                    "Aktivasi Akun",
-                                    style: TextStyle(
-                                        color: appBarTextColor,
-                                        fontFamily: 'lato',
-                                        letterSpacing: 0.4,
-                                        fontSize: 18.0),
-                                  )),
-                                  Row(
-                                    children: [
-                                      Container(
-                                          alignment: Alignment.centerRight,
-                                          child: Text(
-                                            "Akun Belum Teraktivasi",
-                                            style: TextStyle(
-                                                color: redTextColor,
-                                                fontFamily: 'lato',
-                                                letterSpacing: 0.4,
-                                                fontSize: 14.0),
+                                  InkWell(
+                                      onTap: () => {
+                                            Navigator.push(
+                                                context,
+                                                PageTransition(
+                                                    type:
+                                                        PageTransitionType.fade,
+                                                    child: BiodataScreen()))
+                                          },
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Container(
+                                              child: Text(
+                                            "Aktivasi Akun",
+                                            style: subtitle1,
                                           )),
-                                      IconButton(
-                                        onPressed: () => _scaffoldKey
-                                            .currentState
-                                            .openDrawer(),
-                                        tooltip:
-                                            MaterialLocalizations.of(context)
-                                                .openAppDrawerTooltip,
-                                        icon: Icon(
-                                            FontAwesomeIcons.chevronRight,
-                                            size: 17.0,
-                                            color: colorPrimary),
-                                      )
-                                    ],
-                                  )
+                                          Row(
+                                            children: [
+                                              Container(
+                                                  alignment:
+                                                      Alignment.centerRight,
+                                                  child: Text(
+                                                    "Akun Belum Teraktivasi",
+                                                    style: overline.copyWith(
+                                                        color: Colors.red),
+                                                  )),
+                                              IconButton(
+                                                onPressed: () => {
+                                                  Navigator.push(
+                                                      context,
+                                                      PageTransition(
+                                                          type:
+                                                              PageTransitionType
+                                                                  .fade,
+                                                          child:
+                                                              BiodataScreen()))
+                                                },
+                                                tooltip:
+                                                    MaterialLocalizations.of(
+                                                            context)
+                                                        .openAppDrawerTooltip,
+                                                icon: Icon(
+                                                    FontAwesomeIcons
+                                                        .chevronRight,
+                                                    size: 17.0,
+                                                    color: colorPrimary),
+                                              )
+                                            ],
+                                          )
+                                        ],
+                                      )),
                                 ],
-                              ),
-                            ],
-                          ))),
-                  Container(
-                    color: colorGreyBackground,
-                    height: 40.0,
-                  ),
+                              ))),
+                      Container(
+                        color: colorGreyBackground,
+                        height: 40.0,
+                      ),
+                    ],
+                  )),
                   ProfileMenu(context, "Ketentuan Layanan", BiodataScreen()),
                   ProfileMenu(context, "Kebijakan Privasi", BiodataScreen()),
                   ProfileMenu(context, "Pusat Bantuan", BiodataScreen()),
@@ -199,24 +262,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             Align(
               alignment: FractionalOffset.bottomCenter,
-              child:
-                  Container(
-                    color: Colors.white,
-                    height: 45.0,
-                    width: MediaQuery.of(context).size.width,
-                    child: Align(
-                      alignment: Alignment.center, // Align however you like (i.e .centerRight, centerLeft)
-                      child: Text(
-                        "KELUAR",
-                        style: TextStyle(
-                            color: redTextColor,
-                            fontFamily: 'lato',
-                            letterSpacing: 0.4,
-                            fontSize: 16.0),
-                      ),
+              child: GestureDetector(
+                onTap: () {
+                  FlutterSession().set("token", " ");
+                  Navigator.push(
+                      context,
+                      PageTransition(
+                          type: PageTransitionType.fade, child: LoginView()));
+                },
+                child: Container(
+                  color: Colors.white,
+                  height: 45.0,
+                  width: MediaQuery.of(context).size.width,
+                  child: Align(
+                    alignment: Alignment.center,
+                    // Align however you like (i.e .centerRight, centerLeft)
+                    child: Text(
+                      "KELUAR",
+                      style: TextStyle(
+                          color: redTextColor,
+                          fontFamily: 'lato',
+                          letterSpacing: 0.4,
+                          fontSize: 16.0),
                     ),
-
-
+                  ),
+                ),
               ),
             )
           ],

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:lelenesia_pembudidaya/src/typography.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanDetail.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
@@ -49,48 +50,45 @@ Widget AppbarProfile(BuildContext context, String title, Widget page) {
 // ignore: non_constant_identifier_names
 Widget AppbarForgot(BuildContext context, String title, Widget page,Color color) {
   SizeConfig().init(context);
-  final Widget appBar = AppBar(
-    backgroundColor: color,
-
-    elevation: 0.0,
-    title: Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: TextStyle(
-                  color: appBarTextColor,
-                  fontWeight: FontWeight.w500,
-                  fontFamily: 'poppins',
-                  letterSpacing: 0.15,
-                  fontSize: textAppBar),
-            ),
-            Text(
-              "*harap isi sesuai dengan KTP",
-              style: TextStyle(
-                  color: redTextColor,
-                  fontFamily: 'poppins',
-                  letterSpacing: 0.15,
-                  fontSize: 13.0),
-            )
-          ],
-        )),
-    leading: Container(
-        margin: EdgeInsets.only(left: 20.0),
-        child: GestureDetector(
-          onTap: () {
-            Navigator.push(
-                context,
-                PageTransition(
-                    type: PageTransitionType.rightToLeft, child: page));
-            /* Write listener code here */
-          },
-          child: IconTheme(
-            data: IconThemeData(color: appBarTextColor),
-            child: Icon(Icons.arrow_back),
+  final Widget appBar = Container(
+    margin: EdgeInsets.only(top:SizeConfig.blockVertical*8,bottom:SizeConfig.blockVertical*4,),
+    child: Row(
+      children: [
+        Container(
+            margin: EdgeInsets.only(
+                left: SizeConfig.blockHorizotal*5),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    PageTransition(
+                        type: PageTransitionType.rightToLeft, child: page));
+                /* Write listener code here */
+              },
+              child: IconTheme(
+                data: IconThemeData(color: appBarTextColor),
+                child: Icon(Icons.arrow_back),
+              ),
+            )),
+        Container(
+          margin: EdgeInsets.only(
+              left: SizeConfig.blockHorizotal*4),
+          child:  Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: h3,
+              ),
+              Text(
+                "*Harap isi sesuai Dengan Ktp",
+                style: caption.copyWith(color:Colors.red),
+              )
+            ],
           ),
-        )),
+        )
+      ],
+    ),
   );
   return appBar;
 }
@@ -115,11 +113,7 @@ Widget ProfileMenu(BuildContext context, String title, Widget page) {
                 Container(
                     child: Text(
                   title,
-                  style: TextStyle(
-                      color: appBarTextColor,
-                      fontFamily: 'lato',
-                      letterSpacing: 0.4,
-                      fontSize: 18.0),
+                  style: subtitle1,
                 )),
                 Row(
                   children: [

@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaText.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardView.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/forgot/ForgotWidget.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanHome.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/laporanharian/PageOne.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanMain.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
+import 'package:lelenesia_pembudidaya/src/ui/widget/BottomSheetFeedback.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/CustomElevation.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanWidget.dart';
 import 'package:intl/intl.dart' show DateFormat;
@@ -17,7 +21,11 @@ import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginWidget.dart';
 import 'package:page_transition/page_transition.dart';
 
 class PageThree extends StatefulWidget {
-  PageThree({Key key}) : super(key: key);
+  final String idKolam;
+  final int tgl;
+  final int bulan;
+  final int tahun;
+  PageThree({Key key, this.idKolam, this.tgl, this.bulan, this.tahun}) : super(key: key);
 
   @override
   _PageThreeState createState() => _PageThreeState();
@@ -30,16 +38,26 @@ class _PageThreeState extends State<PageThree> {
       _showDetail = !_showDetail;
     });
   }
+  TextEditingController srController = TextEditingController();
+  @override
+  void initState() {
+    print(widget.tgl);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Scaffold(
-          backgroundColor: backgroundGreyColor,
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        statusBarIconBrightness: Brightness.dark,
+      ),
+      child:Scaffold(
           resizeToAvoidBottomPadding: false,
-          appBar: AppbarForgot(context, "Laporan", LoginView()),
-          body: Align(
-            child: Container(
+          backgroundColor: backgroundGreyColor,
+          body:  Column(
+              children: [
+              AppBarContainer(context, "Laporan", DashboardView(),Colors.white),
+          Expanded(child: Container(
                 margin: EdgeInsets.only(
                     left: SizeConfig.blockVertical * 3,
                     right: SizeConfig.blockVertical * 3,
@@ -73,9 +91,10 @@ class _PageThreeState extends State<PageThree> {
                                 Container(
                                   margin: EdgeInsets.only(top: 10.0),
                                   child: TextFormField(
+                                    controller: srController,
                                     decoration: EditTextDecorationText(
                                         context, "", 20.0, 0, 0, 0),
-                                    keyboardType: TextInputType.text,
+                                    keyboardType: TextInputType.number,
                                     style: TextStyle(
                                         color: blackTextColor,
                                         fontFamily: 'lato',
@@ -131,16 +150,26 @@ class _PageThreeState extends State<PageThree> {
                                                   colorPrimary, //Replace with actual colors
                                               color: colorPrimary,
                                               onPressed: () => {
-                                                Navigator.push(
-                                                    context,
-                                                    PageTransition(
-                                                        type: PageTransitionType
-                                                            .fade,
-                                                        // duration: Duration(microseconds: 1000),
-                                                        child: LaporanMain(
-                                                          page: 2,
-                                                          laporan_page: "empat",
-                                                        )))
+
+                                                // if(srController.text.trim() == ""){
+                                                //   BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Pastikan data terisi semua")
+                                                // }else{
+                                                  Navigator.push(
+                                                      context,
+                                                      PageTransition(
+                                                          type: PageTransitionType
+                                                              .fade,
+                                                          // duration: Duration(microseconds: 1000),
+                                                          child: LaporanMain(
+                                                            idKolam: widget.idKolam.toString(),
+                                                            tgl: widget.tgl,
+                                                            bulan: widget.bulan,
+                                                            tahun: widget.tahun,
+                                                            page: 2,
+                                                            laporan_page: "empat",
+                                                          )))
+                                                // }
+
                                               },
                                               child: Text(
                                                 "Next",
@@ -162,8 +191,8 @@ class _PageThreeState extends State<PageThree> {
                               ],
                             )))
                   ],
-                )),
-          )),
-    );
+                )))
+              ],
+          )),);
   }
 }

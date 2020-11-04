@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
+import 'package:lelenesia_pembudidaya/src/typography.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardView.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/forgot/ForgotWidget.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanDetail.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanHome.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/laporanharian/PageOne.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanMain.dart';
@@ -11,29 +16,57 @@ import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanWidget.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginWidget.dart';
+import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
+import 'package:lelenesia_pembudidaya/src/ui/widget/BottomSheetFeedback.dart';
 import 'package:page_transition/page_transition.dart';
 
 class Laporan extends StatefulWidget {
-  Laporan({Key key}) : super(key: key);
+  final String idKolam;
+
+  Laporan({Key key, this.idKolam}) : super(key: key);
 
   @override
   _LaporanState createState() => _LaporanState();
 }
 
 class _LaporanState extends State<Laporan> {
+  var now = new DateTime.now();
   bool _showDetail = true;
+  int activeMonth = 0;
+  var bulan = [
+    "",
+    'Januari',
+    'Februari',
+    'Maret',
+    'April',
+    'Mei',
+    'Juni',
+    "Juli",
+    "Agustus",
+    "September",
+    "Oktober",
+    "November",
+    "Desember"
+  ];
+
   void _toggleDetail() {
     setState(() {
       _showDetail = !_showDetail;
     });
   }
 
+  void setMontActive(dynamic day) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        activeMonth = day.month;
+      });
+    });
+  }
+
+  DateTime _currentDate = DateTime.now();
+
   @override
   Widget build(BuildContext context) {
-    DateTime _currentDate = DateTime(2020, 9, 3);
-    DateTime _currentDate2 = DateTime(2019, 2, 3);
-    String _currentMonth = DateFormat.yMMM().format(DateTime(2019, 2, 3));
-    DateTime _targetDateTime = DateTime(2019, 2, 3);
     Widget _eventIcon = new Container(
       decoration: new BoxDecoration(
           color: Colors.white,
@@ -94,36 +127,35 @@ class _LaporanState extends State<Laporan> {
     // ]);
     //   super.initState();
     // }
-    return Container(
-      child: Scaffold(
-          backgroundColor: backgroundGreyColor,
+
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        statusBarIconBrightness: Brightness.dark,
+      ),
+      child:Scaffold(
           resizeToAvoidBottomPadding: false,
-          appBar: AppbarForgot(context, "Monitoring", LoginView()),
+          backgroundColor: backgroundGreyColor,
           body: Container(
-              margin: EdgeInsets.only(top: 20.0),
               color: backgroundGreyColor,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
+                  AppBarContainer(context, "Monitor", DashboardView(),Colors.white),
                   Container(
-                    margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "September 2020",
-                          style: TextStyle(
-                              color: purpleTextColor,
-                              fontFamily: 'lato',
-                              letterSpacing: 0.25,
-                              fontSize: subTitleLogin),
-                        ),
-                        InkWell(
-                            onTap: () {
-                              _toggleDetail();
-                              print(_showDetail);
-                            },
-                            child: Container(
+                    margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 20.0),
+                    child: InkWell(
+                      onTap: () {
+                        _toggleDetail();
+                        print(_showDetail);
+                      },
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "${bulan[int.parse(activeMonth.toString())]} ${now.year}",
+                              style: body1.copyWith(color: colorPrimary),
+                            ),
+                            Container(
                                 padding: EdgeInsets.only(left: 10.0),
                                 child: Icon(
                                   _showDetail
@@ -131,14 +163,14 @@ class _LaporanState extends State<Laporan> {
                                       : FontAwesomeIcons.chevronDown,
                                   color: purpleTextColor,
                                   size: 14.0,
-                                ))),
-                      ],
+                                )),
+                          ]),
                     ),
                   ),
                   Container(
                       color: backgroundGreyColor,
                       margin:
-                          EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
+                          EdgeInsets.only(left: 20.0, right: 20.0, top: 13.0),
                       child: Column(
                         children: [
                           Visibility(
@@ -151,8 +183,114 @@ class _LaporanState extends State<Laporan> {
                                         borderRadius:
                                             BorderRadius.circular(15.0),
                                       ),
-                                      child: Calendar(_markedDateMap,
-                                          _currentDate, context))
+                                      child: Container(
+                                        margin: EdgeInsets.only(
+                                            left: 16.0,
+                                            right: 16.0,
+                                            bottom: 16.0),
+                                        child: Wrap(
+                                          children: [
+                                            CalendarCarousel<Event>(
+                                              onDayPressed: (DateTime date,
+                                                  List<Event> events) {
+                                                if (date.day == now.day &&
+                                                    date.month == now.month &&
+                                                    date.year == now.year) {
+                                                  Navigator.push(
+                                                      context,
+                                                      PageTransition(
+                                                          type:
+                                                              PageTransitionType
+                                                                  .fade,
+                                                          // duration: Duration(microseconds: 1000),
+                                                          child: LaporanMain(
+                                                            tgl: date.day,
+                                                            bulan: date.month,
+                                                            tahun: date.year,
+                                                            page: 2,
+                                                            laporan_page:
+                                                                "satu",
+                                                          )));
+                                                } else {
+                                                  BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Laporan hanya bisa dilakukan pada tanggal hari ini");
+                                                }
+                                              },
+                                              weekendTextStyle: TextStyle(
+                                                color: Colors.black,
+                                              ),
+                                              iconColor: Colors.black,
+                                              headerTextStyle: TextStyle(
+                                                  color: purpleTextColor,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontFamily: 'poppins',
+                                                  letterSpacing: 0.14,
+                                                  fontSize: 18.02),
+                                              thisMonthDayBorderColor:
+                                                  Colors.transparent,
+                                              customDayBuilder: (
+                                                bool isSelectable,
+                                                int index,
+                                                bool isSelectedDay,
+                                                bool isToday,
+                                                bool isPrevMonthDay,
+                                                TextStyle textStyle,
+                                                bool isNextMonthDay,
+                                                bool isThisMonthDay,
+                                                DateTime day,
+                                              ) {
+                                                setMontActive(day);
+                                                if (day.day > now.day) {
+
+                                                  return Center(
+                                                      child: Text(
+                                                          day.day.toString(),
+                                                          style: body2.copyWith(
+                                                              color: Colors
+                                                                  .grey)));
+                                                } else if (day.day == now.day &&
+                                                    day.month == now.month &&
+                                                    day.year == now.year) {
+                                                  return Center(
+                                                      child: Text(
+                                                          day.day.toString(),
+                                                          style: body2.copyWith(
+                                                              color: Colors
+                                                                  .white)));
+                                                } else {
+                                                  return Center(
+                                                      child: Text(
+                                                          day.day.toString(),
+                                                          style: body2));
+                                                }
+                                              },
+                                              headerText: bulan[int.parse(
+                                                  activeMonth.toString())],
+                                              todayButtonColor: purpleTextColor,
+                                              todayBorderColor: purpleTextColor,
+                                              todayTextStyle: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontFamily: 'poppins',
+                                                  letterSpacing: 0.14,
+                                                  fontSize: 18.02),
+                                              weekdayTextStyle: TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontFamily: 'lato',
+                                                  letterSpacing: 0.36,
+                                                  fontSize: 11.81),
+                                              markedDatesMap: _markedDateMap,
+                                              height:
+                                                  SizeConfig.blockHorizotal *
+                                                      90,
+                                              // selectedDateTime: DateTime(2020, 10, ),
+                                              daysHaveCircularBorder: false,
+
+                                              /// null for not rendering any border, true for circular border, false for rectangular border
+                                            )
+                                          ],
+                                        ),
+                                      ))
                                 ],
                               )),
                           Visibility(
