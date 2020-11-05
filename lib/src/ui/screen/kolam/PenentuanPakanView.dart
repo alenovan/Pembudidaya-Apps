@@ -179,30 +179,15 @@ class _PenentuanPakanViewState extends State<PenentuanPakanView> {
                         left: SizeConfig.blockVertical * 2,
                         right: SizeConfig.blockVertical * 2),
                   child: Container(
-                    child:ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      itemCount: items.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return GestureDetector(
-                            onTap: (){
-                              Navigator.push(
-                                  context,
-                                  PageTransition(
-                                      type: PageTransitionType.fade,
-                                      child: DetailPenentuanPakan(
-                                        idKolam: widget.idKolam,
-                                            id_pakan: items[index].id,
-                                            name: items[index].name,
-                                            price: items[index].price,
-                                            desc: items[index].description,
-                                            image_url: items[index].photo,
-                                      )));
-                            },
-                            child:Container(
-                              child: CardPenentuanPakan(context,items[index].name,"5.0","20 Km",items[index].price,items[index].photo),
-
-                            )
-                        );
+                    child: FutureBuilder(
+                      future: bloc.fetchAllPakan(),
+                      builder: (context, AsyncSnapshot<dynamic> snapshot) {
+                        if (snapshot.hasData) {
+                          return buildList(snapshot);
+                        } else if (snapshot.hasError) {
+                          return Text(snapshot.error.toString());
+                        }
+                        return Center(child: CircularProgressIndicator());
                       },
                     )
                   )),
@@ -214,6 +199,39 @@ class _PenentuanPakanViewState extends State<PenentuanPakanView> {
   }
 
 
+  Widget buildList(AsyncSnapshot<dynamic> snapshot) {
+    return ListView.builder(
+      scrollDirection: Axis.vertical,
+      itemCount: items.length,
+      itemBuilder: (BuildContext context, int index) {
+        return GestureDetector(
+            onTap: (){
+              Navigator.push(
+                  context,
+                  PageTransition(
+                      type: PageTransitionType.fade,
+                      child: DetailPenentuanPakan(
+                        idKolam: widget.idKolam,
+                        id_pakan: items[index].id,
+                        name: items[index].name,
+                        stok: items[index].stock,
+                        size: items[index].size,
+                        type: items[index].type,
+                        price: items[index].price,
+                        desc: items[index].description,
+                        image_url: items[index].photo,
+                      )));
+            },
+            child:Container(
+              child: CardPenentuanPakan(context,items[index].name,"5.0","0.5 Km",items[index].price,items[index].photo),
+
+            )
+        );
+      },
+    );
+  }
+
+
+
+
 }
-
-

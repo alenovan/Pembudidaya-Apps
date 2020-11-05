@@ -251,7 +251,7 @@ class _DashboardViewState extends State<DashboardView> {
                     context,
                     PageTransition(
                         type: PageTransitionType.fade,
-                        child: PenentuanPanenView(idKolam: items[index].id.toString(),)));
+                        child: PenentuanPakanView(idKolam: items[index].id.toString(),)));
 
               } else if(items[index].status.toString() == "1") {
                 Navigator.push(

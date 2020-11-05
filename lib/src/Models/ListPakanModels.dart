@@ -12,7 +12,10 @@ class ListPakanModels {
   ListPakanModels({
     this.id,
     this.name,
+    this.type,
+    this.size,
     this.price,
+    this.stock,
     this.description,
     this.photo,
     this.manufacturer,
@@ -20,7 +23,10 @@ class ListPakanModels {
 
   int id;
   String name;
+  String type;
+  String size;
   int price;
+  int stock;
   String description;
   String photo;
   Manufacturer manufacturer;
@@ -28,7 +34,10 @@ class ListPakanModels {
   factory ListPakanModels.fromJson(Map<String, dynamic> json) => ListPakanModels(
     id: json["id"],
     name: json["name"],
+    type: json["type"],
+    size: json["size"],
     price: json["price"],
+    stock: json["stock"],
     description: json["description"],
     photo: json["photo"],
     manufacturer: Manufacturer.fromJson(json["manufacturer"]),
@@ -37,7 +46,10 @@ class ListPakanModels {
   Map<String, dynamic> toJson() => {
     "id": id,
     "name": name,
+    "type": type,
+    "size": size,
     "price": price,
+    "stock": stock,
     "description": description,
     "photo": photo,
     "manufacturer": manufacturer.toJson(),

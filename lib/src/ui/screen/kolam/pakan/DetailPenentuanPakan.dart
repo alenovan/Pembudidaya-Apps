@@ -22,14 +22,14 @@ import 'package:page_transition/page_transition.dart';
 class DetailPenentuanPakan extends StatefulWidget {
   final String name;
   final int price;
-  final String stok;
-  final String umur;
-  final String jenis;
+  final int stok;
+  final String size; // ukuran
+  final String type; // type
   final String desc;
   final String image_url;
   final String idKolam;
   final int id_pakan;
-  DetailPenentuanPakan({Key key, this.name, this.price, this.stok, this.umur, this.jenis, this.desc, this.image_url, this.idKolam, this.id_pakan}) : super(key: key);
+  DetailPenentuanPakan({Key key, this.name, this.price, this.stok,  this.desc, this.image_url, this.idKolam, this.id_pakan, this.size, this.type}) : super(key: key);
 
   @override
   _DetailPenentuanPakanState createState() => _DetailPenentuanPakanState();
@@ -48,7 +48,11 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
         PageTransition(
             type: PageTransitionType.fade,
             // duration: Duration(microseconds: 1000),
-            child: CheckoutView()));
+            child: CheckoutView(
+              name_pakan: widget.name,
+              price: widget.price,
+              url_pakan: widget.image_url,
+            )));
   }
 
   @override
@@ -172,7 +176,7 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
                                                     fontSize: 14.0),
                                               ),
                                               TextSpan(
-                                                text: "/Kg",
+                                                text: " / Kg",
                                                 style: TextStyle(
                                                     color: Colors.black,
                                                     fontFamily: 'lato',
@@ -195,7 +199,7 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
                                                         fontSize: 13.0),
                                                   ),
                                                   TextSpan(
-                                                    text: " 830 ",
+                                                    text: " ${widget.stok} ",
                                                     style: TextStyle(
                                                         color: Colors.black,
                                                         fontFamily: 'lato',
@@ -218,7 +222,7 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
                                                 textAlign: TextAlign.left,
                                                 text: TextSpan(children: <TextSpan>[
                                                   TextSpan(
-                                                    text: "Umur : ",
+                                                    text: "Ukuran : ",
                                                     style: TextStyle(
                                                         color: Colors.black,
                                                         fontFamily: 'lato',
@@ -226,7 +230,7 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
                                                         fontSize: 13.0),
                                                   ),
                                                   TextSpan(
-                                                    text: " 20hr - 40hr ",
+                                                    text: " ${widget.size} ",
                                                     style: TextStyle(
                                                         color: Colors.black,
                                                         fontFamily: 'lato',
@@ -250,7 +254,7 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
                                                         fontSize: 13.0),
                                                   ),
                                                   TextSpan(
-                                                    text: "Pelet Apung",
+                                                    text: "${widget.type}",
                                                     style: TextStyle(
                                                         color: Colors.black,
                                                         fontFamily: 'lato',
@@ -310,12 +314,7 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
                                     //Replace with actual colors
                                     color: colorPrimary,
                                     onPressed: () => {
-                                      Navigator.push(
-                                          context,
-                                          PageTransition(
-                                              type: PageTransitionType.fade,
-                                              // duration: Duration(microseconds: 1000),
-                                              child: CheckoutView()))
+                                      _toggleButtonForgot()
                                     },
                                     child: Text(
                                       "Pakai Pakan ini",
