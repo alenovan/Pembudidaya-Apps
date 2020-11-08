@@ -67,21 +67,9 @@ class DbHelper {
 
   Future select(int id) async {
     Database db = await this.database;
-    var mapList = await db.rawQuery('SELECT * FROM tb_penentuan_panen where pond_id = $id');
+    var mapList = await db.rawQuery('SELECT * FROM tb_penentuan_panen where pond_id = $id order by pond_id desc limit 1');
     var decode = json.decode(json.encode(mapList))[0];
-    // var data = SqliteDataPenentuanPanen(
-    //     decode["pond_id"],
-    //     decode["sow_date"],
-    //     decode["seed_amount"],
-    //     decode["seed_weight"],
-    //     decode["seed_price"],
-    //     decode["survival_rate"],
-    //     decode["feed_conversion_ratio"],
-    //     decode["feed_id"],
-    //     decode["target_fish_count"],
-    //     decode["target_price"],
-    //     decode["status"]
-    // );
+    print(decode);
     return decode;
   }
 

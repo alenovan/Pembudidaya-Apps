@@ -166,7 +166,7 @@ class _PenentuanPakanViewState extends State<PenentuanPakanView> {
                           controller: _searchBoxController,
                           decoration: EditText(
                               context, "Cari Pabrik Pakan", 20.0, 0, 0, 0,gs),
-                          keyboardType: TextInputType.number,
+                          keyboardType: TextInputType.text,
                           style: body2,
                         ),
                       ),
@@ -206,6 +206,7 @@ class _PenentuanPakanViewState extends State<PenentuanPakanView> {
       itemBuilder: (BuildContext context, int index) {
         return GestureDetector(
             onTap: (){
+
               Navigator.push(
                   context,
                   PageTransition(

@@ -11,6 +11,7 @@ import 'package:lelenesia_pembudidaya/src/typography.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/forgot/ForgotWidget.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanHome.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanMain.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/home/LaporanHomeWidget.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/laporanharian/PageOne.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/lelang/LelangWidget.dart';
@@ -51,9 +52,26 @@ class _DetailLelangViewState extends State<DetailLelangView> {
       child: Scaffold(
           resizeToAvoidBottomPadding: false,
           backgroundColor: backgroundGreyColor,
+          appBar: AppBar(
+            elevation: 0,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back, color: Colors.black),
+              onPressed: () => {
+                Navigator.pop(context, true)
+              },
+            ),
+            actions: <Widget>[
+
+            ],
+            backgroundColor: Colors.white,
+            brightness: Brightness.light,
+            title: Text(
+              "Detail Lelang",
+              style: h3,
+            ),
+          ),
           body: Column(
             children: [
-              AppBarContainer(context, "Detail Lelang", DashboardView(), Colors.white),
               Container(
                   padding: EdgeInsets.only(
                       left: SizeConfig.blockVertical * 3,

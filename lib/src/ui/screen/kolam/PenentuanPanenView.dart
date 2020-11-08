@@ -72,7 +72,7 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
       _tagetJumlah = "-",
       _targetHarga = "-";
 
-  void updateSqlite() {
+  void updateSqlite() async{
     var data = SqliteDataPenentuanPanen(
         int.parse(widget.idKolam),
         tglTebarController.text.toString(),
@@ -85,56 +85,9 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
         int.parse(targetJumlahController.text.toString()),
         int.parse(targetHargaController.text.toString()),
         0);
-    _dbHelper.update(data);
-  }
-
-  void _buttonPenentuan() async {
-    Navigator.of(context).push(new MaterialPageRoute<Null>(
-        builder: (BuildContext context) {
-          return LoadingShow(context);
-        },
-        fullscreenDialog: true));
-    var data = await bloc.funInsertPenentuanPakan(
-        widget.idKolam.toString(),
-        tglTebarController.text.toString(),
-        jumlahBibitController.text.toString(),
-        gramPerEkorController.text.toString(),
-        hargaBibitController.text.toString(),
-        survivalRateController.text.toString(),
-        feedConvController.text.toString(),
-        "15000",
-        targetJumlahController.text.toString(),
-        targetHargaController.text.toString());
-    var status = data['status'];
-    setState(() {
-      if (status == 3) {
-        _tebarBibit = data['data']['sow_date'].toString() == "-"
-            ? " "
-            : data['data']['sow_date'].toString();
-        _hargaBibit = data['data']['seed_price'].toString() == "-"
-            ? " "
-            : data['data']['seed_price'].toString();
-        _jumlahBibit = data['data']['seed_amount'].toString() == "-"
-            ? " "
-            : data['data']['seed_amount'].toString();
-        _gramPerEkor = data['data']['seed_weight'].toString() == "-"
-            ? " "
-            : data['data']['seed_weight'].toString();
-        _survivalRate = data['data']['survival_rate'].toString() == "-"
-            ? " "
-            : data['data']['survival_rate'].toString();
-        _fcr = data['data']['feed_conversion_ratio'].toString() == "-"
-            ? " "
-            : data['data']['feed_conversion_ratio'].toString();
-        _tagetJumlah = data['data']['target_amount'].toString() == "-"
-            ? " "
-            : data['data']['target_amount'].toString();
-        _targetHarga = data['data']['target_price'].toString() == "-"
-            ? " "
-            : data['data']['target_price'].toString();
-      }
-    });
-    if (status == 1) {
+    var update = await _dbHelper.update(data);
+    print(update);
+    if(update == 1){
       Navigator.of(context).pop();
       showDialog(
         context: context,
@@ -145,16 +98,84 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
         Navigator.push(
             context,
             PageTransition(
-                type: PageTransitionType.fade, child: PenentuanPakanView()));
+                type: PageTransitionType.fade, child: PenentuanPakanView(
+              idKolam: widget.idKolam,
+            )));
       });
-      updateSqlite();
-    } else if (status == 2) {
+    }else{
       Navigator.of(context).pop();
-      BottomSheetFeedback.show(context,
-          title: "Mohon Maaf", description: data['data']['message'].toString());
-    } else {
-      Navigator.of(context).pop();
+        BottomSheetFeedback.show(context,
+            title: "Mohon Maaf", description: "Silahkan ulangi kembali");
     }
+  }
+
+  void _buttonPenentuan() async {
+    Navigator.of(context).push(new MaterialPageRoute<Null>(
+        builder: (BuildContext context) {
+          return LoadingShow(context);
+        },
+        fullscreenDialog: true));
+    // var data = await bloc.funInsertPenentuanPakan(
+    //     widget.idKolam.toString(),
+    //     tglTebarController.text.toString(),
+    //     jumlahBibitController.text.toString(),
+    //     gramPerEkorController.text.toString(),
+    //     hargaBibitController.text.toString(),
+    //     survivalRateController.text.toString(),
+    //     feedConvController.text.toString(),
+    //     "",
+    //     targetJumlahController.text.toString(),
+    //     targetHargaController.text.toString());
+    // var status = data['status'];
+    // setState(() {
+    //   if (status == 3) {
+    //     _tebarBibit = data['data']['sow_date'].toString() == "-"
+    //         ? " "
+    //         : data['data']['sow_date'].toString();
+    //     _hargaBibit = data['data']['seed_price'].toString() == "-"
+    //         ? " "
+    //         : data['data']['seed_price'].toString();
+    //     _jumlahBibit = data['data']['seed_amount'].toString() == "-"
+    //         ? " "
+    //         : data['data']['seed_amount'].toString();
+    //     _gramPerEkor = data['data']['seed_weight'].toString() == "-"
+    //         ? " "
+    //         : data['data']['seed_weight'].toString();
+    //     _survivalRate = data['data']['survival_rate'].toString() == "-"
+    //         ? " "
+    //         : data['data']['survival_rate'].toString();
+    //     _fcr = data['data']['feed_conversion_ratio'].toString() == "-"
+    //         ? " "
+    //         : data['data']['feed_conversion_ratio'].toString();
+    //     _tagetJumlah = data['data']['target_amount'].toString() == "-"
+    //         ? " "
+    //         : data['data']['target_amount'].toString();
+    //     _targetHarga = data['data']['target_price'].toString() == "-"
+    //         ? " "
+    //         : data['data']['target_price'].toString();
+    //   }
+    // });
+    // if (status == 1) {
+    //   Navigator.of(context).pop();
+    //   showDialog(
+    //     context: context,
+    //     builder: (BuildContext context) =>
+    //         AlertSuccess(context, DashboardView()),
+    //   );
+    //   Timer(const Duration(seconds: 2), () {
+    //     Navigator.push(
+    //         context,
+    //         PageTransition(
+    //             type: PageTransitionType.fade, child: PenentuanPakanView()));
+    //   });
+      updateSqlite();
+    // } else if (status == 2) {
+    //   Navigator.of(context).pop();
+    //   BottomSheetFeedback.show(context,
+    //       title: "Mohon Maaf", description: data['data']['message'].toString());
+    // } else {
+    //   Navigator.of(context).pop();
+    // }
   }
 
   Future<File> imageFile;
@@ -183,7 +204,7 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
         ),
         child: Scaffold(
           backgroundColor: Colors.white,
-          resizeToAvoidBottomPadding: false,
+          // resizeToAvoidBottomPadding: false,
           body: Column(
             children: [
               AppBarContainer(
@@ -200,7 +221,7 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
                                 left: SizeConfig.blockVertical * 5,
                                 right: SizeConfig.blockVertical * 5),
                             child: Text(
-                              "Tanggal tebar bibit",
+                              "Tanggal Tebar Bibit",
                               style: TextStyle(
                                   color: appBarTextColor,
                                   fontFamily: 'lato',
@@ -266,7 +287,7 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
                                 top: SizeConfig.blockVertical * 2,
                                 right: SizeConfig.blockVertical * 5),
                             child: Text(
-                              "Harga Bibit",
+                              "Harga Bibit (Rupiah)",
                               style: TextStyle(
                                   color: appBarTextColor,
                                   fontFamily: 'lato',
@@ -314,7 +335,7 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
                                 top: SizeConfig.blockVertical * 2,
                                 right: SizeConfig.blockVertical * 5),
                             child: Text(
-                              "Jumlah Bibit",
+                              "Jumlah Bibit (ekor)",
                               style: TextStyle(
                                   color: appBarTextColor,
                                   fontFamily: 'lato',
@@ -458,7 +479,7 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
                                 top: SizeConfig.blockVertical * 2,
                                 right: SizeConfig.blockVertical * 5),
                             child: Text(
-                              "Feed Conv Ratio",
+                              "Feed Conv Ratio (FCR)",
                               style: TextStyle(
                                   color: appBarTextColor,
                                   fontFamily: 'lato',
@@ -620,7 +641,12 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
                                                   ? colorPrimary
                                                   : editTextBgColor,
                                               onPressed: () =>
-                                                  _buttonPenentuan(),
+                                                  showDialog(
+                                                    context: context,
+                                                    builder: (BuildContext context) =>
+                                                        AlertMessage(
+                                                            context),
+                                                  ),
                                               child: Text(
                                                 "Tentukan Pakan",
                                                 style: TextStyle(
@@ -689,8 +715,99 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
             ],
           ),
         ));
+
+
   }
 
+  Widget AlertMessage(BuildContext context) {
+    final Widget data = Container(
+      child: Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        elevation: 0.0,
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                "Apakah anda yakin",
+                style: TextStyle(
+                    color: blackTextColor,
+                    fontFamily: 'poppins',
+                    letterSpacing: 0.25,
+                    fontSize: 15.0),
+                textAlign: TextAlign.center,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                      height: 35.0,
+                      margin: EdgeInsets.only(
+                          left: SizeConfig.blockVertical * 1,
+                          right: SizeConfig.blockVertical * 1,
+                          top: SizeConfig.blockVertical * 3),
+                      child: CustomElevation(
+                          height: 35.0,
+                          child: RaisedButton(
+                            highlightColor: colorPrimary,
+                            //Replace with actual colors
+                            color: colorPrimary,
+                            onPressed: () =>
+                            {
+                              _buttonPenentuan()
+                            },
+                            child: Text(
+                              "Ya",
+                              style: TextStyle(
+                                  color: backgroundColor,
+                                  fontWeight: FontWeight.w500,
+                                  fontFamily: 'poppins',
+                                  letterSpacing: 1.25,
+                                  fontSize: subTitleLogin),
+                            ),
+                            shape: new RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(30.0),
+                            ),
+                          ))),
+                  Container(
+                    height: 35.0,
+                    margin: EdgeInsets.only(
+                        left: SizeConfig.blockVertical * 1,
+                        right: SizeConfig.blockVertical * 1,
+                        top: SizeConfig.blockVertical * 3),
+                    child: CustomElevation(
+                        height: 35.0,
+                        child: RaisedButton(
+                          highlightColor: colorPrimary,
+                          //Replace with actual colors
+                          color: redTextColor,
+                          onPressed: () => {Navigator.pop(context, true)},
+                          child: Text(
+                            "Tidak",
+                            style: TextStyle(
+                                color: backgroundColor,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'poppins',
+                                letterSpacing: 1.25,
+                                fontSize: subTitleLogin),
+                          ),
+                          shape: new RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(30.0),
+                          ),
+                        )),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+    return data;
+  }
   Widget showImage() {
     print("di click");
     return FutureBuilder<File>(
@@ -718,6 +835,8 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
     );
   }
 }
+
+
 
 Widget roundedRectBorderWidget(BuildContext context) {
   return DottedBorder(
@@ -758,3 +877,5 @@ Widget roundedRectBorderWidget(BuildContext context) {
     ),
   );
 }
+
+

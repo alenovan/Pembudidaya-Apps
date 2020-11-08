@@ -109,7 +109,8 @@ Widget AppBarContainer(BuildContext context, String title, Widget page,Color col
            title,
            style: h3,
          ),
-       )
+       ),
+
       ],
     ),
   );

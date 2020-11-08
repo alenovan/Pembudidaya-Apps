@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_calendar_carousel/classes/event.dart';
@@ -5,6 +7,8 @@ import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaText.dart';
+import 'package:lelenesia_pembudidaya/src/bloc/MonitorBloc.dart';
+import 'package:lelenesia_pembudidaya/src/typography.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/forgot/ForgotWidget.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanHome.dart';
@@ -26,7 +30,9 @@ class PageFour extends StatefulWidget {
   final int tgl;
   final int bulan;
   final int tahun;
-  PageFour({Key key, this.idKolam, this.tgl, this.bulan, this.tahun}) : super(key: key);
+  final String dataPageTwo;
+  final String dataPageThree;
+  PageFour({Key key, this.idKolam, this.tgl, this.bulan, this.tahun, this.dataPageTwo, this.dataPageThree}) : super(key: key);
 
   @override
   _PageFourState createState() => _PageFourState();
@@ -34,10 +40,45 @@ class PageFour extends StatefulWidget {
 
 class _PageFourState extends State<PageFour> {
   bool _showDetail = true;
-  void _toggleDetail() {
-    setState(() {
-      _showDetail = !_showDetail;
-    });
+  void _toggleDetail() async {
+    Navigator.of(context).push(new MaterialPageRoute<Null>(
+        builder: (BuildContext context) {
+          return LoadingShow(context);
+        },
+        fullscreenDialog: true));
+    var status = await bloc.weightMonitor(widget.idKolam,weightController.text.toString());
+    if(status){
+      var statusFeed = await bloc.feedMonitor(widget.idKolam,widget.dataPageTwo);
+      if(statusFeed){
+        var statusSr = await bloc.feedSR(widget.idKolam,widget.dataPageThree);
+        if(statusSr){
+          showDialog(
+            context: context,
+            builder: (BuildContext context) =>
+                AlertSuccess(context, LaporanMain(
+                  idKolam: widget
+                      .idKolam
+                      .toString(),
+                  page: 2,
+                  laporan_page:
+                  "home",
+                )),
+          );
+        }else{
+          Navigator.of(context).pop();
+          Navigator.of(context).pop();
+          BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Silahkan ulangi kembali di halaman jumlah kematian ikan");
+        }
+      }else{
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+        BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Silahkan ulangi kembali di halaman jumlah pakan");
+      }
+    }else{
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
+      BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Silahkan ulangi kembali di halaman berat ikan");
+    }
   }
   TextEditingController weightController = TextEditingController();
   @override
@@ -54,9 +95,24 @@ class _PageFourState extends State<PageFour> {
       child:Scaffold(
           resizeToAvoidBottomPadding: false,
           backgroundColor: backgroundGreyColor,
+          appBar: AppBar(
+            elevation: 0,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back, color: Colors.black),
+              onPressed: () => {
+                   Navigator.of(context).pop()
+              },
+            ),
+            actions: <Widget>[],
+            backgroundColor: Colors.white,
+            brightness: Brightness.light,
+            title: Text(
+              "Laporan",
+              style: h3,
+            ),
+          ),
           body:  Column(
               children: [
-              AppBarContainer(context, "Laporan", DashboardView(),Colors.white),
           Expanded(child: Container(
                 margin: EdgeInsets.only(
                     left: SizeConfig.blockVertical * 3,
@@ -156,8 +212,10 @@ class _PageFourState extends State<PageFour> {
                                                   showDialog(
                                                     context: context,
                                                     builder: (BuildContext context) =>
-                                                        AlertSuccess(context,DashboardView()),
+                                                        AlertquestionInsert(
+                                                            context, DashboardView()),
                                                   )
+
                                                 }
 
                                               },
@@ -184,5 +242,92 @@ class _PageFourState extends State<PageFour> {
                 )))
               ],
           )),);
+
   }
+  Widget AlertquestionInsert(BuildContext context, Widget success) {
+    final Widget data = Container(
+      child: Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        elevation: 0.0,
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                "Apakah Anda Yakin ? ",
+                style: TextStyle(
+                    color: blackTextColor,
+                    fontFamily: 'poppins',
+                    letterSpacing: 0.25,
+                    fontSize: 15.0),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                      height: 35.0,
+                      margin: EdgeInsets.only(
+                          left: SizeConfig.blockVertical * 1,
+                          right: SizeConfig.blockVertical * 1,
+                          top: SizeConfig.blockVertical * 3),
+                      child: CustomElevation(
+                          height: 35.0,
+                          child: RaisedButton(
+                            highlightColor: colorPrimary,
+                            //Replace with actual colors
+                            color: colorPrimary,
+                            onPressed: () => {_toggleDetail()},
+                            child: Text(
+                              "Ya",
+                              style: TextStyle(
+                                  color: backgroundColor,
+                                  fontWeight: FontWeight.w500,
+                                  fontFamily: 'poppins',
+                                  letterSpacing: 1.25,
+                                  fontSize: subTitleLogin),
+                            ),
+                            shape: new RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(30.0),
+                            ),
+                          ))),
+                  Container(
+                    height: 35.0,
+                    margin: EdgeInsets.only(
+                        left: SizeConfig.blockVertical * 1,
+                        right: SizeConfig.blockVertical * 1,
+                        top: SizeConfig.blockVertical * 3),
+                    child: CustomElevation(
+                        height: 35.0,
+                        child: RaisedButton(
+                          highlightColor: colorPrimary,
+                          //Replace with actual colors
+                          color: redTextColor,
+                          onPressed: () => {Navigator.pop(context, true)},
+                          child: Text(
+                            "Tidak",
+                            style: TextStyle(
+                                color: backgroundColor,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'poppins',
+                                letterSpacing: 1.25,
+                                fontSize: subTitleLogin),
+                          ),
+                          shape: new RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(30.0),
+                          ),
+                        )),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+    return data;
+  }
+
 }

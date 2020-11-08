@@ -79,7 +79,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     ));
     return Scaffold(
         key: _scaffoldKey,
-        backgroundColor: colorGreyBackground,
+        backgroundColor: Colors.white,
         resizeToAvoidBottomPadding: false,
         drawer: Drawers(context),
         body: Stack(
@@ -177,18 +177,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ],
                     ),
                   ),
-                  Container(
-                    color: colorGreyBackground,
-                    height: 40.0,
-                  ),
                   Visibility(
-                    visible: _ktp_photo == " "?true:false,
+                    visible: false,
                       child: Column(
                     children: [
                       Container(
                           child: Container(
                               height: 50.0,
-                              padding: EdgeInsets.only(left: 20.0, right: 20.0),
+                              padding: EdgeInsets.only(left: 20.0, right: 20.0,top:40),
                               color: Colors.white,
                               child: Column(
                                 children: [
@@ -253,6 +249,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ],
                   )),
+                  SizedBox(
+                    height: 30.0,
+                  ),
                   ProfileMenu(context, "Ketentuan Layanan", BiodataScreen()),
                   ProfileMenu(context, "Kebijakan Privasi", BiodataScreen()),
                   ProfileMenu(context, "Pusat Bantuan", BiodataScreen()),
@@ -264,29 +263,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
               alignment: FractionalOffset.bottomCenter,
               child: GestureDetector(
                 onTap: () {
-                  FlutterSession().set("token", " ");
-                  Navigator.push(
-                      context,
-                      PageTransition(
-                          type: PageTransitionType.fade, child: LoginView()));
+                  // FlutterSession().set("token", " ");
+                  // Navigator.push(
+                  //     context,
+                  //     PageTransition(
+                  //         type: PageTransitionType.fade, child: LoginView()));
                 },
-                child: Container(
-                  color: Colors.white,
-                  height: 45.0,
-                  width: MediaQuery.of(context).size.width,
-                  child: Align(
-                    alignment: Alignment.center,
-                    // Align however you like (i.e .centerRight, centerLeft)
-                    child: Text(
-                      "KELUAR",
-                      style: TextStyle(
-                          color: redTextColor,
-                          fontFamily: 'lato',
-                          letterSpacing: 0.4,
-                          fontSize: 16.0),
-                    ),
-                  ),
-                ),
+                child:  Container(
+                    margin: EdgeInsets.only(bottom: 50.0),
+                    width: 300,
+                    height: 50,
+                    child: OutlineButton(
+                      onPressed: () {
+                        FlutterSession().set("token", " ");
+                        Navigator.push(
+                            context,
+                            PageTransition(
+                                type: PageTransitionType.fade,
+                                child: LoginView()));
+                      },
+                      child: Text(
+                        "Keluar",
+                        style: TextStyle(
+                          fontFamily: "popins",
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.red,
+                        ),
+                      ),
+                      borderSide: BorderSide(color: Colors.red),
+                      shape: StadiumBorder(),
+                    )),
               ),
             )
           ],

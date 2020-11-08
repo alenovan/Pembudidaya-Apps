@@ -5,6 +5,8 @@ import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaText.dart';
+import 'package:lelenesia_pembudidaya/src/bloc/MonitorBloc.dart';
+import 'package:lelenesia_pembudidaya/src/typography.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/forgot/ForgotWidget.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanHome.dart';
@@ -12,6 +14,7 @@ import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/laporanharian/PageOn
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanMain.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
+import 'package:lelenesia_pembudidaya/src/ui/widget/AcceptanceDialog.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/BottomSheetFeedback.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/CustomElevation.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanWidget.dart';
@@ -25,7 +28,8 @@ class PageThree extends StatefulWidget {
   final int tgl;
   final int bulan;
   final int tahun;
-  PageThree({Key key, this.idKolam, this.tgl, this.bulan, this.tahun}) : super(key: key);
+  final String dataPageTwo;
+  PageThree({Key key, this.idKolam, this.tgl, this.bulan, this.tahun, this.dataPageTwo}) : super(key: key);
 
   @override
   _PageThreeState createState() => _PageThreeState();
@@ -33,10 +37,35 @@ class PageThree extends StatefulWidget {
 
 class _PageThreeState extends State<PageThree> {
   bool _showDetail = true;
-  void _toggleDetail() {
-    setState(() {
-      _showDetail = !_showDetail;
-    });
+  void _toggleDetail() async {
+    // Navigator.of(context).push(new MaterialPageRoute<Null>(
+    //     builder: (BuildContext context) {
+    //       return LoadingShow(context);
+    //     },
+    //     fullscreenDialog: true));
+    // var status = await bloc.feedSR(widget.idKolam,srController.text.toString());
+    // if(status){
+    //   Navigator.of(context).pop();
+      Navigator.push(
+          context,
+          PageTransition(
+              type: PageTransitionType
+                  .fade,
+              // duration: Duration(microseconds: 1000),
+              child: LaporanMain(
+                idKolam: widget.idKolam.toString(),
+                tgl: widget.tgl,
+                bulan: widget.bulan,
+                tahun: widget.tahun,
+                dataPageTwo: widget.dataPageTwo,
+                dataPageThree: srController.text.toString(),
+                page: 2,
+                laporan_page: "empat",
+              )));
+    // }else{
+    //   Navigator.of(context).pop();
+    //   BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Silahkan ulangi kembali");
+    // }
   }
   TextEditingController srController = TextEditingController();
   @override
@@ -54,9 +83,25 @@ class _PageThreeState extends State<PageThree> {
       child:Scaffold(
           resizeToAvoidBottomPadding: false,
           backgroundColor: backgroundGreyColor,
+          appBar: AppBar(
+            elevation: 0,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back, color: Colors.black),
+              onPressed: () => {
+                Navigator.of(context).pop()
+
+              },
+            ),
+            actions: <Widget>[],
+            backgroundColor: Colors.white,
+            brightness: Brightness.light,
+            title: Text(
+              "Laporan",
+              style: h3,
+            ),
+          ),
           body:  Column(
               children: [
-              AppBarContainer(context, "Laporan", DashboardView(),Colors.white),
           Expanded(child: Container(
                 margin: EdgeInsets.only(
                     left: SizeConfig.blockVertical * 3,
@@ -151,24 +196,12 @@ class _PageThreeState extends State<PageThree> {
                                               color: colorPrimary,
                                               onPressed: () => {
 
-                                                // if(srController.text.trim() == ""){
-                                                //   BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Pastikan data terisi semua")
-                                                // }else{
-                                                  Navigator.push(
-                                                      context,
-                                                      PageTransition(
-                                                          type: PageTransitionType
-                                                              .fade,
-                                                          // duration: Duration(microseconds: 1000),
-                                                          child: LaporanMain(
-                                                            idKolam: widget.idKolam.toString(),
-                                                            tgl: widget.tgl,
-                                                            bulan: widget.bulan,
-                                                            tahun: widget.tahun,
-                                                            page: 2,
-                                                            laporan_page: "empat",
-                                                          )))
-                                                // }
+                                                if(srController.text.trim() == ""){
+                                                  BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Pastikan data terisi semua")
+                                                }else{
+                                                  _toggleDetail()
+
+                                                }
 
                                               },
                                               child: Text(

@@ -1,15 +1,20 @@
 import 'dart:ui';
 
 import 'package:intl/intl.dart';
+import 'package:lelenesia_pembudidaya/src/bloc/CheckoutBloc.dart' as checkout;
 import 'package:lelenesia_pembudidaya/src/bloc/ProfilBloc.dart' as profile;
 import 'package:flutter/material.dart';
 import 'package:lelenesia_pembudidaya/src/helper/DbHelper.dart';
 import 'package:lelenesia_pembudidaya/src/typography.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/checkout/Alamat/ListAlamatPengiriman.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/checkout/CheckoutWidget.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardView.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanMain.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/CustomElevation.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:flutter/services.dart';
+import 'package:page_transition/page_transition.dart';
 
 class CheckoutView extends StatefulWidget {
   final String name_pakan;
@@ -40,12 +45,17 @@ class _CheckoutViewState extends State<CheckoutView> {
   var feed_conversion_ratio = 0;
   var target_fish_count = 0;
   var target_price = 0;
+  var name_pakan = "";
+  var price = 0;
+  var url_pakan = "";
   DbHelper _dbHelper;
   var dataPenentuan;
 
   void getDataPanen() async {
     dataPenentuan = await _dbHelper.select(int.parse(widget.idKolam));
-    print(dataPenentuan);
+    var detail_pakan =
+        await checkout.bloc.getFeedDetail(dataPenentuan["feed_id"].toString());
+    print(detail_pakan["data"]);
     setState(() {
       sow_date = dataPenentuan["sow_date"].toString();
       seed_price = dataPenentuan["seed_price"];
@@ -55,6 +65,9 @@ class _CheckoutViewState extends State<CheckoutView> {
       feed_conversion_ratio = dataPenentuan["feed_conversion_ratio"];
       target_fish_count = dataPenentuan["target_fish_count"];
       target_price = dataPenentuan["target_price"];
+      name_pakan = detail_pakan["data"]["name"];
+      price = detail_pakan["data"]["price"];
+      url_pakan = detail_pakan["data"]["photo"];
     });
   }
 
@@ -75,6 +88,7 @@ class _CheckoutViewState extends State<CheckoutView> {
 
   @override
   void initState() {
+    _dbHelper = DbHelper.instance;
     update();
     getDataPanen();
     super.initState();
@@ -102,22 +116,34 @@ class _CheckoutViewState extends State<CheckoutView> {
         ),
         child: Scaffold(
           resizeToAvoidBottomPadding: false,
+          appBar: AppBar(
+            centerTitle: true,
+            elevation: 0,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back, color: Colors.black),
+              onPressed: () => {
+                Navigator.push(
+                    context,
+                    PageTransition(
+                        type: PageTransitionType.fade,
+                        child: LaporanMain(
+                          page: 0,
+                          laporan_page: "home",
+                          idKolam: widget.idKolam,
+                        )))
+              },
+            ),
+            actions: <Widget>[],
+            backgroundColor: Colors.white,
+            brightness: Brightness.light,
+            title: Text(
+              "Checkout",
+              style: h3,
+            ),
+          ),
           backgroundColor: Colors.white,
           body: Column(
             children: [
-              Container(
-                padding: EdgeInsets.only(top: SizeConfig.blockVertical * 5),
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: getBackButton(),
-                    ),
-                    const Spacer(),
-                    getTitle(),
-                    const Spacer(flex: 2)
-                  ],
-                ),
-              ),
               Expanded(
                   child: Stack(
                 children: [
@@ -146,10 +172,21 @@ class _CheckoutViewState extends State<CheckoutView> {
                                   )),
                               Container(
                                   alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    "Ubah",
-                                    style:
-                                        overline.copyWith(color: Colors.grey),
+                                  child: InkWell(
+                                    onTap: ()=>{
+                                      Navigator.push(
+                                          context,
+                                          PageTransition(
+                                              type: PageTransitionType.fade,
+                                              child: ListAlamatPengiriman(
+                                                idKolam: widget.idKolam,
+                                              )))
+                                  },
+                                    child: Text(
+                                      "Pilih Alamat Lain",
+                                      style:
+                                      overline.copyWith(color: colorPrimary),
+                                    ),
                                   ))
                             ],
                           ),
@@ -276,12 +313,8 @@ class _CheckoutViewState extends State<CheckoutView> {
                                   )),
                             ],
                           ),
-                          CardPenentuanPakan(
-                              context,
-                              widget.name_pakan,
-                              "Rp." + formatter.format(widget.price),
-                              "Kg",
-                              widget.url_pakan),
+                          CardPenentuanPakan(context, name_pakan,
+                              "Rp." + formatter.format(price), "Kg", url_pakan),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [

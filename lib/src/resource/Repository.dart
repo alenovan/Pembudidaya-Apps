@@ -46,4 +46,23 @@ class Repository {
       todoApiProvider.activasiKolam(idKolam,kolam);
 
   Future fetchAllPakan() => todoApiProvider.fetchPakanList();
+
+//  monitor
+
+  Future monitorWeight(String pond_id,String weight) =>
+      todoApiProvider.monitorWeight(pond_id,weight);
+
+  Future monitorFeed(String pond_id,String feed) =>
+      todoApiProvider.monitorFeed(pond_id,feed);
+
+  Future monitorSr(String pond_id,String fish_died) =>
+      todoApiProvider.monitorSR(pond_id,fish_died);
+
+  getFeedDetail(String feed_id) => todoApiProvider.getFeedDetail(feed_id);
+
+  Future analyticsMonitor(String pond_id,String month,String year) =>
+      todoApiProvider.analyticsMonitor(pond_id,month,year);
+
+  Future analyticsCalendar(String pond_id,String from) =>
+      todoApiProvider.analyticsCalendar(pond_id,from);
 }

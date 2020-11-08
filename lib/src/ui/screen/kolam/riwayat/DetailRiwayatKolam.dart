@@ -17,53 +17,47 @@ import 'package:intl/intl.dart' show DateFormat, NumberFormat;
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:page_transition/page_transition.dart';
 
-class HomeLaporan extends StatefulWidget {
+class DetailRiwayatKolam extends StatefulWidget {
   final String idKolam;
 
-  HomeLaporan({Key key, @required this.idKolam}) : super(key: key);
+  DetailRiwayatKolam({Key key, @required this.idKolam}) : super(key: key);
 
   @override
-  _HomeLaporanState createState() => _HomeLaporanState();
+  _DetailRiwayatKolamState createState() => _DetailRiwayatKolamState();
 }
 
-class _HomeLaporanState extends State<HomeLaporan> {
+class _DetailRiwayatKolamState extends State<DetailRiwayatKolam> {
   var loop = 0;
   var _stock_pakan = "";
   var _tanggal_panen = "";
-  var _target_jual = 0 ;
+  var _target_jual = "";
   var _jumlah_ikan = "";
   var _berat_ikan = "";
-  var _informasi_modal = 0;
+  var _informasi_modal = "";
   var _perkiraan_omset = "";
   var _laba = "";
-  var _jumlah_ikan_first = 0;
-  var _berat_ikan_current = 0;
   var _nama_kolam = "";
-  var _omset;
-  final formatter = new NumberFormat("#,###");
+
   void update() async {
     var detail = await bloc.getKolamDetail(widget.idKolam);
     var data = detail['data'];
-    var modalPakan = (data['harvest']['feed_requirement_estimation'] / 1000) * data['harvest']['feed_price'] ;
-    var modalIkan = data['harvest']['seed_amount'] *  data['harvest']['seed_price'];
-    var jmlIkanPerkilo = 1000 / data['harvest']['harvest_weight_estimation'];
-    var omset = (data['harvest']['current_amount'] / jmlIkanPerkilo) * data['harvest']['target_price'];
     setState(() {
       _nama_kolam = data['name'].toString();
       _stock_pakan = data['harvest']['current_stocked_feed'].toString() + " gr";
       _tanggal_panen = data['harvest']['harvest_date_estimation'].toString();
-      _target_jual = data['harvest']['target_price'];
-      _jumlah_ikan = data['harvest']['current_amount'].toString();
-      _berat_ikan =
-          data['harvest']['harvest_weight_estimation'].toString();
-      _jumlah_ikan_first = data['harvest']['seed_amount'];
-      _berat_ikan_current= data['harvest']['current_weight'];
-      _laba = formatter
-              .format(data['harvest']['profit_estimation'])
-              .toString() +
+      _target_jual = NumberFormat.currency(name: 'Rp. ')
+          .format(data['harvest']['target_price'])
+          .toString() +
           ",-";
-      _omset = omset;
-      _informasi_modal = modalIkan.toInt()+modalPakan.toInt();
+      _jumlah_ikan = data['harvest']['seed_amount'].toString();
+      _berat_ikan =
+          data['harvest']['harvest_weight_estimation'].toString() + " gr";
+      _informasi_modal = data['harvest']['current_weight'].toString();
+      _perkiraan_omset = "";
+      _laba = NumberFormat.currency(name: 'Rp. ')
+          .format(data['harvest']['profit_estimation'])
+          .toString() +
+          ",-";
     });
   }
 
@@ -72,15 +66,12 @@ class _HomeLaporanState extends State<HomeLaporan> {
     _nama_kolam = "...";
     _stock_pakan = "Loading";
     _tanggal_panen = "Loading";
-    _target_jual = 0;
-    _jumlah_ikan = "0";
-    _berat_ikan = "0";
-    _jumlah_ikan_first = 0;
-    _berat_ikan_current = 0;
-    _informasi_modal = 0;
+    _target_jual = "Loading";
+    _jumlah_ikan = "Loading";
+    _berat_ikan = "Loading";
+    _informasi_modal = "Loading";
     _perkiraan_omset = "Loading";
     _laba = "Loading";
-    _omset = 0;
     update();
     super.initState();
   }
@@ -106,44 +97,11 @@ class _HomeLaporanState extends State<HomeLaporan> {
                         child: DashboardView()))
               },
             ),
-            actions: <Widget>[
-              PopupMenuButton<int>(
-                itemBuilder: (context) => [
-                  // PopupMenuItem(
-                  //   value: 1,
-                  //   child: Row(
-                  //     children: [
-                  //       Icon(Icons.store, color: colorPrimary),
-                  //       Text("  Status Pesanan Pakan", style: body2)
-                  //     ],
-                  //   ),
-                  // ),
-                  PopupMenuItem(
-                    value: 1,
-                    child: Row(
-                      children: [
-                        Icon(Icons.history, color: colorPrimary),
-                        Text(
-                          "  Riwayat Kolam",
-                          style: body2,
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-                onSelected: (value) {
-                  if (value == 1) {
-                    Navigator.push(
-                        context, PageTransition(type: PageTransitionType.fade, child: RiwayatKolam(idKolam: widget.idKolam,)));
-                  }
-                },
-                icon: Icon(Icons.more_vert, color: Colors.black),
-              )
-            ],
+
             backgroundColor: Colors.white,
             brightness: Brightness.light,
             title: Text(
-              "Detail Kolam",
+              "Riwayat Kolam",
               style: h3,
             ),
           ),
@@ -326,172 +284,55 @@ class _HomeLaporanState extends State<HomeLaporan> {
       physics: new BouncingScrollPhysics(),
       child: Container(
           child: Column(children: [
-        Container(
-          margin: EdgeInsets.only(
-            top: SizeConfig.blockVertical * 3,
-          ),
-          child: Container(
-            height: 100,
-            child: Card(
-                elevation: 2,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15.0),
-                ),
-                child: Container(
-                    padding: EdgeInsets.only(
-                        left: SizeConfig.blockVertical * 3, right: 15.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                                child: Text(
-                              "Stock Pakan",
-                              style: subtitle2.copyWith(color: colorPrimary),
-                            )),
-                            Container(
-                                child: Text(
-                              _stock_pakan,
-                              style: h3.copyWith(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w500,
-                                  letterSpacing: 1.15),
-                            )),
-                          ],
-                        ),
-                        Container(
-                            margin: EdgeInsets.only(top: 10.0),
-                            alignment: Alignment.centerRight,
-                            child: CustomElevation(
-                                height: 40.0,
-                                child: RaisedButton(
-                                  highlightColor: colorPrimary,
-                                  //Replace with actual colors
-                                  color: colorPrimary,
-                                  onPressed: () => {
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) =>
-                                          AlertQuestionPakan(context),
-                                    )
-                                  },
-                                  child: Text(
-                                    "Request",
-                                    style:
-                                        overline.copyWith(color: Colors.white),
-                                  ),
-                                  shape: new RoundedRectangleBorder(
-                                    borderRadius:
-                                        new BorderRadius.circular(30.0),
-                                  ),
-                                ))),
-                      ],
-                    ))),
-          ),
-        ),
-        Container(
-          child: CardColumn(context, "Tanggal Panen", _tanggal_panen,
-              Alignment.centerLeft, SizeConfig.blockVertical * 3),
-        ),
-        Row(
-          children: <Widget>[
-            Expanded(
-                child: Container(
-              child: CardColumn(
-                  context, "Jumlah Ikan", _jumlah_ikan_first.toString(), Alignment.center, 0),
-            )),
-            Expanded(
-              child: Container(
-                child: CardColumn(
-                    context, "Berat Ikan ", _berat_ikan, Alignment.center, 0),
-              ),
+            Container(
+              margin: EdgeInsets.only(top:20),
+              child: CardColumn(context, "Pakan Tergunakan", "20000",
+                  Alignment.centerLeft, SizeConfig.blockVertical * 3),
             ),
-          ],
-        ),
+            Container(
+              child: CardColumn(context, "Tanggal Tebar", _tanggal_panen,
+                  Alignment.centerLeft, SizeConfig.blockVertical * 3),
+            ),  Container(
+              child: CardColumn(context, "Tanggal Panen", _tanggal_panen,
+                  Alignment.centerLeft, SizeConfig.blockVertical * 3),
+            ),
 
-            // Row(
-            //   children: <Widget>[
-            //     Expanded(
-            //         child: Container(
-            //           child: CardColumn(
-            //               context, "Jml Ikan Terkini", _jumlah_ikan.toString(), Alignment.center, 0),
-            //         )),
-            //     Expanded(
-            //       child: Container(
-            //         child: CardColumn(
-            //             context, "Berat Ikan Terkini", _berat_ikan_current.toString(), Alignment.center, 0),
-            //       ),
-            //     ),
-            //   ],
-            // ),
-        Container(
-          child: buildCardChart(
-              title: "Tingkat Kematian",
-              percent: 95,
-              status: 1,
-              statusCount: "4",
-              date: "1 September - 30 September",
-              chartData: _createSampleData()),
-        ),
-        Container(
-          child: buildCardChartGram(
-              title: "Jumlah Pakan Keluar",
-              percent: 3000,
-              status: 1,
-              statusCount: "4",
-              date: "1 September - 30 September",
-              chartData: _createSampleData()),
-        ),
-        Container(
-          child: buildCardChart(
-              title: "Berat Lele",
-              percent: 95,
-              status: 2,
-              statusCount: "4",
-              date: "1 September - 30 September",
-              chartData: _createSampleData()),
-        ),
-        Container(
-          child: CardColumn(context, "Informasi Modal", "Rp.${formatter.format(_informasi_modal).toString()},-",
-              Alignment.centerLeft, SizeConfig.blockVertical * 3),
-        ),
-        Container(
-          child: CardColumn(context, "Perkiraan Omset", "Rp.${formatter.format(_omset).toString()},-",
-              Alignment.centerLeft, SizeConfig.blockVertical * 3),
-        ),
-        Container(
-          child: CardColumn(context, "Laba / Keuntungan", "Rp.$_laba",
-              Alignment.centerLeft, SizeConfig.blockVertical * 3),
-        ),
-        Container(
-          child: CardColumn(context, "Target Harga Jual", "Rp.${formatter.format(_target_jual).toString()},-",
-              Alignment.centerLeft, SizeConfig.blockVertical * 3),
-        ),
-        Container(
-            margin: EdgeInsets.only(top: SizeConfig.blockVertical * 2),
-            width: double.infinity,
-            child: CustomElevation(
-                height: 40.0,
-                child: RaisedButton(
-                  highlightColor: redTextColor,
-                  //Replace with actual colors
-                  color: redTextColor,
-                  onPressed: () => {},
-                  child: Text(
-                    "Panen",
-                    style: h3.copyWith(color: Colors.white),
+            Row(
+              children: <Widget>[
+                Expanded(
+                    child: Container(
+                      child: CardColumn(
+                          context, "Jumlah Ikan", _jumlah_ikan, Alignment.center, 0),
+                    )),
+                Expanded(
+                  child: Container(
+                    child: CardColumn(
+                        context, "Berat Ikan ", _berat_ikan, Alignment.center, 0),
                   ),
-                  shape: new RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(30.0),
+                ),
+              ],
+            ),
+
+            Row(
+              children: <Widget>[
+                Expanded(
+                    child: Container(
+                      child: CardColumn(
+                          context, "FCR", "1", Alignment.center, 0),
+                    )),
+                Expanded(
+                  child: Container(
+                    child: CardColumn(
+                        context, "SR", "95%", Alignment.center, 0),
                   ),
-                ))),
-        SizedBox(
-          height: 20.0,
-        )
-      ])),
+                ),
+              ],
+            ),
+
+            SizedBox(
+              height: 20.0,
+            )
+          ])),
     );
     return datax;
   }
@@ -500,12 +341,12 @@ class _HomeLaporanState extends State<HomeLaporan> {
 List<charts.Series<LinearIncome, int>> _createSampleData() {
   final myFakeDesktopData = [
     new LinearIncome(0, 0),
-    new LinearIncome(1, 0),
-    new LinearIncome(2, 0),
-    new LinearIncome(3, 0),
-    new LinearIncome(4, 0),
-    new LinearIncome(5, 0),
-    new LinearIncome(6, 0),
+    new LinearIncome(1, 100000),
+    new LinearIncome(2, 100000),
+    new LinearIncome(3, 150000),
+    new LinearIncome(4, 200000),
+    new LinearIncome(5, 100000),
+    new LinearIncome(6, 150000),
   ];
 
   return [

@@ -5,6 +5,8 @@ import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaText.dart';
+import 'package:lelenesia_pembudidaya/src/bloc/MonitorBloc.dart';
+import 'package:lelenesia_pembudidaya/src/typography.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/forgot/ForgotWidget.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanHome.dart';
@@ -12,6 +14,7 @@ import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/laporanharian/PageOn
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanMain.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
+import 'package:lelenesia_pembudidaya/src/ui/widget/AcceptanceDialog.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/BottomSheetFeedback.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/CustomElevation.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanWidget.dart';
@@ -33,10 +36,33 @@ class PageTwo extends StatefulWidget {
 
 class _PageTwoState extends State<PageTwo> {
   bool _showDetail = true;
-  void _toggleDetail() {
-    setState(() {
-      _showDetail = !_showDetail;
-    });
+  void _toggleSimpan() async {
+    // Navigator.of(context).push(new MaterialPageRoute<Null>(
+    //     builder: (BuildContext context) {
+    //       return LoadingShow(context);
+    //     },
+    //     fullscreenDialog: true));
+    // var status = await bloc.feedMonitor(widget.idKolam,feedController.text.toString());
+    // if(status){
+    //   Navigator.of(context).pop();
+      Navigator.push(
+          context,
+          PageTransition(
+              type: PageTransitionType.fade,
+              // duration: Duration(microseconds: 1000),
+              child: LaporanMain(
+                idKolam: widget.idKolam.toString(),
+                tgl: widget.tgl,
+                bulan: widget.bulan,
+                tahun: widget.tahun,
+                dataPageTwo : feedController.text.toString(),
+                page: 2,
+                laporan_page: "tiga",
+              )));
+    // }else{
+    //   Navigator.of(context).pop();
+    //   BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Silahkan ulangi kembali");
+    // }
   }
   TextEditingController feedController = TextEditingController();
   @override
@@ -54,9 +80,35 @@ class _PageTwoState extends State<PageTwo> {
       child:Scaffold(
           resizeToAvoidBottomPadding: false,
           backgroundColor: backgroundGreyColor,
+          appBar: AppBar(
+            elevation: 0,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back, color: Colors.black),
+              onPressed: () => {
+                Navigator.push(
+                    context,
+                    PageTransition(
+                        type: PageTransitionType.rightToLeft,
+                        child:  LaporanMain(
+                          idKolam: widget
+                              .idKolam
+                              .toString(),
+                          page: 2,
+                          laporan_page:
+                          "home",
+                        )))
+              },
+            ),
+            actions: <Widget>[],
+            backgroundColor: Colors.white,
+            brightness: Brightness.light,
+            title: Text(
+              "Laporan",
+              style: h3,
+            ),
+          ),
           body:  Column(
               children: [
-              AppBarContainer(context, "Laporan", DashboardView(),Colors.white),
               Expanded(child: Container(
                 margin: EdgeInsets.only(
                     left: SizeConfig.blockVertical * 3,
@@ -116,23 +168,11 @@ class _PageTwoState extends State<PageTwo> {
                                             colorPrimary, //Replace with actual colors
                                         color: colorPrimary,
                                         onPressed: () => {
-                                          // if(feedController.text.trim() == ""){
-                                          // BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Pastikan data terisi semua")
-                                          // }else{
-                                            Navigator.push(
-                                                context,
-                                                PageTransition(
-                                                    type: PageTransitionType.fade,
-                                                    // duration: Duration(microseconds: 1000),
-                                                    child: LaporanMain(
-                                                      idKolam: widget.idKolam.toString(),
-                                                      tgl: widget.tgl,
-                                                      bulan: widget.bulan,
-                                                      tahun: widget.tahun,
-                                                      page: 2,
-                                                      laporan_page: "tiga",
-                                                    )))
-                                          // }
+                                          if(feedController.text.trim() == ""){
+                                          BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Pastikan data terisi semua")
+                                          }else{
+                                            _toggleSimpan()
+                                          }
                                         },
                                         child: Text(
                                           "Selanjutnya",

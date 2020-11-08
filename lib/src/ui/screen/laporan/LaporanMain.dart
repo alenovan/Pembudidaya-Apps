@@ -17,7 +17,10 @@ class LaporanMain extends StatefulWidget {
   final int tahun;
   final String idKolam;
   final String idLelang;
-  LaporanMain({Key key, this.page, this.laporan_page, this.idKolam, this.tgl, this.bulan, this.tahun, this.idLelang}) : super(key: key);
+  final String isoString;
+  final String dataPageTwo;
+  final String dataPageThree;
+  LaporanMain({Key key, this.page, this.laporan_page, this.idKolam, this.tgl, this.bulan, this.tahun, this.idLelang, this.isoString, this.dataPageTwo, this.dataPageThree}) : super(key: key);
 
   @override
   _LaporanMainState createState() => _LaporanMainState();
@@ -38,8 +41,10 @@ class _LaporanMainState extends State<LaporanMain> {
         idKolam: widget.idKolam.toString(),
         tgl: widget.tgl,
         bulan: widget.bulan,
+        isoData: widget.isoString,
         tahun: widget.tahun,);
     } else if (widget.laporan_page == "dua") {
+      print(widget.idKolam.toString());
       laporanPage = PageTwo(idKolam: widget.idKolam.toString(),
         tgl: widget.tgl,
         bulan: widget.bulan,
@@ -48,11 +53,14 @@ class _LaporanMainState extends State<LaporanMain> {
       laporanPage = PageThree(idKolam: widget.idKolam.toString(),
         tgl: widget.tgl,
         bulan: widget.bulan,
+        dataPageTwo:widget.dataPageTwo,
         tahun: widget.tahun,);
     } else if (widget.laporan_page == "empat") {
       laporanPage = PageFour(idKolam: widget.idKolam.toString(),
         tgl: widget.tgl,
         bulan: widget.bulan,
+        dataPageTwo: widget.dataPageTwo,
+        dataPageThree:widget.dataPageThree,
         tahun: widget.tahun,);
     }else{
       laporanPage = Laporan(idKolam: widget.idKolam.toString());

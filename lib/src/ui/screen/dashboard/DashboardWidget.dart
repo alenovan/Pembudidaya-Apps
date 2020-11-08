@@ -1,13 +1,17 @@
-
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_session/flutter_session.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lelenesia_pembudidaya/src/typography.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/riwayat/RiwayatPakan.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/kolam/TambahKolamView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanDetail.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/profile/ProfileScreen.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
@@ -25,23 +29,24 @@ class DashboardWidget extends StatelessWidget {
     return null;
   }
 }
+
 Widget CardKolam(
     BuildContext context, String title, String sub, String status) {
   var text;
   var color;
-  if(status == "0"){
+  if (status == "0") {
     text = "Belum Aktif";
     color = Colors.red;
-  }else if(status == "1"){
+  } else if (status == "1") {
     text = "Kosong";
     color = Colors.redAccent;
-  }else if(status == "2"){
+  } else if (status == "2") {
     text = "Sedang Panen";
     color = Colors.lightBlueAccent;
-  }else if(status == "3"){
+  } else if (status == "3") {
     text = "Siap Panen";
     color = Colors.green;
-  }else{
+  } else {
     text = status;
     color = Colors.redAccent;
   }
@@ -65,31 +70,29 @@ Widget CardKolam(
                       children: [
                         Icon(
                           Icons.circle,
-                          color:color,
+                          color: color,
                           size: 15.0,
                         ),
-                       Container(
-                           margin: EdgeInsets.only(left: 5.0),
-                         child: Text(
-                           text,
-                           style: caption.copyWith(color:color),
-                         )
-                       )
+                        Container(
+                            margin: EdgeInsets.only(left: 5.0),
+                            child: Text(
+                              text,
+                              style: caption.copyWith(color: color),
+                            ))
                       ],
                     ),
                     Container(
-                        margin: EdgeInsets.only(top: 5.0,left: 20),
+                        margin: EdgeInsets.only(top: 5.0, left: 20),
                         child: Text(
                           title,
                           style: subtitle1,
                         )),
                     Container(
-                        margin: EdgeInsets.only(top: 5.0,left: 20),
+                        margin: EdgeInsets.only(top: 5.0, left: 20),
                         child: Text(
                           sub,
                           style: overline,
                         )),
-
                   ],
                 ),
                 Container(
@@ -99,7 +102,6 @@ Widget CardKolam(
                       color: purpleTextColor,
                       size: SizeConfig.blockHorizotal * 8,
                     )),
-
               ],
             ))),
   );
@@ -127,37 +129,138 @@ Widget Drawers(BuildContext context) {
     child: Drawer(
       child: Container(
           color: Colors.white,
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                    margin: EdgeInsets.only(
-                        top: SizeConfig.blockVertical * 5,
-                        left: SizeConfig.blockHorizotal * 3,
-                        bottom: SizeConfig.blockVertical * 5),
-                    child: Icon(
-                      MaterialIcons.close,
-                      size: 30.0,
-                    )),
+          child: Stack(
+            children: [
+              Positioned(
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  children: <Widget>[
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                          margin: EdgeInsets.only(
+                              top: SizeConfig.blockVertical * 5,
+                              left: SizeConfig.blockHorizotal * 3,
+                              bottom: SizeConfig.blockVertical * 5),
+                          child: Icon(
+                            MaterialIcons.close,
+                            size: 30.0,
+                          )),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                          //                    <-- BoxDecoration
+                          border: Border(
+                              bottom: BorderSide(color: Colors.grey[300]),
+                              top: BorderSide(color: Colors.grey[300]))),
+                      child: ListTile(
+                        title: Row(
+                          children: [
+                            Icon(FontAwesome.user_circle, color: colorPrimary),
+                            Container(
+                                margin: EdgeInsets.only(left: 20.0),
+                                child: Text(
+                                  "  Akun",
+                                  style: subtitle1,
+                                ))
+                          ],
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              PageTransition(
+                                  type: PageTransitionType.fade,
+                                  child: ProfileScreen()));
+                        },
+                      ),
+                    ),
+                    Container(
+                      child: ListTile(
+                        title: Row(
+                          children: [
+                            Icon(Icons.assignment_outlined,
+                                color: colorPrimary),
+                            Container(
+                                margin: EdgeInsets.only(left: 20.0),
+                                child: Text(
+                                  "  Tambah Kolam",
+                                  style: subtitle1,
+                                ))
+                          ],
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              PageTransition(
+                                  type: PageTransitionType.fade,
+                                  child: TambahKolamView()));
+                        },
+                      ),
+                    ),
+                    Container(
+                        decoration: BoxDecoration(
+                            //                    <-- BoxDecoration
+                            border: Border(
+                                bottom: BorderSide(color: Colors.grey[300]),
+                                top: BorderSide(color: Colors.grey[300]))),
+                        child: ListTile(
+                          title: Row(
+                            children: [
+                              Icon(FontAwesome.shopping_cart,
+                                  color: colorPrimary),
+                              Container(
+                                margin: EdgeInsets.only(left: 20.0),
+                                child: Text(
+                                  "  Pesanan",
+                                  style: subtitle1,
+                                ),
+                              )
+                            ],
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                PageTransition(
+                                    type: PageTransitionType.fade,
+                                    child: RiwayatPakan()));
+                          },
+                        )),
+                  ],
+                ),
               ),
-              ListTile(
-                title: Text('Akun',style: subtitle1,),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      PageTransition(
-                          type: PageTransitionType.fade,
-                          child: ProfileScreen()));
-                },
-              ),
-              ListTile(
-                title: Text('Tambah Kolam',style: subtitle1),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
+              Positioned(
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                      margin: EdgeInsets.only(bottom: 50.0),
+                      width: 250,
+                      height: 50,
+                      child: OutlineButton(
+                        onPressed: () {
+                          FlutterSession().set("token", " ");
+                          Navigator.push(
+                              context,
+                              PageTransition(
+                                  type: PageTransitionType.fade,
+                                  child: LoginView()));
+                        },
+                        child: Text(
+                          "Keluar",
+                          style: TextStyle(
+                            fontFamily: "popins",
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.red,
+                          ),
+                        ),
+                        borderSide: BorderSide(color: Colors.red),
+                        shape: StadiumBorder(),
+                      )),
+                ),
+              )
+              // Container(
+              //   child: Text("aaa"),
+              // )
             ],
           )),
     ), // We'll populate the Drawer in the next step!

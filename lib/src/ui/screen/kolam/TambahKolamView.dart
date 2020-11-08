@@ -21,14 +21,14 @@ import 'package:flutter/services.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:toast/toast.dart';
 
-class DashboardFirstView extends StatefulWidget {
-  const DashboardFirstView({Key key}) : super(key: key);
+class TambahKolamView extends StatefulWidget {
+  const TambahKolamView({Key key}) : super(key: key);
 
   @override
-  _DashboardFirstViewState createState() => _DashboardFirstViewState();
+  _TambahKolamViewState createState() => _TambahKolamViewState();
 }
 
-class _DashboardFirstViewState extends State<DashboardFirstView> {
+class _TambahKolamViewState extends State<TambahKolamView> {
   TextEditingController countController = new TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey =
   new GlobalKey<ScaffoldState>();
@@ -72,62 +72,34 @@ class _DashboardFirstViewState extends State<DashboardFirstView> {
     return Scaffold(
         key: _scaffoldKey,
         backgroundColor: Colors.white,
+        appBar: AppBar(
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () => {
+              Navigator.push(
+                  context,
+                  PageTransition(
+                      type: PageTransitionType.rightToLeft,
+                      child: DashboardView()))
+            },
+          ),
+          actions: <Widget>[],
+          backgroundColor: Colors.white,
+          brightness: Brightness.light,
+          title: Text(
+            "Tambah Kolam",
+            style: h3,
+          ),
+        ),
         // resizeToAvoidBottomPadding: false,
-        drawer: Drawers(context),
+        // drawer: Drawers(context),
         body: Stack(
           children: [
-            new Positioned(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      // color: Colors.red,
-                      height: SizeConfig.blockHorizotal * 40,
-                      width: double.infinity,
-                      child: Stack(
-                        children: [
-                          Container(
-                              child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Container(
-                                margin: EdgeInsets.only(
-                                    left: SizeConfig.blockVertical * 3,
-                                    bottom: SizeConfig.blockVertical * 3),
-                                child: IconButton(
-                                  onPressed: () =>
-                                      _scaffoldKey.currentState.openDrawer(),
-                                  tooltip: MaterialLocalizations.of(context)
-                                      .openAppDrawerTooltip,
-                                  icon: Icon(FontAwesomeIcons.bars,
-                                      color: colorPrimary, size: 30.0),
-                                )),
-                          )),
-                          Container(
-                              margin: EdgeInsets.only(
-                                  right: SizeConfig.blockVertical * 5,
-                                  bottom: SizeConfig.blockVertical * 3),
-                              child: Align(
-                                alignment: Alignment.centerRight,
-                                child: Container(
-                                    child: IconButton(
-                                        onPressed: () => _scaffoldKey
-                                            .currentState
-                                            .openDrawer(),
-                                        tooltip: "Notifikasi",
-                                        icon: Icon(
-                                          FontAwesomeIcons.solidBell,
-                                          color: colorPrimary,
-                                          size: 30.0,
-                                        ))),
-                              )),
-                        ],
-                      ),
-                    ),
-                    Container(
-                        margin: EdgeInsets.only(
-                            left: SizeConfig.blockVertical * 3,
-                            right: SizeConfig.blockVertical * 3),
+            new Container(
+              margin: EdgeInsets.only(
+                  left: SizeConfig.blockVertical * 3,
+                  right: SizeConfig.blockVertical * 3),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -136,7 +108,7 @@ class _DashboardFirstViewState extends State<DashboardFirstView> {
                                 alignment: Alignment.center,
                                 child: DetailNull(context)),
                             Text(
-                              textNullFirst,
+                              "Anda mau menambah berapa kolam ? ",
                               textAlign: TextAlign.center,
                               style: h3.copyWith(
                                   color: blackTextColor,
@@ -162,7 +134,7 @@ class _DashboardFirstViewState extends State<DashboardFirstView> {
                                 child: Container(
                                   width: 200.0,
                                   padding:
-                                      EdgeInsets.only(left: 30.0, right: 30.0),
+                                  EdgeInsets.only(left: 30.0, right: 30.0),
                                   child: TextFormField(
                                     controller: countController,
                                     textAlign: TextAlign.center,
@@ -199,7 +171,7 @@ class _DashboardFirstViewState extends State<DashboardFirstView> {
                                       )
                                     },
                                     child: Text(
-                                      "Buat Kolam",
+                                      "Tambah Kolam",
                                       style: TextStyle(
                                           color: backgroundColor,
                                           fontWeight: FontWeight.w500,
@@ -209,16 +181,12 @@ class _DashboardFirstViewState extends State<DashboardFirstView> {
                                     ),
                                     shape: new RoundedRectangleBorder(
                                       borderRadius:
-                                          new BorderRadius.circular(30.0),
+                                      new BorderRadius.circular(30.0),
                                     ),
                                   )),
                             ),
                           ],
                         )),
-                  ],
-                ),
-              ),
-            ),
           ],
         ));
   }

@@ -5,6 +5,7 @@ import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaText.dart';
+import 'package:lelenesia_pembudidaya/src/typography.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/forgot/ForgotWidget.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanHome.dart';
@@ -24,7 +25,8 @@ class PageOne extends StatefulWidget {
   final int tgl;
   final int bulan;
   final int tahun;
-  PageOne({Key key, this.idKolam, @required this.tgl, @required this.bulan, @required this.tahun}) : super(key: key);
+  final String isoData;
+  PageOne({Key key, this.idKolam, @required this.tgl, @required this.bulan, @required this.tahun, this.isoData}) : super(key: key);
 
   @override
   _PageOneState createState() => _PageOneState();
@@ -32,10 +34,8 @@ class PageOne extends StatefulWidget {
 
 class _PageOneState extends State<PageOne> {
   bool _showDetail = true;
-  void _toggleDetail() {
-    setState(() {
-      _showDetail = !_showDetail;
-    });
+  void _cekStatusHarian() {
+
   }
 
   @override
@@ -53,9 +53,28 @@ class _PageOneState extends State<PageOne> {
         child:Scaffold(
           resizeToAvoidBottomPadding: false,
           backgroundColor: backgroundGreyColor,
+            appBar: AppBar(
+              elevation: 0,
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back, color: Colors.black),
+                onPressed: () => {
+                  Navigator.push(
+                      context,
+                      PageTransition(
+                          type: PageTransitionType.rightToLeft,
+                          child: DashboardView()))
+                },
+              ),
+              actions: <Widget>[],
+              backgroundColor: Colors.white,
+              brightness: Brightness.light,
+              title: Text(
+                "Laporan",
+                style: h3,
+              ),
+            ),
           body:  Column(
               children: [
-              AppBarContainer(context, "Laporan", DashboardView(),Colors.white), 
                 Expanded(child: Container(
                     margin: EdgeInsets.only(
                       left: SizeConfig.blockVertical * 3,
@@ -101,6 +120,7 @@ class _PageOneState extends State<PageOne> {
                                             colorPrimary, //Replace with actual colors
                                             color: colorPrimary,
                                             onPressed: () => {
+                                              // print(widget.idKolam.toString())
                                               Navigator.push(
                                                   context,
                                                   PageTransition(

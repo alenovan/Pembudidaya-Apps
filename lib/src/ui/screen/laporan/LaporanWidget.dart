@@ -165,7 +165,6 @@ Widget CardInfo(
         ),
         child: Container(
             padding: EdgeInsets.all(15.0),
-            width: 150.0,
             child: Column(
               children: [
                 Text(
@@ -242,7 +241,7 @@ Widget CardDateLapora(BuildContext context, String title) {
 Widget CardLelang(
     BuildContext context, String title, String number, String date) {
   final Widget svgIcon = Container(
-    height: SizeConfig.blockVertical * 11,
+    height: SizeConfig.blockVertical * 14,
     child: Card(
         elevation: 2,
         shape: RoundedRectangleBorder(
@@ -269,7 +268,7 @@ Widget CardLelang(
                         margin: EdgeInsets.only(top: 5.0),
                         child: Text(
                           title,
-                          style: subtitle2.copyWith(color:Colors.black),
+                          style: subtitle2.copyWith(color:Colors.black,fontSize: 20.0),
                         ))
                   ],
                 ),
@@ -289,7 +288,7 @@ Widget CardLelang(
 Widget CardLelangBerlangsung(
     BuildContext context, String title, String date) {
   final Widget svgIcon = Container(
-    height: SizeConfig.blockVertical * 11,
+    height: SizeConfig.blockVertical * 14,
     child: Card(
         elevation: 2,
         shape: RoundedRectangleBorder(
@@ -325,7 +324,7 @@ Widget CardLelangBerlangsung(
                           margin: EdgeInsets.only(top: 5.0),
                           child: Text(
                             title,
-                            style: subtitle2.copyWith(color:Colors.black),
+                            style: subtitle2.copyWith(color:Colors.black,fontSize: 20.0),
                           ))
                     ],
                   ),

@@ -75,6 +75,18 @@ class ApiProvider {
     }
   }
 
+  getFeedDetail(String id) async {
+    dynamic token = await FlutterSession().get("token");
+    final response = await client
+        .get("$_url/feeds/${id}", headers: {'Authorization': 'Bearer $token'});
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception('Failed to Load');
+    }
+    // print(response.body);
+  }
+
   getDetailKolam(String idKolam) async {
     dynamic token = await FlutterSession().get("token");
     final response = await client
@@ -124,7 +136,7 @@ class ApiProvider {
       'seed_price': seed_price.toString(),
       'survival_rate': survival_rate.toString(),
       'feed_conversion_ratio': feed_conversion_ratio.toString(),
-      'feed_price': feed_price.toString(),
+      'feed_id': feed_price.toString(),
       'target_fish_count': target_fish_count.toString(),
       'target_price': target_price.toString(),
     });
@@ -162,5 +174,52 @@ class ApiProvider {
     } else {
       throw Exception('Failed to Load');
     }
+  }
+
+  Future monitorWeight(String pond_id,String weight) async {
+    dynamic token = await FlutterSession().get("token");
+    final response =
+    await client.post("$_url/monit/weight", headers: {
+      'Authorization': 'Bearer $token'
+    }, body: {'pond_id': pond_id,"weight":weight});
+    print(response.body);
+    return response;
+  }
+
+  Future monitorFeed(String pond_id,String feed) async {
+    dynamic token = await FlutterSession().get("token");
+    final response =
+    await client.post("$_url/monit/feed", headers: {
+      'Authorization': 'Bearer $token'
+    },body: {'pond_id': pond_id,"feed_spent":feed});
+    print(pond_id);
+    return response;
+  }
+
+  Future monitorSR(String pond_id,String fish_died) async {
+    dynamic token = await FlutterSession().get("token");
+    final response =
+    await client.post("$_url/monit/survival", headers: {
+      'Authorization': 'Bearer $token'
+    },body: {'pond_id': pond_id,"fish_died":fish_died});
+    return response;
+  }
+
+  Future analyticsMonitor(String pond_id,String month,String year) async {
+    dynamic token = await FlutterSession().get("token");
+    final response =
+        await client.get("$_url/analytics?pond_id=${pond_id}&month=${month}&year=${year}", headers: {
+      'Authorization': 'Bearer $token'
+    });
+    return response;
+  }
+
+  Future analyticsCalendar(String pond_id,String from) async {
+    dynamic token = await FlutterSession().get("token");
+    final response =
+    await client.get("$_url/analytics/survival?pond_id=${pond_id}&from=${from}", headers: {
+      'Authorization': 'Bearer $token'
+    });
+    return response;
   }
 }

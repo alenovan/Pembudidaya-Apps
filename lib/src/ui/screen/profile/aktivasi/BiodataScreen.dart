@@ -118,7 +118,6 @@ class _BiodataScreenState extends State<BiodataScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      resizeToAvoidBottomPadding: false,
       body: Column(
         children: [
           AppbarForgot(

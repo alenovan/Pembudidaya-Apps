@@ -49,9 +49,31 @@ class _LelangViewState extends State<LelangView> {
       child: Scaffold(
           resizeToAvoidBottomPadding: false,
           backgroundColor: backgroundGreyColor,
+          appBar: AppBar(
+            elevation: 0,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back, color: Colors.black),
+              onPressed: () => {
+                Navigator.push(
+                    context,
+                    PageTransition(
+                        type: PageTransitionType.rightToLeft,
+                        child: DashboardView()))
+              },
+            ),
+            actions: <Widget>[
+
+            ],
+            backgroundColor: Colors.white,
+            brightness: Brightness.light,
+            title: Text(
+              "Lelang",
+              style: h3,
+            ),
+          ),
           body: Column(
             children: [
-              AppBarContainer(context, "Lelang", DashboardView(), Colors.white),
+              // AppBarContainer(context, "Lelang", DashboardView(), Colors.white),
               Container(
                   padding: EdgeInsets.only(
                       left: SizeConfig.blockVertical * 3,
@@ -130,8 +152,6 @@ class _LelangViewState extends State<LelangView> {
                                 "180.000", "09 Juni 2012"),
                             CardLelang(context, "Lele catfish blackie",
                                 "180.000", "09 Juni 2012"),
-                            CardLelang(context, "Lele catfish blackie",
-                                "180.000", "09 Juni 2012")
                           ],
                         ),
                       )

@@ -8,6 +8,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lelenesia_pembudidaya/src/bloc/PakanBloc.dart';
 import 'package:lelenesia_pembudidaya/src/typography.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/checkout/Alamat/ListAlamatPengiriman.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/checkout/CheckoutView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/kolam/PenentuanPakanView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanMain.dart';
@@ -26,16 +28,16 @@ import 'package:lelenesia_pembudidaya/src/ui/widget/DatePicker.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:dotted_border/dotted_border.dart';
 
-class TambahLelang extends StatefulWidget {
+class TambahAlamatView extends StatefulWidget {
   final String idKolam;
 
-  const TambahLelang({Key key, @required this.idKolam}) : super(key: key);
+  const TambahAlamatView({Key key, @required this.idKolam}) : super(key: key);
 
   @override
-  _TambahLelangState createState() => _TambahLelangState();
+  _TambahAlamatViewState createState() => _TambahAlamatViewState();
 }
 
-class _TambahLelangState extends State<TambahLelang> {
+class _TambahAlamatViewState extends State<TambahAlamatView> {
   bool _clickForgot = true;
 
   void _buttonPenentuan() async {
@@ -52,20 +54,25 @@ class _TambahLelangState extends State<TambahLelang> {
         child: Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
+            centerTitle: true,
             elevation: 0,
             leading: IconButton(
               icon: Icon(Icons.arrow_back, color: Colors.black),
               onPressed: () => {
-                Navigator.pop(context, true)
+                Navigator.push(
+                    context,
+                    PageTransition(
+                        type: PageTransitionType.fade,
+                        child: ListAlamatPengiriman(
+                          idKolam: widget.idKolam,
+                        )))
               },
             ),
-            actions: <Widget>[
-
-            ],
+            actions: <Widget>[],
             backgroundColor: Colors.white,
             brightness: Brightness.light,
             title: Text(
-              "Lelang",
+              "Alamat Pengiriman",
               style: h3,
             ),
           ),
@@ -80,22 +87,11 @@ class _TambahLelangState extends State<TambahLelang> {
 
                       Container(
                         margin: EdgeInsets.only(
-                            left: SizeConfig.blockVertical * 3,
-                            top: SizeConfig.blockVertical * 2,
-                            right: SizeConfig.blockVertical * 5),
-                        child: Text(
-                          "Produk",
-                          style: subtitle2.copyWith(fontWeight: FontWeight.w700),
-                        ),
-                      ),
-
-                      Container(
-                        margin: EdgeInsets.only(
                             left: SizeConfig.blockVertical * 5,
                             top: SizeConfig.blockVertical * 2,
                             right: SizeConfig.blockVertical * 5),
                         child: Text(
-                          "Jenis Ikan",
+                          "Nama Lengkap",
                           style: TextStyle(
                               color: appBarTextColor,
                               fontFamily: 'lato',
@@ -111,7 +107,7 @@ class _TambahLelangState extends State<TambahLelang> {
                         child: TextFormField(
                           decoration: EditTextDecorationText(
                               context, "", 20.0, 0, 0, 0),
-                          keyboardType: TextInputType.number,
+                          keyboardType: TextInputType.text,
                           style: TextStyle(
                               color: blackTextColor,
                               fontFamily: 'lato',
@@ -126,7 +122,7 @@ class _TambahLelangState extends State<TambahLelang> {
                             top: SizeConfig.blockVertical * 2,
                             right: SizeConfig.blockVertical * 5),
                         child: Text(
-                          "Jumlah Stock (Kilogram)",
+                          "Alamat",
                           style: TextStyle(
                               color: appBarTextColor,
                               fontFamily: 'lato',
@@ -142,7 +138,7 @@ class _TambahLelangState extends State<TambahLelang> {
                         child: TextFormField(
                           decoration: EditTextDecorationText(
                               context, "", 20.0, 0, 0, 0),
-                          keyboardType: TextInputType.number,
+                          keyboardType: TextInputType.text,
                           style: TextStyle(
                               color: blackTextColor,
                               fontFamily: 'lato',
@@ -157,7 +153,7 @@ class _TambahLelangState extends State<TambahLelang> {
                             top: SizeConfig.blockVertical * 2,
                             right: SizeConfig.blockVertical * 5),
                         child: Text(
-                          "Harga Per Kilogram",
+                          "Provinsi",
                           style: TextStyle(
                               color: appBarTextColor,
                               fontFamily: 'lato',
@@ -173,7 +169,7 @@ class _TambahLelangState extends State<TambahLelang> {
                         child: TextFormField(
                           decoration: EditTextDecorationText(
                               context, "", 20.0, 0, 0, 0),
-                          keyboardType: TextInputType.number,
+                          keyboardType: TextInputType.text,
                           style: TextStyle(
                               color: blackTextColor,
                               fontFamily: 'lato',
@@ -188,7 +184,7 @@ class _TambahLelangState extends State<TambahLelang> {
                             top: SizeConfig.blockVertical * 2,
                             right: SizeConfig.blockVertical * 5),
                         child: Text(
-                          "Jumlah ikan per Kilogram",
+                          "Kota",
                           style: TextStyle(
                               color: appBarTextColor,
                               fontFamily: 'lato',
@@ -204,7 +200,7 @@ class _TambahLelangState extends State<TambahLelang> {
                         child: TextFormField(
                           decoration: EditTextDecorationText(
                               context, "", 20.0, 0, 0, 0),
-                          keyboardType: TextInputType.number,
+                          keyboardType: TextInputType.text,
                           style: TextStyle(
                               color: blackTextColor,
                               fontFamily: 'lato',
@@ -215,22 +211,11 @@ class _TambahLelangState extends State<TambahLelang> {
 
                       Container(
                         margin: EdgeInsets.only(
-                            left: SizeConfig.blockVertical * 3,
-                            top: SizeConfig.blockVertical * 2,
-                            right: SizeConfig.blockVertical * 5),
-                        child: Text(
-                          "Lelang",
-                          style: subtitle2.copyWith(fontWeight: FontWeight.w700),
-                        ),
-                      ),
-
-                      Container(
-                        margin: EdgeInsets.only(
                             left: SizeConfig.blockVertical * 5,
                             top: SizeConfig.blockVertical * 2,
                             right: SizeConfig.blockVertical * 5),
                         child: Text(
-                          "Tanggal Mulai Lelang",
+                          "Kecamatan",
                           style: TextStyle(
                               color: appBarTextColor,
                               fontFamily: 'lato',
@@ -246,7 +231,7 @@ class _TambahLelangState extends State<TambahLelang> {
                         child: TextFormField(
                           decoration: EditTextDecorationText(
                               context, "", 20.0, 0, 0, 0),
-                          keyboardType: TextInputType.number,
+                          keyboardType: TextInputType.text,
                           style: TextStyle(
                               color: blackTextColor,
                               fontFamily: 'lato',
@@ -255,67 +240,7 @@ class _TambahLelangState extends State<TambahLelang> {
                         ),
                       ),
 
-                      Container(
-                        margin: EdgeInsets.only(
-                            left: SizeConfig.blockVertical * 5,
-                            top: SizeConfig.blockVertical * 2,
-                            right: SizeConfig.blockVertical * 5),
-                        child: Text(
-                          "Tanggal Berakhir Lelang",
-                          style: TextStyle(
-                              color: appBarTextColor,
-                              fontFamily: 'lato',
-                              letterSpacing: 0.4,
-                              fontSize: 14.0),
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(
-                            left: SizeConfig.blockVertical * 5,
-                            top: SizeConfig.blockVertical * 1,
-                            right: SizeConfig.blockVertical * 5),
-                        child: TextFormField(
-                          decoration: EditTextDecorationText(
-                              context, "", 20.0, 0, 0, 0),
-                          keyboardType: TextInputType.number,
-                          style: TextStyle(
-                              color: blackTextColor,
-                              fontFamily: 'lato',
-                              letterSpacing: 0.4,
-                              fontSize: subTitleLogin),
-                        ),
-                      ),
 
-                      Container(
-                        margin: EdgeInsets.only(
-                            left: SizeConfig.blockVertical * 5,
-                            top: SizeConfig.blockVertical * 2,
-                            right: SizeConfig.blockVertical * 5),
-                        child: Text(
-                          "Buka Harga",
-                          style: TextStyle(
-                              color: appBarTextColor,
-                              fontFamily: 'lato',
-                              letterSpacing: 0.4,
-                              fontSize: 14.0),
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(
-                            left: SizeConfig.blockVertical * 5,
-                            top: SizeConfig.blockVertical * 1,
-                            right: SizeConfig.blockVertical * 5),
-                        child: TextFormField(
-                          decoration: EditTextDecorationText(
-                              context, "", 20.0, 0, 0, 0),
-                          keyboardType: TextInputType.number,
-                          style: TextStyle(
-                              color: blackTextColor,
-                              fontFamily: 'lato',
-                              letterSpacing: 0.4,
-                              fontSize: subTitleLogin),
-                        ),
-                      ),
 
                       Container(
                           margin: EdgeInsets.only(bottom: 20.0),
@@ -373,7 +298,15 @@ class _TambahLelangState extends State<TambahLelang> {
                                           highlightColor: redTextColor,
                                           //Replace with actual colors
                                           color: redTextColor,
-                                          onPressed: () => {},
+                                          onPressed: () => {
+                                            Navigator.push(
+                                                context,
+                                                PageTransition(
+                                                    type: PageTransitionType.fade,
+                                                    child: ListAlamatPengiriman(
+                                                      idKolam: widget.idKolam,
+                                                    )))
+                                          },
                                           // _toggleButtonForgot(),
                                           child: Text(
                                             "Batal",
