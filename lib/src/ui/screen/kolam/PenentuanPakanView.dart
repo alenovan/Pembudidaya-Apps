@@ -115,43 +115,29 @@ class _PenentuanPakanViewState extends State<PenentuanPakanView> {
     child:Scaffold(
         backgroundColor: Colors.grey[100],
     resizeToAvoidBottomPadding: false,
+        appBar: AppBar(
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () => {
+              Navigator.push(
+                  context,
+                  PageTransition(
+                      type: PageTransitionType.rightToLeft,
+                      child: DashboardView()))
+            },
+          ),
+          actions: <Widget>[],
+          backgroundColor: Colors.white,
+          brightness: Brightness.light,
+          title: Text(
+            "Penentuan Pakan",
+            style: h3,
+          ),
+        ),
     body: Container(
-
             child:Column(
               children: [
-                Container(
-                  padding: EdgeInsets.only(top:SizeConfig.blockVertical*8,bottom:SizeConfig.blockVertical*4,),
-                  color: Colors.white,
-                  child: Row(
-                    children: [
-                      Container(
-                          padding: EdgeInsets.only(
-                              left: SizeConfig.blockHorizotal*5),
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  PageTransition(
-                                      type: PageTransitionType.fade,
-                                      // duration: Duration(microseconds: 1000),
-                                      child: DashboardView()));
-                            },
-                            child: IconTheme(
-                              data: IconThemeData(color: appBarTextColor),
-                              child: Icon(Icons.arrow_back),
-                            ),
-                          )),
-                      Container(
-                        padding: EdgeInsets.only(
-                            left: SizeConfig.blockHorizotal*2),
-                        child:  Text(
-                          "Penentuan Pakan",
-                          style: h3,
-                        ),
-                      )
-                    ],
-                  ),
-                ),
                 Container(
                   margin: EdgeInsets.only(
                       top: SizeConfig.blockVertical * 4,
@@ -176,6 +162,7 @@ class _PenentuanPakanViewState extends State<PenentuanPakanView> {
                 Expanded(
                   child:Container(
                     margin: EdgeInsets.only(
+                        top: SizeConfig.blockVertical * 2,
                         left: SizeConfig.blockVertical * 2,
                         right: SizeConfig.blockVertical * 2),
                   child: Container(
@@ -201,6 +188,7 @@ class _PenentuanPakanViewState extends State<PenentuanPakanView> {
 
   Widget buildList(AsyncSnapshot<dynamic> snapshot) {
     return ListView.builder(
+      physics: new BouncingScrollPhysics(),
       scrollDirection: Axis.vertical,
       itemCount: items.length,
       itemBuilder: (BuildContext context, int index) {

@@ -58,6 +58,7 @@ Widget CardPenentuanPakan(
                       ),
                     ),
                     Container(
+                      width: SizeConfig.blockHorizotal * 40,
                       margin: EdgeInsets.only(left: 10.0),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,

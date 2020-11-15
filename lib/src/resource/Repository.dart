@@ -10,11 +10,14 @@ class Repository {
   Future login(String nohp) =>
       todoApiProvider.login(nohp);
 
+  Future checkout(String id_order) =>
+      todoApiProvider.checkout(id_order);
+
   Future register(String nama,String nohp) =>
       todoApiProvider.register(nama,nohp);
 
-  Future updateBiodataProfile(String address, String province, String city, String district, String region, String postal_code) =>
-  todoApiProvider.UpdateBiodataProfile(address,province,city,district,region,postal_code);
+  Future updateBiodataProfile(String address, String province, String city, String district) =>
+  todoApiProvider.UpdateBiodataProfile(address,province,city,district);
 
 
   Future updateKtpProfile(String noKtp, String ktp, String selfie) =>
@@ -42,6 +45,8 @@ class Repository {
 
   getDetailKolam(String idKolam) => todoApiProvider.getDetailKolam(idKolam);
 
+  getOrderId(String id_order) => todoApiProvider.getOrderId(id_order);
+
   Future activasiKolam(String idKolam,String kolam) =>
       todoApiProvider.activasiKolam(idKolam,kolam);
 
@@ -49,20 +54,38 @@ class Repository {
 
 //  monitor
 
-  Future monitorWeight(String pond_id,String weight) =>
-      todoApiProvider.monitorWeight(pond_id,weight);
+  Future monitorWeight(String pond_id,String weight,String created_at) =>
+      todoApiProvider.monitorWeight(pond_id,weight,created_at);
 
-  Future monitorFeed(String pond_id,String feed) =>
-      todoApiProvider.monitorFeed(pond_id,feed);
+  Future monitorFeed(String pond_id,String feed,String created_at) =>
+      todoApiProvider.monitorFeed(pond_id,feed,created_at);
 
-  Future monitorSr(String pond_id,String fish_died) =>
-      todoApiProvider.monitorSR(pond_id,fish_died);
+  Future monitorSr(String pond_id,String fish_died,String created_at) =>
+      todoApiProvider.monitorSR(pond_id,fish_died,created_at);
 
   getFeedDetail(String feed_id) => todoApiProvider.getFeedDetail(feed_id);
 
   Future analyticsMonitor(String pond_id,String month,String year) =>
       todoApiProvider.analyticsMonitor(pond_id,month,year);
 
-  Future analyticsCalendar(String pond_id,String from) =>
-      todoApiProvider.analyticsCalendar(pond_id,from);
+  Future analyticsCalendar(String pond_id,String from,String to) =>
+      todoApiProvider.analyticsCalendar(pond_id,from,to);
+
+  Future analyticsChartKematian(String pond_id,String from,String to) =>
+      todoApiProvider.analyticsChartKematian(pond_id,from,to);
+
+  Future analyticsBeratKematian(String pond_id,String from,String to) =>
+      todoApiProvider.analyticsBeratKematian(pond_id,from,to);
+
+  Future analyticsPakanKematian(String pond_id,String from,String to) =>
+      todoApiProvider.analyticsPakanKematian(pond_id,from,to);
+
+  Future getProvinsi() =>
+      todoApiProvider.getProvinsi();
+
+  Future getKota(String id_provinsi) =>
+      todoApiProvider.getKota(id_provinsi);
+
+  Future getKecamatan(String idKota) =>
+      todoApiProvider.getKecamatan(idKota);
 }

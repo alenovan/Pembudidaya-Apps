@@ -5,7 +5,9 @@ import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lelenesia_pembudidaya/src/typography.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanDetail.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/profile/ProfileScreen.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
@@ -48,8 +50,14 @@ Widget AppbarProfile(BuildContext context, String title, Widget page) {
 
 
 // ignore: non_constant_identifier_names
-Widget AppbarForgot(BuildContext context, String title, Widget page,Color color) {
+Widget AppbarForgot(BuildContext context, String title,Color color,String status) {
   SizeConfig().init(context);
+  var lokasi;
+  if(status == "dashboard"){
+    lokasi = DashboardView();
+  }else{
+    lokasi = ProfileScreen();
+  }
   final Widget appBar = Container(
     margin: EdgeInsets.only(top:SizeConfig.blockVertical*8,bottom:SizeConfig.blockVertical*4,),
     child: Row(
@@ -62,7 +70,7 @@ Widget AppbarForgot(BuildContext context, String title, Widget page,Color color)
                 Navigator.push(
                     context,
                     PageTransition(
-                        type: PageTransitionType.rightToLeft, child: page));
+                        type: PageTransitionType.rightToLeft, child: lokasi));
                 /* Write listener code here */
               },
               child: IconTheme(
@@ -138,3 +146,5 @@ Widget ProfileMenu(BuildContext context, String title, Widget page) {
   ));
   return appBar;
 }
+
+

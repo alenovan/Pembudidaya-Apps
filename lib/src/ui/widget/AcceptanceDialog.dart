@@ -115,6 +115,23 @@ Widget Alertquestion(BuildContext context, Widget success) {
 }
 
 
+showLoaderDialog(BuildContext context){
+  AlertDialog alert=AlertDialog(
+    content: new Row(
+      children: [
+        CircularProgressIndicator(),
+        Container(margin: EdgeInsets.only(left: 15),child:Text("Silahkan Tunggu .." )),
+      ],),
+  );
+  showDialog(barrierDismissible: false,
+    context:context,
+    builder:(BuildContext context){
+      return alert;
+    },
+  );
+}
+
+
 Widget AlertSuccess(BuildContext context, Widget success) {
   Widget data;
   data = Container(

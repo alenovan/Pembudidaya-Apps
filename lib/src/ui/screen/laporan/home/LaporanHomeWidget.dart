@@ -6,9 +6,11 @@ import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:lelenesia_pembudidaya/src/typography.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanDetail.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/profile/ProfileScreen.dart';
+import 'package:lelenesia_pembudidaya/src/ui/tools/LocalizedTimeFactory.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
@@ -16,8 +18,8 @@ import 'package:lelenesia_pembudidaya/src/LelenesiaText.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/AreaAndLineChart.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/CustomElevation.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart'
-    show CalendarCarousel, EventList;
+import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
+import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
 
 class LaporanHomeWidget extends StatelessWidget {
   const LaporanHomeWidget({Key key}) : super(key: key);
@@ -56,7 +58,7 @@ Widget CardColumn(BuildContext context, String title, String sub,
                     sub,
                     style: h3.copyWith(
                         color: Colors.black,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.bold,
                         letterSpacing: 1.15),
                   )),
             ],
@@ -86,17 +88,17 @@ Widget CardRow(BuildContext context, String title, String sub) {
                   children: [
                     Container(
                         child: Text(
-                      title,
-                      style: subtitle2.copyWith(color: colorPrimary),
-                    )),
+                          title,
+                          style: subtitle2.copyWith(color: colorPrimary),
+                        )),
                     Container(
                         child: Text(
-                      sub,
-                      style: h3.copyWith(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: 1.15),
-                    )),
+                          sub,
+                          style: h3.copyWith(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500,
+                              letterSpacing: 1.15),
+                        )),
                   ],
                 ),
                 Container(
@@ -123,13 +125,16 @@ Widget CardRow(BuildContext context, String title, String sub) {
   return svgIcon;
 }
 
-Widget buildCardChart(
-    {@required String title,
-    @required int percent,
-    @required int status,
-    @required String statusCount,
-    @required String date,
-    @required chartData}) {
+Widget buildCardChart({@required String title,
+  @required filter,
+  @required int percent,
+  @required int status,
+  @required String statusCount,
+  @required String date,
+  @required chartData,
+  @required context}) {
+  print(filter);
+  initializeDateFormatting();
   var statusData;
   if (status == 1) {
     statusData = Row(children: <Widget>[
@@ -138,7 +143,7 @@ Widget buildCardChart(
         size: 12.0,
       ),
       Text(
-        " "+  statusCount + "%",
+        " " + statusCount + "%",
         style: overline.copyWith(color: Colors.green),
       )
     ]);
@@ -150,40 +155,15 @@ Widget buildCardChart(
         size: 12.0,
       ),
       Text(
-        " "+  statusCount + "%",
+        " " + statusCount + "%",
         style: overline.copyWith(color: Colors.red),
       )
     ]);
   }
-  return Card(
-    elevation: 4,
+  return Container(
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          padding: EdgeInsets.only(
-              left: SizeConfig.blockVertical * 2,
-              top: SizeConfig.blockHorizotal * 3),
-          child: Text(
-            title,
-            style: subtitle2,
-          ),
-        ),
-        Row(
-          children: [
-            Container(
-              padding: EdgeInsets.only(left: SizeConfig.blockVertical * 2),
-              child: Text(
-                percent.toString() + "%",
-                style: body2,
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.only(left: SizeConfig.blockVertical * 1),
-              child: statusData,
-            ),
-          ],
-        ),
         Container(
           padding: EdgeInsets.only(
               left: SizeConfig.blockVertical * 2,
@@ -200,9 +180,21 @@ Widget buildCardChart(
           ),
           width: double.infinity,
           height: 200,
-          child: AreaAndLineChart(
+          child: charts.TimeSeriesChart(
             chartData,
             animate: true,
+            dateTimeFactory:LocalizedTimeFactory(Localizations.localeOf(context)),
+            primaryMeasureAxis: new charts.NumericAxisSpec(
+                tickProviderSpec: new charts.BasicNumericTickProviderSpec(zeroBound: false)
+            ),
+            domainAxis: charts.DateTimeAxisSpec(
+              tickFormatterSpec: charts.AutoDateTimeTickFormatterSpec(
+                day: charts.TimeFormatterSpec(
+                  format: 'EEEE',
+                  transitionFormat: 'EEEE',
+                ),
+              ),
+            ),
           ),
         ),
       ],
@@ -210,13 +202,12 @@ Widget buildCardChart(
   );
 }
 
-Widget buildCardChartGram(
-    {@required String title,
-    @required int percent,
-    @required int status,
-    @required String statusCount,
-    @required String date,
-    @required chartData}) {
+Widget buildCardChartGram({@required String title,
+  @required int percent,
+  @required int status,
+  @required String statusCount,
+  @required String date,
+  @required chartData}) {
   var statusData;
   if (status == 1) {
     statusData = Row(children: <Widget>[
@@ -225,7 +216,7 @@ Widget buildCardChartGram(
         size: 12.0,
       ),
       Text(
-        " "+  statusCount + "%",
+        " " + statusCount + "%",
         style: overline.copyWith(color: Colors.green),
       )
     ]);
@@ -237,7 +228,7 @@ Widget buildCardChartGram(
         size: 12.0,
       ),
       Text(
-        " "+  statusCount + "%",
+        " " + statusCount + "%",
         style: overline.copyWith(color: Colors.red),
       )
     ]);
@@ -247,28 +238,58 @@ Widget buildCardChartGram(
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          padding: EdgeInsets.only(
-              left: SizeConfig.blockVertical * 2,
-              top: SizeConfig.blockHorizotal * 3),
-          child: Text(
-            title,
-            style: subtitle2,
-          ),
-        ),
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
-              padding: EdgeInsets.only(left: SizeConfig.blockVertical * 2),
-              child: Text(
-                percent.toString() + "gr",
-                style: body2,
-              ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: EdgeInsets.only(
+                      left: SizeConfig.blockVertical * 2,
+                      top: SizeConfig.blockHorizotal * 3),
+                  child: Text(
+                    title,
+                    style: subtitle2,
+                  ),
+                ),
+                Row(
+                  children: [
+                    Container(
+                      padding:
+                      EdgeInsets.only(left: SizeConfig.blockVertical * 2),
+                      child: Text(
+                        percent.toString() + " gram",
+                        style: body2,
+                      ),
+                    ),
+                    Container(
+                      padding:
+                      EdgeInsets.only(left: SizeConfig.blockVertical * 1),
+                      child: statusData,
+                    ),
+                  ],
+                )
+              ],
             ),
             Container(
-              padding: EdgeInsets.only(left: SizeConfig.blockVertical * 1),
-              child: statusData,
-            ),
+                margin: EdgeInsets.only(top: 20.0, right: 10.0),
+                alignment: Alignment.centerRight,
+                child: CustomElevation(
+                    height: 30.0,
+                    child: RaisedButton(
+                      highlightColor: colorPrimary,
+                      //Replace with actual colors
+                      color: colorPrimary,
+                      onPressed: () => {},
+                      child: Text(
+                        "Filter",
+                        style: overline.copyWith(color: Colors.white),
+                      ),
+                      shape: new RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(30.0),
+                      ),
+                    ))),
           ],
         ),
         Container(

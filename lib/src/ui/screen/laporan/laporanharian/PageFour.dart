@@ -32,7 +32,8 @@ class PageFour extends StatefulWidget {
   final int tahun;
   final String dataPageTwo;
   final String dataPageThree;
-  PageFour({Key key, this.idKolam, this.tgl, this.bulan, this.tahun, this.dataPageTwo, this.dataPageThree}) : super(key: key);
+  final DateTime isoData;
+  PageFour({Key key, this.idKolam, this.tgl, this.bulan, this.tahun, this.dataPageTwo, this.dataPageThree, this.isoData}) : super(key: key);
 
   @override
   _PageFourState createState() => _PageFourState();
@@ -40,51 +41,109 @@ class PageFour extends StatefulWidget {
 
 class _PageFourState extends State<PageFour> {
   bool _showDetail = true;
-  void _toggleDetail() async {
+  void _toggleDetail(status_all) async {
+   var dateSelected = DateFormat("yyyy-MM-dd hh:mm:ss","id_ID").format(widget.isoData);
+   print(dateSelected);
     Navigator.of(context).push(new MaterialPageRoute<Null>(
         builder: (BuildContext context) {
           return LoadingShow(context);
         },
         fullscreenDialog: true));
-    var status = await bloc.weightMonitor(widget.idKolam,weightController.text.toString());
-    if(status){
-      var statusFeed = await bloc.feedMonitor(widget.idKolam,widget.dataPageTwo);
-      if(statusFeed){
-        var statusSr = await bloc.feedSR(widget.idKolam,widget.dataPageThree);
-        if(statusSr){
-          showDialog(
-            context: context,
-            builder: (BuildContext context) =>
-                AlertSuccess(context, LaporanMain(
-                  idKolam: widget
-                      .idKolam
-                      .toString(),
-                  page: 2,
-                  laporan_page:
-                  "home",
-                )),
-          );
+    if(status_all){
+      var status = await bloc.weightMonitor(widget.idKolam,weightController.text.toString(),dateSelected);
+      if(status){
+        var statusFeed = await bloc.feedMonitor(widget.idKolam,widget.dataPageTwo,dateSelected);
+        if(statusFeed){
+          var statusSr = await bloc.feedSR(widget.idKolam,widget.dataPageThree,dateSelected);
+          if(statusSr){
+            showDialog(
+              context: context,
+              builder: (BuildContext context) =>
+                  AlertSuccess(context, LaporanMain(
+                    idKolam: widget
+                        .idKolam
+                        .toString(),
+                    page: 2,
+                    laporan_page:
+                    "home",
+                  )),
+            );
+
+            Navigator.push(
+                context,
+                PageTransition(
+                    type: PageTransitionType.fade,
+                    child:  LaporanMain(
+                      idKolam: widget
+                          .idKolam
+                          .toString(),
+                      page: 2,
+                      laporan_page:
+                      "home",
+                    )));
+          }else{
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+            BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Silahkan ulangi kembali di halaman jumlah kematian ikan");
+          }
         }else{
           Navigator.of(context).pop();
           Navigator.of(context).pop();
-          BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Silahkan ulangi kembali di halaman jumlah kematian ikan");
+          BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Silahkan ulangi kembali di halaman jumlah pakan");
         }
       }else{
         Navigator.of(context).pop();
         Navigator.of(context).pop();
-        BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Silahkan ulangi kembali di halaman jumlah pakan");
+        BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Silahkan ulangi kembali di halaman berat ikan");
       }
     }else{
-      Navigator.of(context).pop();
-      Navigator.of(context).pop();
-      BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Silahkan ulangi kembali di halaman berat ikan");
+        var statusFeed = await bloc.feedMonitor(widget.idKolam,widget.dataPageTwo,dateSelected);
+        if(statusFeed){
+          var statusSr = await bloc.feedSR(widget.idKolam,widget.dataPageThree,dateSelected);
+          if(statusSr){
+            showDialog(
+              context: context,
+              builder: (BuildContext context) =>
+                  AlertSuccess(context, LaporanMain(
+                    idKolam: widget
+                        .idKolam
+                        .toString(),
+                    page: 2,
+                    laporan_page:
+                    "home",
+                  )),
+            );
+
+            Navigator.push(
+                context,
+                PageTransition(
+                    type: PageTransitionType.fade,
+                    child:  LaporanMain(
+                      idKolam: widget
+                          .idKolam
+                          .toString(),
+                      page: 2,
+                      laporan_page:
+                      "home",
+                    )));
+          }else{
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+            BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Silahkan ulangi kembali di halaman jumlah kematian ikan");
+          }
+        }else{
+          Navigator.of(context).pop();
+          Navigator.of(context).pop();
+          BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Silahkan ulangi kembali di halaman jumlah pakan");
+        }
     }
+
   }
   TextEditingController weightController = TextEditingController();
   @override
   void initState() {
-    print(widget.tgl);
     super.initState();
+    // print(DateFormat("yyyy-MM-dd hh:mm:ss","id_ID").format(widget.isoData));
   }
   @override
   Widget build(BuildContext context) {
@@ -206,14 +265,19 @@ class _PageFourState extends State<PageFour> {
                                               colorPrimary, //Replace with actual colors
                                               color: colorPrimary,
                                               onPressed: () => {
-                                                if(weightController.text.trim() == ""){
-                                                  BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Pastikan data terisi semua")
+                                                if(weightController.text.trim().length <= 1){
+                                                  showDialog(
+                                                    context: context,
+                                                    builder: (BuildContext context) =>
+                                                        AlertquestionInsert(
+                                                            context, false),
+                                                  )
                                                 }else{
                                                   showDialog(
                                                     context: context,
                                                     builder: (BuildContext context) =>
                                                         AlertquestionInsert(
-                                                            context, DashboardView()),
+                                                            context,true),
                                                   )
 
                                                 }
@@ -244,7 +308,7 @@ class _PageFourState extends State<PageFour> {
           )),);
 
   }
-  Widget AlertquestionInsert(BuildContext context, Widget success) {
+  Widget AlertquestionInsert(BuildContext context, bool success) {
     final Widget data = Container(
       child: Dialog(
         shape: RoundedRectangleBorder(
@@ -279,7 +343,7 @@ class _PageFourState extends State<PageFour> {
                             highlightColor: colorPrimary,
                             //Replace with actual colors
                             color: colorPrimary,
-                            onPressed: () => {_toggleDetail()},
+                            onPressed: () => {_toggleDetail(success)},
                             child: Text(
                               "Ya",
                               style: TextStyle(

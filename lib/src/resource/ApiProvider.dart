@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_session/flutter_session.dart';
 import 'package:http/http.dart' show Client, Response;
+import 'package:intl/intl.dart';
 import 'package:lelenesia_pembudidaya/src/Models/ListKolamModels.dart';
 import 'package:lelenesia_pembudidaya/src/Models/ProfileModels.dart';
 import 'package:lelenesia_pembudidaya/src/Models/RegisterModels.dart';
@@ -26,7 +27,7 @@ class ApiProvider {
   }
 
   Future UpdateBiodataProfile(String address, String province, String city,
-      String district, String region, String postal_code) async {
+      String district) async {
     dynamic token = await FlutterSession().get("token");
     final response = await client.put("$_url/user/change/profile", headers: {
       'Authorization': 'Bearer $token'
@@ -35,8 +36,6 @@ class ApiProvider {
       'province': province,
       'city': city,
       'district': district,
-      'region': region,
-      'postal_code': postal_code
     });
     return response;
   }
@@ -76,15 +75,11 @@ class ApiProvider {
   }
 
   getFeedDetail(String id) async {
+    print(id);
     dynamic token = await FlutterSession().get("token");
     final response = await client
         .get("$_url/feeds/${id}", headers: {'Authorization': 'Bearer $token'});
-    if (response.statusCode == 200) {
       return response.body;
-    } else {
-      throw Exception('Failed to Load');
-    }
-    // print(response.body);
   }
 
   getDetailKolam(String idKolam) async {
@@ -176,33 +171,35 @@ class ApiProvider {
     }
   }
 
-  Future monitorWeight(String pond_id,String weight) async {
+  Future monitorWeight(String pond_id,String weight,String created_at) async {
+    var now = new DateTime.now();
+    String formattedDate = DateFormat("yyyy-MM-dd HH:mm:ss").format(now);
     dynamic token = await FlutterSession().get("token");
     final response =
     await client.post("$_url/monit/weight", headers: {
       'Authorization': 'Bearer $token'
-    }, body: {'pond_id': pond_id,"weight":weight});
+    }, body: {'pond_id': pond_id,"weight":weight,"created_at":created_at});
     print(response.body);
     return response;
   }
 
-  Future monitorFeed(String pond_id,String feed) async {
+  Future monitorFeed(String pond_id,String feed,String created_at) async {
     dynamic token = await FlutterSession().get("token");
     final response =
     await client.post("$_url/monit/feed", headers: {
       'Authorization': 'Bearer $token'
-    },body: {'pond_id': pond_id,"feed_spent":feed});
-    print(pond_id);
+    },body: {'pond_id': pond_id,"feed_spent":feed,"created_at":created_at});
     return response;
   }
 
-  Future monitorSR(String pond_id,String fish_died) async {
+  Future monitorSR(String pond_id,String fish_died,String created_at) async {
     dynamic token = await FlutterSession().get("token");
     final response =
     await client.post("$_url/monit/survival", headers: {
       'Authorization': 'Bearer $token'
-    },body: {'pond_id': pond_id,"fish_died":fish_died});
+    },body: {'pond_id': pond_id,"fish_died":fish_died,"created_at":created_at});
     return response;
+    print(created_at);
   }
 
   Future analyticsMonitor(String pond_id,String month,String year) async {
@@ -214,12 +211,87 @@ class ApiProvider {
     return response;
   }
 
-  Future analyticsCalendar(String pond_id,String from) async {
+  Future analyticsCalendar(String pond_id,String from,String to) async {
     dynamic token = await FlutterSession().get("token");
     final response =
-    await client.get("$_url/analytics/survival?pond_id=${pond_id}&from=${from}", headers: {
+    await client.get("$_url/analytics/survival?pond_id=${pond_id}&from=${from},&to=${to}", headers: {
       'Authorization': 'Bearer $token'
     });
+    return response;
+  }
+
+  Future getOrderId(String id_order) async {
+    dynamic token = await FlutterSession().get("token");
+    final response =
+    await client.get("$_url/orders/${id_order}", headers: {
+      'Authorization': 'Bearer $token'
+    });
+    // print(id_order);
+    return response;
+  }
+
+  Future checkout(String id_order) async {
+    dynamic token = await FlutterSession().get("token");
+    final response =
+    await client.post("$_url/orders/${id_order}/checkout", headers: {
+      'Authorization': 'Bearer $token'
+    });
+    return response;
+  }
+
+  Future analyticsChartKematian(String pond_id,String from,String to) async {
+    dynamic token = await FlutterSession().get("token");
+    final response =
+    await client.get("$_url/analytics/survival?pond_id=${pond_id}&from=${from}&to=${to}", headers: {
+      'Authorization': 'Bearer $token'
+    });
+    return response;
+  }
+
+  Future analyticsBeratKematian(String pond_id,String from,String to) async {
+    dynamic token = await FlutterSession().get("token");
+    final response =
+    await client.get("$_url/analytics/growth?pond_id=${pond_id}&from=${from}&to=${to}", headers: {
+      'Authorization': 'Bearer $token'
+    });
+    return response;
+  }
+
+  Future analyticsPakanKematian(String pond_id,String from,String to) async {
+    dynamic token = await FlutterSession().get("token");
+    final response =
+    await client.get("$_url/analytics/growth?pond_id=${pond_id}&from=${from}&to=${to}", headers: {
+      'Authorization': 'Bearer $token'
+    });
+    return response;
+  }
+
+  Future getProvinsi() async {
+    dynamic token = await FlutterSession().get("token");
+    final response =
+    await client.get("$_url/geo/provinces", headers: {
+      'Authorization': 'Bearer $token'
+    });
+    return response;
+  }
+
+  Future getKota(id_provinsi) async {
+    dynamic token = await FlutterSession().get("token");
+    final response =
+    await client.get("$_url/geo/${id_provinsi}/cities", headers: {
+      'Authorization': 'Bearer $token'
+    });
+    // print(response.body);
+    return response;
+  }
+
+  Future getKecamatan(id_kota) async {
+    dynamic token = await FlutterSession().get("token");
+    final response =
+    await client.get("$_url/geo/${id_kota}/districts", headers: {
+      'Authorization': 'Bearer $token'
+    });
+    // print(response.body);
     return response;
   }
 }

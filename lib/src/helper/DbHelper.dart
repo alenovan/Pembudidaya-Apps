@@ -69,7 +69,7 @@ class DbHelper {
     Database db = await this.database;
     var mapList = await db.rawQuery('SELECT * FROM tb_penentuan_panen where pond_id = $id order by pond_id desc limit 1');
     var decode = json.decode(json.encode(mapList))[0];
-    print(decode);
+    // print(decode);
     return decode;
   }
 

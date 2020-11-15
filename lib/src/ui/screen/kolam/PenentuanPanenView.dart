@@ -41,19 +41,35 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
   final format = DateFormat("yyyy-MM-dd HH:mm:ss");
   DbHelper _dbHelper;
   var dataPenentuan;
-
   void getData() async {
     dataPenentuan = await _dbHelper.select(int.parse(widget.idKolam));
     // var select = json.decode(json.encode(data));
     print(dataPenentuan);
     tglTebarController.text = dataPenentuan["sow_date"].toString();
-    hargaBibitController.text = dataPenentuan["seed_price"].toString();
-    jumlahBibitController.text = dataPenentuan["seed_amount"].toString();
-    gramPerEkorController.text = dataPenentuan["seed_weight"].toString();
-    survivalRateController.text = dataPenentuan["survival_rate"].toString();
-    feedConvController.text = dataPenentuan["feed_conversion_ratio"].toString();
-    targetJumlahController.text = dataPenentuan["target_fish_count"].toString();
-    targetHargaController.text = dataPenentuan["target_price"].toString();
+    hargaBibitController.text = dataPenentuan["seed_price"].toString() == "0"
+        ? null
+        : dataPenentuan["seed_price"].toString();
+    jumlahBibitController.text = dataPenentuan["seed_amount"].toString() == "0"
+        ? null
+        : dataPenentuan["seed_amount"].toString();
+    gramPerEkorController.text = dataPenentuan["seed_weight"].toString() == "0"
+        ? null
+        : dataPenentuan["seed_weight"].toString();
+    survivalRateController.text =
+        dataPenentuan["survival_rate"].toString() == "0"
+            ? null
+            : dataPenentuan["survival_rate"].toString();
+    feedConvController.text =
+        dataPenentuan["feed_conversion_ratio"].toString() == "0"
+            ? null
+            : dataPenentuan["feed_conversion_ratio"].toString();
+    targetJumlahController.text =
+        dataPenentuan["target_fish_count"].toString() == "0"
+            ? null
+            : dataPenentuan["target_fish_count"].toString();
+    targetHargaController.text = dataPenentuan["target_price"].toString() == "0"
+        ? null
+        : dataPenentuan["target_price"].toString();
   }
 
   @override
@@ -72,22 +88,36 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
       _tagetJumlah = "-",
       _targetHarga = "-";
 
-  void updateSqlite() async{
+  void updateSqlite() async {
     var data = SqliteDataPenentuanPanen(
         int.parse(widget.idKolam),
         tglTebarController.text.toString(),
-        int.parse(jumlahBibitController.text.toString()),
-        int.parse(gramPerEkorController.text.toString()),
-        int.parse(hargaBibitController.text.toString()),
-        int.parse(survivalRateController.text.toString()),
-        int.parse(feedConvController.text.toString()),
+        int.parse(jumlahBibitController.text.toString() == null
+            ? "0"
+            : jumlahBibitController.text.toString()),
+        int.parse(jumlahBibitController.text.toString() == null
+            ? "0"
+            : jumlahBibitController.text.toString()),
+        int.parse(hargaBibitController.text.toString() == null
+            ? "0"
+            : hargaBibitController.text.toString()),
+        int.parse(survivalRateController.text.toString() == null
+            ? "0"
+            : survivalRateController.text.toString()),
+        int.parse(feedConvController.text.toString() == null
+            ? "0"
+            : feedConvController.text.toString()),
         0,
-        int.parse(targetJumlahController.text.toString()),
-        int.parse(targetHargaController.text.toString()),
+        int.parse(targetJumlahController.text.toString() == null
+            ? "0"
+            : targetJumlahController.text.toString()),
+        int.parse(targetHargaController.text.toString() == null
+            ? "0"
+            : targetHargaController.text.toString()),
         0);
     var update = await _dbHelper.update(data);
     print(update);
-    if(update == 1){
+    if (update == 1) {
       Navigator.of(context).pop();
       showDialog(
         context: context,
@@ -98,14 +128,15 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
         Navigator.push(
             context,
             PageTransition(
-                type: PageTransitionType.fade, child: PenentuanPakanView(
-              idKolam: widget.idKolam,
-            )));
+                type: PageTransitionType.fade,
+                child: PenentuanPakanView(
+                  idKolam: widget.idKolam,
+                )));
       });
-    }else{
+    } else {
       Navigator.of(context).pop();
-        BottomSheetFeedback.show(context,
-            title: "Mohon Maaf", description: "Silahkan ulangi kembali");
+      BottomSheetFeedback.show(context,
+          title: "Mohon Maaf", description: "Silahkan ulangi kembali");
     }
   }
 
@@ -168,7 +199,7 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
     //         PageTransition(
     //             type: PageTransitionType.fade, child: PenentuanPakanView()));
     //   });
-      updateSqlite();
+    updateSqlite();
     // } else if (status == 2) {
     //   Navigator.of(context).pop();
     //   BottomSheetFeedback.show(context,
@@ -229,41 +260,53 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
                                   fontSize: 14.0),
                             ),
                           ),
-                          Container(
-                            margin: EdgeInsets.only(
-                                left: SizeConfig.blockVertical * 5,
-                                top: SizeConfig.blockVertical * 1,
-                                right: SizeConfig.blockVertical * 5),
-                            child: DateTimeField(
-                              controller: tglTebarController,
-                              decoration: EditTextDecorationText(
-                                  context, "", 20.0, 0, 0, 0),
-                              keyboardType: TextInputType.number,
-                              style: TextStyle(
-                                  color: blackTextColor,
-                                  fontFamily: 'lato',
-                                  letterSpacing: 0.4,
-                                  fontSize: subTitleLogin),
-                              format: format,
-                              onShowPicker: (context, currentValue) async {
-                                final date = await showDatePicker(
-                                    context: context,
-                                    firstDate: DateTime(1900),
-                                    initialDate: currentValue ?? DateTime.now(),
-                                    lastDate: DateTime(2100));
-                                if (date != null) {
-                                  final time = await showTimePicker(
-                                    context: context,
-                                    initialTime: TimeOfDay.fromDateTime(
-                                        currentValue ?? DateTime.now()),
-                                  );
-                                  return DateTimeField.combine(date, time);
-                                } else {
-                                  return currentValue;
-                                }
-                              },
-                            ),
-                          ),
+                          Theme(
+                              data: Theme.of(context).copyWith(
+                                accentColor: colorPrimaryLight,
+                                primaryColor: colorPrimary,
+                              ),
+                              child: Builder(
+                                  builder: (context) => Container(
+                                        margin: EdgeInsets.only(
+                                            left: SizeConfig.blockVertical * 5,
+                                            top: SizeConfig.blockVertical * 1,
+                                            right:
+                                                SizeConfig.blockVertical * 5),
+                                        child: DateTimeField(
+                                          controller: tglTebarController,
+                                          decoration: EditTextDecorationText(
+                                              context, "", 20.0, 0, 0, 0),
+                                          keyboardType: TextInputType.number,
+                                          style: TextStyle(
+                                              color: blackTextColor,
+                                              fontFamily: 'lato',
+                                              letterSpacing: 0.4,
+                                              fontSize: subTitleLogin),
+                                          format: format,
+                                          onShowPicker:
+                                              (context, currentValue) async {
+                                            final date = await showDatePicker(
+                                                context: context,
+                                                firstDate: DateTime(1900),
+                                                initialDate: currentValue ??
+                                                    DateTime.now(),
+                                                lastDate: DateTime(2100));
+                                            if (date != null) {
+                                              final time = await showTimePicker(
+                                                context: context,
+                                                initialTime:
+                                                    TimeOfDay.fromDateTime(
+                                                        currentValue ??
+                                                            DateTime.now()),
+                                              );
+                                              return DateTimeField.combine(
+                                                  date, time);
+                                            } else {
+                                              return currentValue;
+                                            }
+                                          },
+                                        ),
+                                      ))),
                           Visibility(
                             visible: _tebarBibit == "-" ? false : true,
                             child: Container(
@@ -287,7 +330,7 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
                                 top: SizeConfig.blockVertical * 2,
                                 right: SizeConfig.blockVertical * 5),
                             child: Text(
-                              "Harga Bibit (Rupiah)",
+                              "Harga Bibit (Rupiah/Ekor)",
                               style: TextStyle(
                                   color: appBarTextColor,
                                   fontFamily: 'lato',
@@ -640,13 +683,12 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
                                               color: _clickForgot
                                                   ? colorPrimary
                                                   : editTextBgColor,
-                                              onPressed: () =>
-                                                  showDialog(
-                                                    context: context,
-                                                    builder: (BuildContext context) =>
-                                                        AlertMessage(
-                                                            context),
-                                                  ),
+                                              onPressed: () => showDialog(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) =>
+                                                        AlertMessage(context),
+                                              ),
                                               child: Text(
                                                 "Tentukan Pakan",
                                                 style: TextStyle(
@@ -715,8 +757,6 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
             ],
           ),
         ));
-
-
   }
 
   Widget AlertMessage(BuildContext context) {
@@ -741,13 +781,11 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
                 textAlign: TextAlign.center,
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Container(
                       height: 35.0,
                       margin: EdgeInsets.only(
-                          left: SizeConfig.blockVertical * 1,
-                          right: SizeConfig.blockVertical * 1,
                           top: SizeConfig.blockVertical * 3),
                       child: CustomElevation(
                           height: 35.0,
@@ -755,10 +793,7 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
                             highlightColor: colorPrimary,
                             //Replace with actual colors
                             color: colorPrimary,
-                            onPressed: () =>
-                            {
-                              _buttonPenentuan()
-                            },
+                            onPressed: () => {_buttonPenentuan()},
                             child: Text(
                               "Ya",
                               style: TextStyle(
@@ -775,8 +810,6 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
                   Container(
                     height: 35.0,
                     margin: EdgeInsets.only(
-                        left: SizeConfig.blockVertical * 1,
-                        right: SizeConfig.blockVertical * 1,
                         top: SizeConfig.blockVertical * 3),
                     child: CustomElevation(
                         height: 35.0,
@@ -808,6 +841,7 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
     );
     return data;
   }
+
   Widget showImage() {
     print("di click");
     return FutureBuilder<File>(
@@ -835,8 +869,6 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
     );
   }
 }
-
-
 
 Widget roundedRectBorderWidget(BuildContext context) {
   return DottedBorder(
@@ -877,5 +909,3 @@ Widget roundedRectBorderWidget(BuildContext context) {
     ),
   );
 }
-
-

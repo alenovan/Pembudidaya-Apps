@@ -28,7 +28,8 @@ class PageTwo extends StatefulWidget {
   final int tgl;
   final int bulan;
   final int tahun;
-  PageTwo({Key key, this.idKolam, this.tgl, this.bulan, this.tahun}) : super(key: key);
+  final DateTime isoData;
+  PageTwo({Key key, this.idKolam, this.tgl, this.bulan, this.tahun, this.isoData}) : super(key: key);
 
   @override
   _PageTwoState createState() => _PageTwoState();
@@ -56,6 +57,7 @@ class _PageTwoState extends State<PageTwo> {
                 bulan: widget.bulan,
                 tahun: widget.tahun,
                 dataPageTwo : feedController.text.toString(),
+                isoString: widget.isoData,
                 page: 2,
                 laporan_page: "tiga",
               )));
@@ -67,12 +69,13 @@ class _PageTwoState extends State<PageTwo> {
   TextEditingController feedController = TextEditingController();
   @override
   void initState() {
-    print(widget.tgl);
+    print(widget.isoData);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    print(widget.isoData);
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         statusBarIconBrightness: Brightness.dark,
@@ -85,18 +88,7 @@ class _PageTwoState extends State<PageTwo> {
             leading: IconButton(
               icon: Icon(Icons.arrow_back, color: Colors.black),
               onPressed: () => {
-                Navigator.push(
-                    context,
-                    PageTransition(
-                        type: PageTransitionType.rightToLeft,
-                        child:  LaporanMain(
-                          idKolam: widget
-                              .idKolam
-                              .toString(),
-                          page: 2,
-                          laporan_page:
-                          "home",
-                        )))
+                Navigator.pop(context,true)
               },
             ),
             actions: <Widget>[],

@@ -26,6 +26,7 @@ class CheckoutWidget extends StatelessWidget {
 
 Widget CardPenentuanPakan(
     BuildContext context, String title, String sub, String satuan,String image) {
+  print(image_link+image);
   final Widget svgIcon = Container(
     height: 110,
     child:Container(
@@ -45,7 +46,9 @@ Widget CardPenentuanPakan(
                             height: SizeConfig.blockHorizotal * 17,
                             errorBuilder: (BuildContext context, Object exception, StackTrace stackTrace) {
                               return Image.network(
-                                  "https://via.placeholder.com/300"
+                                  image_link+image,
+                                fit: BoxFit.cover,
+                                height: SizeConfig.blockHorizotal * 17,
                               );
                             },
                           )

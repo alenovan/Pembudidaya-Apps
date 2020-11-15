@@ -66,6 +66,7 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
   var feedConvController = 0;
   var targetJumlahController = 0;
   var targetHargaController = 0;
+  var dataCheck;
 
   void _toggleButtonSave(int statusx) async {
     getData();
@@ -118,7 +119,7 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
     }
   }
 
-  void updateSqlite() async{
+  void updateSqlite() async {
     var data = SqliteDataPenentuanPanen(
         int.parse(widget.idKolam),
         tglTebarController.toString(),
@@ -138,6 +139,7 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
     dataPenentuan = await _dbHelper.select(int.parse(widget.idKolam));
     print(dataPenentuan);
     setState(() {
+      dataCheck = dataPenentuan["seed_amount"].toString();
       tglTebarController = dataPenentuan["sow_date"].toString();
       hargaBibitController = dataPenentuan["seed_price"];
       jumlahBibitController = dataPenentuan["seed_amount"];
@@ -151,13 +153,16 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
 
   @override
   void initState() {
-    _dbHelper = DbHelper.instance;
     super.initState();
+    _dbHelper = DbHelper.instance;
     getData();
   }
 
   @override
   Widget build(BuildContext context) {
+    if(dataCheck == "0"){
+      getData();
+    }
     return AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle(
           statusBarIconBrightness: Brightness.dark,
@@ -489,13 +494,11 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
                 textAlign: TextAlign.center,
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Container(
                       height: 35.0,
                       margin: EdgeInsets.only(
-                          left: SizeConfig.blockVertical * 1,
-                          right: SizeConfig.blockVertical * 1,
                           top: SizeConfig.blockVertical * 3),
                       child: CustomElevation(
                           height: 35.0,
@@ -520,8 +523,6 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
                   Container(
                     height: 35.0,
                     margin: EdgeInsets.only(
-                        left: SizeConfig.blockVertical * 1,
-                        right: SizeConfig.blockVertical * 1,
                         top: SizeConfig.blockVertical * 3),
                     child: CustomElevation(
                         height: 35.0,

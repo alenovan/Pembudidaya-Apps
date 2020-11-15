@@ -59,7 +59,7 @@ class _LaporanState extends State<Laporan> {
   ];
 
   void _toggleDetail() {
-    print("data");
+    // print("data");
     setState(() {
       _showDetail = !_showDetail;
     });
@@ -97,7 +97,7 @@ class _LaporanState extends State<Laporan> {
     }
 
     var dataEvent = await bloc.analyticsCalendar(
-        widget.idKolam, "${activeYear}-${activeMonth}-01T00:00:00Z");
+        widget.idKolam, "${activeYear}-${activeMonth}-01T00:00:00Z","${activeYear}-${activeMonth}-31T00:00:00Z");
     print(dataEvent);
     setState(() {
       values = dataEvent;
@@ -249,8 +249,7 @@ class _LaporanState extends State<Laporan> {
                                                             tgl: date.day,
                                                             bulan: date.month,
                                                             tahun: date.year,
-                                                            isoString: date
-                                                                .toIso8601String(),
+                                                            isoString: date,
                                                             page: 2,
                                                             laporan_page:
                                                                 "satu",
@@ -268,7 +267,6 @@ class _LaporanState extends State<Laporan> {
                                                             type:
                                                                 PageTransitionType
                                                                     .leftToRight,
-                                                            // duration: Duration(microseconds: 1000),
                                                             child:
                                                                 LaporanDetail(
                                                                   isoDate: date.toIso8601String(),
@@ -278,11 +276,25 @@ class _LaporanState extends State<Laporan> {
                                                                   bulan: date.month,
                                                                 )));
                                                   } else {
-                                                    BottomSheetFeedback.show(
+                                                    Navigator.push(
                                                         context,
-                                                        title: "Mohon Maaf",
-                                                        description:
-                                                            "Anda tidak dapat mengisi laporan pada tanggal ini");
+                                                        PageTransition(
+                                                            type:
+                                                            PageTransitionType
+                                                                .fade,
+                                                            // duration: Duration(microseconds: 1000),
+                                                            child: LaporanMain(
+                                                              idKolam: widget
+                                                                  .idKolam
+                                                                  .toString(),
+                                                              tgl: date.day,
+                                                              bulan: date.month,
+                                                              tahun: date.year,
+                                                              isoString: date,
+                                                              page: 2,
+                                                              laporan_page:
+                                                              "satu",
+                                                            )));
                                                   }
                                                 } else {
                                                   BottomSheetFeedback.show(
@@ -403,15 +415,15 @@ class _LaporanState extends State<Laporan> {
                                                           style: body2));
                                                 }
                                               },
-                                              todayButtonColor: purpleTextColor,
-                                              // dayButtonColor:Colors.red,
-                                              // daysTextStyle:TextStyle(
-                                              //     color: Colors.white,
-                                              //     fontWeight: FontWeight.w500,
-                                              //     fontFamily: 'poppins',
-                                              //     letterSpacing: 0.14,
-                                              //     fontSize: 18.02),
-                                              todayBorderColor: purpleTextColor,
+                                              todayButtonColor: values.contains("${now.year}-${now.month}-${now.day}") ? Colors.green[400]:colorPrimary,
+                                              // dayButtonColor:values.contains("${now.year}-${now.month}-${now.day}") ? Colors.green:colorPrimary,
+                                              daysTextStyle:TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontFamily: 'poppins',
+                                                  letterSpacing: 0.14,
+                                                  fontSize: 18.02),
+                                              todayBorderColor: values.contains("${now.year}-${now.month}-${now.day}") ? Colors.green[400]:colorPrimary,
                                               todayTextStyle: TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.w500,
@@ -481,7 +493,7 @@ class _LaporanState extends State<Laporan> {
                                     CardRekap(
                                         context,
                                         "Berat Ikan",
-                                        "${last_fish_weight} Kg",
+                                        "${last_fish_weight}",
                                         "${bulan[int.parse(activeMonth.toString())]} ${now.year}"),
                                   ],
                                 ),

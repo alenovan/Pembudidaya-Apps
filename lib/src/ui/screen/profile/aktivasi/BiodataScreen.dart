@@ -1,11 +1,15 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lelenesia_pembudidaya/src/Models/KecamatanModel.dart';
+import 'package:lelenesia_pembudidaya/src/Models/KotaModel.dart';
 import 'package:lelenesia_pembudidaya/src/Models/ProfileModels.dart';
+import 'package:lelenesia_pembudidaya/src/Models/ProvinsiModel.dart';
 import 'package:lelenesia_pembudidaya/src/bloc/ProfilBloc.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/forgot/ForgotResetView.dart';
@@ -29,7 +33,8 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
 class BiodataScreen extends StatefulWidget {
-  const BiodataScreen({Key key}) : super(key: key);
+  final String from;
+  const BiodataScreen({Key key, this.from}) : super(key: key);
 
   @override
   _BiodataScreenState createState() => _BiodataScreenState();
@@ -39,10 +44,21 @@ class _BiodataScreenState extends State<BiodataScreen> {
   var blox;
   var loop = 0;
 
+  //provinsigetKecamatan
+  List<ProvinsiModel> itemsProvinsi = [];
+  //kota
+  List<KotaModel> itemsKota = [];
+  //Kecamatan
+  List<KecamatanModel> itemsKecamatan= [];
+
+  var selectedProvinsi;
+  var selectedKota;
+  var selectedKecamatan;
   @override
   void initState() {
-    update();
     super.initState();
+    getProvinsi();
+    update();
   }
 
   bool _clickForgot = true;
@@ -65,11 +81,9 @@ class _BiodataScreenState extends State<BiodataScreen> {
       var status = await bloc.funUpdateProfile(
         namaLengkapController.text.toString(),
         alamatController.text.toString(),
-        kotaController.text.toString(),
-        provinsiController.text.toString(),
-        kelurahanController.text.toString(),
-        kecamatanController.text.toString(),
-        kodePosController.text.toString(),
+        selectedKota.text.toString(),
+        selectedProvinsi.toString(),
+        selectedKecamatan.toString()
       );
       Navigator.of(context).pop();
       Navigator.push(
@@ -77,7 +91,7 @@ class _BiodataScreenState extends State<BiodataScreen> {
           PageTransition(
               type: PageTransitionType.fade,
               // duration: Duration(microseconds: 1000),
-              child: KtpScreen()));
+              child: KtpScreen(from:widget.from)));
     } else {
       BottomSheetFeedback.show(context,
           title: "Mohon Maaf", description: "Pastikan data terisi semua");
@@ -89,8 +103,6 @@ class _BiodataScreenState extends State<BiodataScreen> {
         (alamatController.text.trim() != "") &&
         (kotaController.text.trim() != "") &&
         (provinsiController.text.trim() != "") &&
-        (kodePosController.text.trim() != "") &&
-        (kelurahanController.text.trim() != "") &&
         (kecamatanController.text.trim() != "")) {
       setState(() {
         isButtonEnabled = true;
@@ -104,24 +116,61 @@ class _BiodataScreenState extends State<BiodataScreen> {
 
   void update() async {
     blox = await bloc.getProfile();
-    namaLengkapController.text = blox['data']['name'];
-    alamatController.text = blox['data']['address'];
-    kotaController.text = blox['data']['city'];
-    provinsiController.text = blox['data']['province'];
-    kelurahanController.text = blox['data']['district'];
-    kecamatanController.text = blox['data']['region'];
-    kodePosController.text = blox['data']['postal_code'];
+    // namaLengkapController.text = blox['data']['name'];
+    // alamatController.text = blox['data']['address'];
+    // kotaController.text = blox['data']['city'];
+    // provinsiController.text = blox['data']['province'];
+    // kelurahanController.text = blox['data']['district'];
+    // kecamatanController.text = blox['data']['region'];
+    // kodePosController.text = blox['data']['postal_code'];
     checkInput();
+  }
+
+  void getProvinsi() {
+    itemsProvinsi.clear();
+    bloc.getProvinsi()
+        .then((value) {
+      List<ProvinsiModel> dataKolam = new List();
+      setState(() {
+        dataKolam = value;
+        itemsProvinsi.addAll(dataKolam);
+      });
+    });
+  }
+
+  void getKota(String id_provinsi) {
+    itemsKota.clear();
+    bloc.getKota(id_provinsi)
+        .then((value) {
+      List<KotaModel> dataKolam = new List();
+      setState(() {
+        dataKolam = value;
+        itemsKota.addAll(dataKolam);
+      });
+    });
+  }
+
+  void getKecamatan(String id_kota) {
+    itemsKecamatan.clear();
+    bloc.getKecamatan(id_kota)
+        .then((value) {
+      List<KecamatanModel> dataKolam = new List();
+      setState(() {
+        dataKolam = value;
+        itemsKecamatan.addAll(dataKolam);
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+   
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
         children: [
           AppbarForgot(
-              context, "Aktivasi Akun ", ProfileScreen(), Colors.white),
+              context, "Aktivasi Akun ", Colors.white,widget.from),
               Expanded(child:
               SingleChildScrollView(
                   physics: new BouncingScrollPhysics(),
@@ -161,6 +210,161 @@ class _BiodataScreenState extends State<BiodataScreen> {
                           fontSize: subTitleLogin),
                     ),
                   ),
+
+
+
+
+                  Container(
+                    margin: EdgeInsets.only(
+                        left: SizeConfig.blockVertical * 5,
+                        top: SizeConfig.blockVertical * 1,
+                        right: SizeConfig.blockVertical * 5),
+                    child: Text(
+                      "Provinsi",
+                      style: TextStyle(
+                          color: appBarTextColor,
+                          fontFamily: 'lato',
+                          letterSpacing: 0.4,
+                          fontSize: 14.0),
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(
+                        left: SizeConfig.blockVertical * 5,
+                        top: SizeConfig.blockVertical * 1,
+                        right: SizeConfig.blockVertical * 5),
+                    child:DropdownSearch<ProvinsiModel>(
+                      searchBoxController: provinsiController,
+                      items:itemsProvinsi,
+                      mode: Mode.BOTTOM_SHEET,
+                      isFilteredOnline: true,
+                      showClearButton: true,
+                      showSearchBox: true,
+                      dropdownSearchDecoration:  EditTextDecorationText(context, "", 20.0, 0, 0, 0),
+                      autoValidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (ProvinsiModel u) =>
+                      u == null ? "Provinsi Wajib di Isi " : null,
+                      onChanged: (ProvinsiModel data) {
+                        print(data.id);
+                        setState(() {
+                          selectedProvinsi = data.id;
+                        });
+                        getKota(data.id.toString());
+                      },
+                    ),
+                  ),
+
+                  Container(
+                    margin: EdgeInsets.only(
+                        left: SizeConfig.blockVertical * 5,
+                        top: SizeConfig.blockVertical * 1,
+                        right: SizeConfig.blockVertical * 5),
+                    child: Text(
+                      "Kota",
+                      style: TextStyle(
+                          color: appBarTextColor,
+                          fontFamily: 'lato',
+                          letterSpacing: 0.4,
+                          fontSize: 14.0),
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(
+                        left: SizeConfig.blockVertical * 5,
+                        top: SizeConfig.blockVertical * 1,
+                        right: SizeConfig.blockVertical * 5),
+                    child:DropdownSearch<KotaModel>(
+                      searchBoxController: kotaController,
+                      items:itemsKota,
+                      mode: Mode.BOTTOM_SHEET,
+                      isFilteredOnline: true,
+                      showClearButton: true,
+                      showSearchBox: true,
+                      dropdownSearchDecoration:  EditTextDecorationText(context, "", 20.0, 0, 0, 0),
+                      autoValidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (KotaModel u) =>
+                      u == null ? "Kota Wajib di Isi " : null,
+                      onChanged: (KotaModel data) {
+                        print(data.cityId);
+                        setState(() {
+                          selectedKota = data.cityId;
+                        });
+                        getKecamatan(data.cityId.toString());
+                      },
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(
+                        left: SizeConfig.blockVertical * 5,
+                        top: SizeConfig.blockVertical * 1,
+                        right: SizeConfig.blockVertical * 5),
+                    child: Text(
+                      "Kecamatan",
+                      style: TextStyle(
+                          color: appBarTextColor,
+                          fontFamily: 'lato',
+                          letterSpacing: 0.4,
+                          fontSize: 14.0),
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(
+                        left: SizeConfig.blockVertical * 5,
+                        top: SizeConfig.blockVertical * 1,
+                        right: SizeConfig.blockVertical * 5),
+                    child:DropdownSearch<KecamatanModel>(
+                      searchBoxController: kecamatanController,
+                      items:itemsKecamatan,
+                      mode: Mode.BOTTOM_SHEET,
+                      isFilteredOnline: true,
+                      showClearButton: true,
+                      showSearchBox: true,
+                      dropdownSearchDecoration:  EditTextDecorationText(context, "", 20.0, 0, 0, 0),
+                      autoValidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (KecamatanModel u) =>
+                      u == null ? "Kecamatan Wajib di Isi " : null,
+                      onChanged: (KecamatanModel data) {
+                        print(data.districtId);
+                        setState(() {
+                          selectedKecamatan = data.districtId;
+                        });
+                      },
+                    ),
+                  ),
+                  // Container(
+                  //   margin: EdgeInsets.only(
+                  //       left: SizeConfig.blockVertical * 5,
+                  //       top: SizeConfig.blockVertical * 1,
+                  //       right: SizeConfig.blockVertical * 5),
+                  //   child: Text(
+                  //     "Kelurahan",
+                  //     style: TextStyle(
+                  //         color: appBarTextColor,
+                  //         fontFamily: 'lato',
+                  //         letterSpacing: 0.4,
+                  //         fontSize: 14.0),
+                  //   ),
+                  // ),
+                  // Container(
+                  //   margin: EdgeInsets.only(
+                  //       left: SizeConfig.blockVertical * 5,
+                  //       top: SizeConfig.blockVertical * 1,
+                  //       right: SizeConfig.blockVertical * 5),
+                  //   child: TextFormField(
+                  //     onChanged: (val) {
+                  //       checkInput();
+                  //     },
+                  //     controller: kelurahanController,
+                  //     decoration:
+                  //     EditTextDecorationText(context, "", 20.0, 0, 0, 0),
+                  //     keyboardType: TextInputType.text,
+                  //     style: TextStyle(
+                  //         color: blackTextColor,
+                  //         fontFamily: 'lato',
+                  //         letterSpacing: 0.4,
+                  //         fontSize: subTitleLogin),
+                  //   ),
+                  // ),
                   Container(
                     margin: EdgeInsets.only(
                         left: SizeConfig.blockVertical * 5,
@@ -188,176 +392,6 @@ class _BiodataScreenState extends State<BiodataScreen> {
                       decoration:
                       EditTextDecorationText(context, "", 20.0, 0, 0, 0),
                       keyboardType: TextInputType.text,
-                      style: TextStyle(
-                          color: blackTextColor,
-                          fontFamily: 'lato',
-                          letterSpacing: 0.4,
-                          fontSize: subTitleLogin),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(
-                        left: SizeConfig.blockVertical * 5,
-                        top: SizeConfig.blockVertical * 1,
-                        right: SizeConfig.blockVertical * 5),
-                    child: Text(
-                      "Kota",
-                      style: TextStyle(
-                          color: appBarTextColor,
-                          fontFamily: 'lato',
-                          letterSpacing: 0.4,
-                          fontSize: 14.0),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(
-                        left: SizeConfig.blockVertical * 5,
-                        top: SizeConfig.blockVertical * 1,
-                        right: SizeConfig.blockVertical * 5),
-                    child: TextFormField(
-                      onChanged: (val) {
-                        checkInput();
-                      },
-                      controller: kotaController,
-                      decoration:
-                      EditTextDecorationText(context, "", 20.0, 0, 0, 0),
-                      keyboardType: TextInputType.text,
-                      style: TextStyle(
-                          color: blackTextColor,
-                          fontFamily: 'lato',
-                          letterSpacing: 0.4,
-                          fontSize: subTitleLogin),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(
-                        left: SizeConfig.blockVertical * 5,
-                        top: SizeConfig.blockVertical * 1,
-                        right: SizeConfig.blockVertical * 5),
-                    child: Text(
-                      "Provinsi",
-                      style: TextStyle(
-                          color: appBarTextColor,
-                          fontFamily: 'lato',
-                          letterSpacing: 0.4,
-                          fontSize: 14.0),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(
-                        left: SizeConfig.blockVertical * 5,
-                        top: SizeConfig.blockVertical * 1,
-                        right: SizeConfig.blockVertical * 5),
-                    child: TextFormField(
-                      onChanged: (val) {
-                        checkInput();
-                      },
-                      controller: provinsiController,
-                      decoration:
-                      EditTextDecorationText(context, "", 20.0, 0, 0, 0),
-                      keyboardType: TextInputType.text,
-                      style: TextStyle(
-                          color: blackTextColor,
-                          fontFamily: 'lato',
-                          letterSpacing: 0.4,
-                          fontSize: subTitleLogin),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(
-                        left: SizeConfig.blockVertical * 5,
-                        top: SizeConfig.blockVertical * 1,
-                        right: SizeConfig.blockVertical * 5),
-                    child: Text(
-                      "Kecamatan",
-                      style: TextStyle(
-                          color: appBarTextColor,
-                          fontFamily: 'lato',
-                          letterSpacing: 0.4,
-                          fontSize: 14.0),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(
-                        left: SizeConfig.blockVertical * 5,
-                        top: SizeConfig.blockVertical * 1,
-                        right: SizeConfig.blockVertical * 5),
-                    child: TextFormField(
-                      onChanged: (val) {
-                        checkInput();
-                      },
-                      controller: kecamatanController,
-                      decoration:
-                      EditTextDecorationText(context, "", 20.0, 0, 0, 0),
-                      keyboardType: TextInputType.text,
-                      style: TextStyle(
-                          color: blackTextColor,
-                          fontFamily: 'lato',
-                          letterSpacing: 0.4,
-                          fontSize: subTitleLogin),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(
-                        left: SizeConfig.blockVertical * 5,
-                        top: SizeConfig.blockVertical * 1,
-                        right: SizeConfig.blockVertical * 5),
-                    child: Text(
-                      "Kelurahan",
-                      style: TextStyle(
-                          color: appBarTextColor,
-                          fontFamily: 'lato',
-                          letterSpacing: 0.4,
-                          fontSize: 14.0),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(
-                        left: SizeConfig.blockVertical * 5,
-                        top: SizeConfig.blockVertical * 1,
-                        right: SizeConfig.blockVertical * 5),
-                    child: TextFormField(
-                      onChanged: (val) {
-                        checkInput();
-                      },
-                      controller: kelurahanController,
-                      decoration:
-                      EditTextDecorationText(context, "", 20.0, 0, 0, 0),
-                      keyboardType: TextInputType.text,
-                      style: TextStyle(
-                          color: blackTextColor,
-                          fontFamily: 'lato',
-                          letterSpacing: 0.4,
-                          fontSize: subTitleLogin),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(
-                        left: SizeConfig.blockVertical * 5,
-                        top: SizeConfig.blockVertical * 1,
-                        right: SizeConfig.blockVertical * 5),
-                    child: Text(
-                      "Kode Pos",
-                      style: TextStyle(
-                          color: appBarTextColor,
-                          fontFamily: 'lato',
-                          letterSpacing: 0.4,
-                          fontSize: 14.0),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(
-                        left: SizeConfig.blockVertical * 5,
-                        top: SizeConfig.blockVertical * 1,
-                        right: SizeConfig.blockVertical * 5),
-                    child: TextFormField(
-                      onChanged: (val) {
-                        checkInput();
-                      },
-                      controller: kodePosController,
-                      decoration:
-                      EditTextDecorationText(context, "", 20.0, 0, 0, 0),
-                      keyboardType: TextInputType.number,
                       style: TextStyle(
                           color: blackTextColor,
                           fontFamily: 'lato',

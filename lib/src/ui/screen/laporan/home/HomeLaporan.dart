@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaText.dart';
+import 'package:lelenesia_pembudidaya/src/Models/ChartKematianModel.dart';
 import 'package:lelenesia_pembudidaya/src/bloc/KolamBloc.dart';
 import 'package:lelenesia_pembudidaya/src/typography.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/checkout/CheckoutView.dart';
@@ -11,11 +12,16 @@ import 'package:lelenesia_pembudidaya/src/ui/screen/kolam/riwayat/RiwayatKolam.d
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/home/LaporanHomeWidget.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginWidget.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
+import 'package:lelenesia_pembudidaya/src/ui/widget/AcceptanceDialog.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/CustomElevation.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanWidget.dart';
 import 'package:intl/intl.dart' show DateFormat, NumberFormat;
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:page_transition/page_transition.dart';
+import 'package:lelenesia_pembudidaya/src/bloc/CheckoutBloc.dart' as checkout;
+import 'package:lelenesia_pembudidaya/src/bloc/LaporanBloc.dart' as laporan;
+import 'package:date_range_picker/date_range_picker.dart' as DateRangePicker;
+import 'package:intl/date_symbol_data_local.dart';
 
 class HomeLaporan extends StatefulWidget {
   final String idKolam;
@@ -30,45 +36,152 @@ class _HomeLaporanState extends State<HomeLaporan> {
   var loop = 0;
   var _stock_pakan = "";
   var _tanggal_panen = "";
-  var _target_jual = 0 ;
+  var _target_jual = 0;
+  DateTime time = DateTime.now();
+  bool _disposed = false;
   var _jumlah_ikan = "";
   var _berat_ikan = "";
-  var _informasi_modal = 0;
+  var _informasi_modal = "0";
   var _perkiraan_omset = "";
   var _laba = "";
   var _jumlah_ikan_first = 0;
   var _berat_ikan_current = 0;
   var _nama_kolam = "";
   var _omset;
+  var id_order = "";
+  var status_checkout = false;
   final formatter = new NumberFormat("#,###");
+
+  //for kematian
+  List<DateTime> tingkatKematianDateRange = [];
+  var itemsKematian = List<ChartKematianModel>();
+
+  //for berat
+  List<DateTime> tingkatBeratDateRange = [];
+  var itemsBerat = List<ChartKematianModel>();
+
+  //for pakan
+  List<DateTime> tingkatPakanDateRange = [];
+  var itemsPakan = List<ChartKematianModel>();
+
+
   void update() async {
     var detail = await bloc.getKolamDetail(widget.idKolam);
     var data = detail['data'];
-    var modalPakan = (data['harvest']['feed_requirement_estimation'] / 1000) * data['harvest']['feed_price'] ;
-    var modalIkan = data['harvest']['seed_amount'] *  data['harvest']['seed_price'];
-    var jmlIkanPerkilo = 1000 / data['harvest']['harvest_weight_estimation'];
-    var omset = (data['harvest']['current_amount'] / jmlIkanPerkilo) * data['harvest']['target_price'];
     setState(() {
       _nama_kolam = data['name'].toString();
       _stock_pakan = data['harvest']['current_stocked_feed'].toString() + " gr";
       _tanggal_panen = data['harvest']['harvest_date_estimation'].toString();
       _target_jual = data['harvest']['target_price'];
       _jumlah_ikan = data['harvest']['current_amount'].toString();
-      _berat_ikan =
-          data['harvest']['harvest_weight_estimation'].toString();
+      _berat_ikan = data['harvest']['harvest_weight_estimation'].toString();
       _jumlah_ikan_first = data['harvest']['seed_amount'];
-      _berat_ikan_current= data['harvest']['current_weight'];
-      _laba = formatter
-              .format(data['harvest']['profit_estimation'])
-              .toString() +
-          ",-";
-      _omset = omset;
-      _informasi_modal = modalIkan.toInt()+modalPakan.toInt();
+      _berat_ikan_current = data['harvest']['current_weight'];
+      _laba =
+          formatter.format(data['harvest']['profit_estimation']).toString() +
+              ",-";
+      _omset = formatter.format(data['harvest']['revenue']).toString();
+      _informasi_modal = formatter.format(data['harvest']['budget']).toString();
+      id_order = data['harvest']['last_order_id'].toString();
+    });
+    // print("id_order  $id_order");
+    detailOrder();
+  }
+
+  void detailOrder() async {
+    var detail = await checkout.bloc.getCheckOrderId(id_order.toString());
+    await WidgetsBinding.instance.addPostFrameCallback((_) {
+      // print(detail);
+      setState(() {
+        status_checkout = detail;
+      });
+    });
+    Navigator.pop(context);
+  }
+
+  void dateRangeKematian(data) {
+    setState(() {
+      tingkatKematianDateRange = data;
+    });
+    chartKematian();
+  }
+
+  void dateRangeBerat(data) {
+    setState(() {
+      tingkatBeratDateRange = data;
+    });
+    chartBerat();
+  }
+
+  void dateRangePakan(data) {
+    setState(() {
+      tingkatPakanDateRange = data;
+    });
+    chartPakan();
+  }
+
+  void chartKematian() {
+    itemsKematian.clear();
+    laporan.bloc
+        .analyticsKematian(
+            widget.idKolam,
+            tingkatKematianDateRange[0].toIso8601String(),
+            tingkatKematianDateRange[1].toIso8601String())
+        .then((value) {
+      List<ChartKematianModel> dataKolam = new List();
+      setState(() {
+        dataKolam = value;
+        itemsKematian.addAll(dataKolam);
+      });
+    });
+  }
+
+  void chartBerat() {
+    itemsBerat.clear();
+    laporan.bloc
+        .analyticsBerat(
+            widget.idKolam,
+            tingkatBeratDateRange[0].toIso8601String(),
+            tingkatBeratDateRange[1].toIso8601String())
+        .then((value) {
+      List<ChartKematianModel> dataKolam = new List();
+      setState(() {
+        dataKolam = value;
+        itemsBerat.addAll(dataKolam);
+      });
+    });
+  }
+
+  void chartPakan() {
+    itemsPakan.clear();
+    laporan.bloc
+        .analyticsPakan(
+        widget.idKolam,
+        tingkatPakanDateRange[0].toIso8601String(),
+        tingkatPakanDateRange[1].toIso8601String())
+        .then((value) {
+      List<ChartKematianModel> dataKolam = new List();
+      setState(() {
+        dataKolam = value;
+        itemsPakan.addAll(dataKolam);
+      });
     });
   }
 
   @override
   void initState() {
+    super.initState();
+    initializeDateFormatting(); //very important
+    tingkatKematianDateRange.add(new DateTime.now());
+    tingkatKematianDateRange
+        .add((new DateTime.now()).add(new Duration(days: 7)));
+
+    tingkatBeratDateRange.add(new DateTime.now());
+    tingkatBeratDateRange.add((new DateTime.now()).add(new Duration(days: 7)));
+
+    tingkatPakanDateRange.add(new DateTime.now());
+    tingkatPakanDateRange.add((new DateTime.now()).add(new Duration(days: 7)));
+
     _nama_kolam = "...";
     _stock_pakan = "Loading";
     _tanggal_panen = "Loading";
@@ -77,12 +190,24 @@ class _HomeLaporanState extends State<HomeLaporan> {
     _berat_ikan = "0";
     _jumlah_ikan_first = 0;
     _berat_ikan_current = 0;
-    _informasi_modal = 0;
+    _informasi_modal = "Loading";
     _perkiraan_omset = "Loading";
     _laba = "Loading";
     _omset = 0;
-    update();
-    super.initState();
+    Future.delayed(Duration.zero, () {
+      if (!_disposed)
+        setState(() {
+          showLoaderDialog(context);
+        });
+      update();
+      chartKematian();
+    });
+  }
+
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
   }
 
   @override
@@ -134,7 +259,12 @@ class _HomeLaporanState extends State<HomeLaporan> {
                 onSelected: (value) {
                   if (value == 1) {
                     Navigator.push(
-                        context, PageTransition(type: PageTransitionType.fade, child: RiwayatKolam(idKolam: widget.idKolam,)));
+                        context,
+                        PageTransition(
+                            type: PageTransitionType.fade,
+                            child: RiwayatKolam(
+                              idKolam: widget.idKolam,
+                            )));
                   }
                 },
                 icon: Icon(Icons.more_vert, color: Colors.black),
@@ -231,12 +361,11 @@ class _HomeLaporanState extends State<HomeLaporan> {
                     fontSize: 15.0),
                 textAlign: TextAlign.start,
               ),
-
               Container(
                 margin: EdgeInsets.only(top: 10.0),
                 child: TextFormField(
-                  decoration: EditTextDecorationText(
-                      context, "", 20.0, 0, 0, 0),
+                  decoration:
+                      EditTextDecorationText(context, "", 20.0, 0, 0, 0),
                   keyboardType: TextInputType.number,
                   style: TextStyle(
                       color: blackTextColor,
@@ -245,7 +374,6 @@ class _HomeLaporanState extends State<HomeLaporan> {
                       fontSize: subTitleLogin),
                 ),
               ),
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -261,8 +389,7 @@ class _HomeLaporanState extends State<HomeLaporan> {
                             highlightColor: colorPrimary,
                             //Replace with actual colors
                             color: colorPrimary,
-                            onPressed: () =>
-                            {
+                            onPressed: () => {
                               Navigator.push(
                                   context,
                                   PageTransition(
@@ -357,7 +484,7 @@ class _HomeLaporanState extends State<HomeLaporan> {
                               _stock_pakan,
                               style: h3.copyWith(
                                   color: Colors.black,
-                                  fontWeight: FontWeight.w500,
+                                  fontWeight: FontWeight.bold,
                                   letterSpacing: 1.15),
                             )),
                           ],
@@ -372,14 +499,27 @@ class _HomeLaporanState extends State<HomeLaporan> {
                                   //Replace with actual colors
                                   color: colorPrimary,
                                   onPressed: () => {
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) =>
-                                          AlertQuestionPakan(context),
-                                    )
+                                    if (status_checkout)
+                                      {
+                                        Navigator.push(
+                                            context,
+                                            PageTransition(
+                                                type: PageTransitionType.fade,
+                                                child: CheckoutView(
+                                                  idKolam: widget.idKolam,
+                                                )))
+                                      }
+                                    else
+                                      {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) =>
+                                              AlertQuestionPakan(context),
+                                        )
+                                      }
                                   },
                                   child: Text(
-                                    "Request",
+                                    status_checkout ? "Checkout" : "Request",
                                     style:
                                         overline.copyWith(color: Colors.white),
                                   ),
@@ -396,70 +536,331 @@ class _HomeLaporanState extends State<HomeLaporan> {
           child: CardColumn(context, "Tanggal Panen", _tanggal_panen,
               Alignment.centerLeft, SizeConfig.blockVertical * 3),
         ),
-        Row(
-          children: <Widget>[
-            Expanded(
-                child: Container(
-              child: CardColumn(
-                  context, "Jumlah Ikan", _jumlah_ikan_first.toString(), Alignment.center, 0),
-            )),
-            Expanded(
-              child: Container(
-                child: CardColumn(
-                    context, "Berat Ikan ", _berat_ikan, Alignment.center, 0),
-              ),
-            ),
-          ],
+
+        Container(
+          child: CardColumn(
+              context,
+              "Jumlah Ikan",
+              "${_jumlah_ikan_first.toString()}/${_jumlah_ikan.toString()}",
+              Alignment.centerLeft,
+              SizeConfig.blockVertical * 3),
+        ),
+        Container(
+          child: CardColumn(
+              context,
+              "Berat Ikan ",
+              "${_berat_ikan.toString()}/${_jumlah_ikan.toString()} gr",
+              Alignment.centerLeft,
+              SizeConfig.blockVertical * 3),
         ),
 
-            // Row(
-            //   children: <Widget>[
-            //     Expanded(
-            //         child: Container(
-            //           child: CardColumn(
-            //               context, "Jml Ikan Terkini", _jumlah_ikan.toString(), Alignment.center, 0),
-            //         )),
-            //     Expanded(
-            //       child: Container(
-            //         child: CardColumn(
-            //             context, "Berat Ikan Terkini", _berat_ikan_current.toString(), Alignment.center, 0),
-            //       ),
-            //     ),
-            //   ],
-            // ),
-        Container(
-          child: buildCardChart(
-              title: "Tingkat Kematian",
-              percent: 95,
-              status: 1,
-              statusCount: "4",
-              date: "1 September - 30 September",
-              chartData: _createSampleData()),
+        // Row(
+        //   children: <Widget>[
+        //     Expanded(
+        //         child: Container(
+        //           child: CardColumn(
+        //               context, "Jml Ikan Terkini", _jumlah_ikan.toString(), Alignment.center, 0),
+        //         )),
+        //     Expanded(
+        //       child: Container(
+        //         child: CardColumn(
+        //             context, "Berat Ikan Terkini", _berat_ikan_current.toString(), Alignment.center, 0),
+        //       ),
+        //     ),
+        //   ],
+        // ),
+        Card(
+          elevation: 4,
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.only(
+                            left: SizeConfig.blockVertical * 2,
+                            top: SizeConfig.blockHorizotal * 3),
+                        child: Text(
+                          "Tingkat Kematian",
+                          style: subtitle2,
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.only(
+                                left: SizeConfig.blockVertical * 2),
+                            child: Text(
+                              "95" + "%",
+                              style: body2,
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(
+                                left: SizeConfig.blockVertical * 1),
+                            child: Row(children: <Widget>[
+                              Icon(
+                                Icons.trending_down,
+                                color: Colors.red,
+                                size: 12.0,
+                              ),
+                              Text(
+                                " " + "4" + "%",
+                                style: overline.copyWith(color: Colors.red),
+                              )
+                            ]),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                  Container(
+                      margin: EdgeInsets.only(top: 20.0, right: 10.0),
+                      alignment: Alignment.centerRight,
+                      child: Theme(
+                        data: Theme.of(context).copyWith(
+                          accentColor: colorPrimaryLight,
+                          primaryColor: colorPrimary,
+                        ),
+                        child: Builder(
+                          builder: (context) => CustomElevation(
+                              height: 30.0,
+                              child: RaisedButton(
+                                highlightColor: colorPrimary,
+                                //Replace with actual colors
+                                color: colorPrimary,
+                                onPressed: () async {
+                                  final List<DateTime> picked =
+                                      await DateRangePicker.showDatePicker(
+                                          context: context,
+                                          initialFirstDate:
+                                              tingkatKematianDateRange[0],
+                                          initialLastDate:
+                                              tingkatKematianDateRange[1],
+                                          firstDate: new DateTime(2015),
+                                          lastDate: new DateTime(2021));
+                                  if (picked != null && picked.length == 2) {
+                                    dateRangeKematian(picked);
+                                  }
+                                },
+                                child: Text(
+                                  "Filter",
+                                  style: overline.copyWith(color: Colors.white),
+                                ),
+                                shape: new RoundedRectangleBorder(
+                                  borderRadius: new BorderRadius.circular(30.0),
+                                ),
+                              )),
+                        ),
+                      )),
+                ],
+              ),
+              buildCardChart(
+                  status: 1,
+                  statusCount: "4",
+                  context: context,
+                  date:
+                      " ${DateFormat('d MMMM').format(tingkatKematianDateRange[0])} - ${DateFormat('d MMMM').format(tingkatKematianDateRange[1])}",
+                  chartData: _createKematianData())
+            ],
+          ),
+        ),
+        Card(
+          elevation: 4,
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.only(
+                            left: SizeConfig.blockVertical * 2,
+                            top: SizeConfig.blockHorizotal * 3),
+                        child: Text(
+                          "Jumlah Pakan Keluar",
+                          style: subtitle2,
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.only(
+                                left: SizeConfig.blockVertical * 2),
+                            child: Text(
+                              "10000 " + "gram",
+                              style: body2,
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                  Container(
+                      margin: EdgeInsets.only(top: 20.0, right: 10.0),
+                      alignment: Alignment.centerRight,
+                      child: Theme(
+                        data: Theme.of(context).copyWith(
+                          accentColor: colorPrimaryLight,
+                          primaryColor: colorPrimary,
+                        ),
+                        child: Builder(
+                          builder: (context) => CustomElevation(
+                              height: 30.0,
+                              child: RaisedButton(
+                                highlightColor: colorPrimary,
+                                //Replace with actual colors
+                                color: colorPrimary,
+                                onPressed: () async {
+                                  final List<DateTime> picked =
+                                      await DateRangePicker.showDatePicker(
+                                          context: context,
+                                          initialFirstDate:
+                                              tingkatPakanDateRange[0],
+                                          initialLastDate:
+                                          tingkatPakanDateRange[1],
+                                          firstDate: new DateTime(2015),
+                                          lastDate: new DateTime(2021));
+                                  if (picked != null && picked.length == 2) {
+                                    dateRangePakan(picked);
+                                  }
+                                },
+                                child: Text(
+                                  "Filter",
+                                  style: overline.copyWith(color: Colors.white),
+                                ),
+                                shape: new RoundedRectangleBorder(
+                                  borderRadius: new BorderRadius.circular(30.0),
+                                ),
+                              )),
+                        ),
+                      )),
+                ],
+              ),
+              buildCardChart(
+                  status: 1,
+                  statusCount: "4",
+                  context: context,
+                  date:
+                      " ${DateFormat('d MMMM').format(tingkatPakanDateRange[0])} - ${DateFormat('d MMMM').format(tingkatPakanDateRange[1])}",
+                  chartData: _createKematianData())
+            ],
+          ),
+        ),
+        Card(
+          elevation: 4,
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.only(
+                            left: SizeConfig.blockVertical * 2,
+                            top: SizeConfig.blockHorizotal * 3),
+                        child: Text(
+                          "Berat Lele",
+                          style: subtitle2,
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.only(
+                                left: SizeConfig.blockVertical * 2),
+                            child: Text(
+                              "95" + "%",
+                              style: body2,
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(
+                                left: SizeConfig.blockVertical * 1),
+                            child: Row(children: <Widget>[
+                              Icon(
+                                Icons.trending_down,
+                                color: Colors.red,
+                                size: 12.0,
+                              ),
+                              Text(
+                                " " + "4" + "%",
+                                style: overline.copyWith(color: Colors.red),
+                              )
+                            ]),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                  Container(
+                      margin: EdgeInsets.only(top: 20.0, right: 10.0),
+                      alignment: Alignment.centerRight,
+                      child: Theme(
+                        data: Theme.of(context).copyWith(
+                          accentColor: colorPrimaryLight,
+                          primaryColor: colorPrimary,
+                        ),
+                        child: Builder(
+                          builder: (context) => CustomElevation(
+                              height: 30.0,
+                              child: RaisedButton(
+                                highlightColor: colorPrimary,
+                                //Replace with actual colors
+                                color: colorPrimary,
+                                onPressed: () async {
+                                  final List<DateTime> picked =
+                                      await DateRangePicker.showDatePicker(
+                                          context: context,
+                                          initialFirstDate:
+                                              tingkatBeratDateRange[0],
+                                          initialLastDate:
+                                              tingkatBeratDateRange[1],
+                                          firstDate: new DateTime(2015),
+                                          lastDate: new DateTime(2021));
+                                  if (picked != null && picked.length == 2) {
+                                    dateRangeBerat(picked);
+                                  }
+                                },
+                                child: Text(
+                                  "Filter",
+                                  style: overline.copyWith(color: Colors.white),
+                                ),
+                                shape: new RoundedRectangleBorder(
+                                  borderRadius: new BorderRadius.circular(30.0),
+                                ),
+                              )),
+                        ),
+                      )),
+                ],
+              ),
+              buildCardChart(
+                  status: 1,
+                  statusCount: "4",
+                  context: context,
+                  date:
+                      " ${DateFormat('d MMMM').format(tingkatBeratDateRange[0])} - ${DateFormat('d MMMM').format(tingkatBeratDateRange[1])}",
+                  chartData: _createKematianData())
+            ],
+          ),
         ),
         Container(
-          child: buildCardChartGram(
-              title: "Jumlah Pakan Keluar",
-              percent: 3000,
-              status: 1,
-              statusCount: "4",
-              date: "1 September - 30 September",
-              chartData: _createSampleData()),
+          child: CardColumn(
+              context,
+              "Informasi Modal",
+              "Rp.${_informasi_modal},-",
+              Alignment.centerLeft,
+              SizeConfig.blockVertical * 3),
         ),
         Container(
-          child: buildCardChart(
-              title: "Berat Lele",
-              percent: 95,
-              status: 2,
-              statusCount: "4",
-              date: "1 September - 30 September",
-              chartData: _createSampleData()),
-        ),
-        Container(
-          child: CardColumn(context, "Informasi Modal", "Rp.${formatter.format(_informasi_modal).toString()},-",
-              Alignment.centerLeft, SizeConfig.blockVertical * 3),
-        ),
-        Container(
-          child: CardColumn(context, "Perkiraan Omset", "Rp.${formatter.format(_omset).toString()},-",
+          child: CardColumn(context, "Perkiraan Omset", "Rp.${_omset},-",
               Alignment.centerLeft, SizeConfig.blockVertical * 3),
         ),
         Container(
@@ -467,8 +868,12 @@ class _HomeLaporanState extends State<HomeLaporan> {
               Alignment.centerLeft, SizeConfig.blockVertical * 3),
         ),
         Container(
-          child: CardColumn(context, "Target Harga Jual", "Rp.${formatter.format(_target_jual).toString()},-",
-              Alignment.centerLeft, SizeConfig.blockVertical * 3),
+          child: CardColumn(
+              context,
+              "Target Harga Jual",
+              "Rp.${formatter.format(_target_jual).toString()},-",
+              Alignment.centerLeft,
+              SizeConfig.blockVertical * 3),
         ),
         Container(
             margin: EdgeInsets.only(top: SizeConfig.blockVertical * 2),
@@ -495,35 +900,28 @@ class _HomeLaporanState extends State<HomeLaporan> {
     );
     return datax;
   }
+
+  List<charts.Series<ChartKematianModel, DateTime>> _createKematianData() {
+    return [
+      new charts.Series<ChartKematianModel, DateTime>(
+        id: 'Tingkat Kematian',
+        colorFn: (_, __) => charts.ColorUtil.fromDartColor(colorPrimary),
+        domainFn: (ChartKematianModel income, _) => income.x,
+        measureFn: (ChartKematianModel income, _) => income.y,
+        data: itemsKematian,
+      )
+    ];
+  }
+
+  List<charts.Series<ChartKematianModel, DateTime>> _createBeratData() {
+    return [
+      new charts.Series<ChartKematianModel, DateTime>(
+        id: 'Tingkat Berat',
+        colorFn: (_, __) => charts.ColorUtil.fromDartColor(colorPrimary),
+        domainFn: (ChartKematianModel income, _) => income.x,
+        measureFn: (ChartKematianModel income, _) => income.y,
+        data: itemsBerat,
+      )
+    ];
+  }
 }
-
-List<charts.Series<LinearIncome, int>> _createSampleData() {
-  final myFakeDesktopData = [
-    new LinearIncome(0, 0),
-    new LinearIncome(1, 0),
-    new LinearIncome(2, 0),
-    new LinearIncome(3, 0),
-    new LinearIncome(4, 0),
-    new LinearIncome(5, 0),
-    new LinearIncome(6, 0),
-  ];
-
-  return [
-    new charts.Series<LinearIncome, int>(
-      id: 'Desktop',
-      colorFn: (_, __) => charts.ColorUtil.fromDartColor(colorPrimary),
-      domainFn: (LinearIncome income, _) => income.week,
-      measureFn: (LinearIncome income, _) => income.income,
-      data: myFakeDesktopData,
-    )
-  ];
-}
-
-class LinearIncome {
-  final int week;
-  final int income;
-
-  LinearIncome(this.week, this.income);
-}
-
-

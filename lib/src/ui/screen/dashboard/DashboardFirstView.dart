@@ -70,6 +70,7 @@ class _DashboardFirstViewState extends State<DashboardFirstView> {
     SizeConfig().init(context);
 
     return Scaffold(
+        resizeToAvoidBottomPadding: false,
         key: _scaffoldKey,
         backgroundColor: Colors.white,
         // resizeToAvoidBottomPadding: false,
@@ -244,13 +245,13 @@ class _DashboardFirstViewState extends State<DashboardFirstView> {
                     fontSize: 15.0),
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Container(
                       height: 35.0,
                       margin: EdgeInsets.only(
-                          left: SizeConfig.blockVertical * 1,
-                          right: SizeConfig.blockVertical * 1,
+                          // left: SizeConfig.blockVertical * 4,
+                          // right: SizeConfig.blockVertical * 1,
                           top: SizeConfig.blockVertical * 3),
                       child: CustomElevation(
                           height: 35.0,
@@ -275,8 +276,8 @@ class _DashboardFirstViewState extends State<DashboardFirstView> {
                   Container(
                     height: 35.0,
                     margin: EdgeInsets.only(
-                        left: SizeConfig.blockVertical * 1,
-                        right: SizeConfig.blockVertical * 1,
+                        // left: SizeConfig.blockVertical * 1,
+                        // right: SizeConfig.blockVertical * 4,
                         top: SizeConfig.blockVertical * 3),
                     child: CustomElevation(
                         height: 35.0,

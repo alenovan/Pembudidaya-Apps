@@ -17,7 +17,7 @@ class LaporanMain extends StatefulWidget {
   final int tahun;
   final String idKolam;
   final String idLelang;
-  final String isoString;
+  final DateTime isoString;
   final String dataPageTwo;
   final String dataPageThree;
   LaporanMain({Key key, this.page, this.laporan_page, this.idKolam, this.tgl, this.bulan, this.tahun, this.idLelang, this.isoString, this.dataPageTwo, this.dataPageThree}) : super(key: key);
@@ -44,21 +44,24 @@ class _LaporanMainState extends State<LaporanMain> {
         isoData: widget.isoString,
         tahun: widget.tahun,);
     } else if (widget.laporan_page == "dua") {
-      print(widget.idKolam.toString());
+      // print(widget.idKolam.toString());
       laporanPage = PageTwo(idKolam: widget.idKolam.toString(),
         tgl: widget.tgl,
         bulan: widget.bulan,
+        isoData: widget.isoString,
         tahun: widget.tahun,);
     } else if (widget.laporan_page == "tiga") {
       laporanPage = PageThree(idKolam: widget.idKolam.toString(),
         tgl: widget.tgl,
         bulan: widget.bulan,
+        isoData: widget.isoString,
         dataPageTwo:widget.dataPageTwo,
         tahun: widget.tahun,);
     } else if (widget.laporan_page == "empat") {
       laporanPage = PageFour(idKolam: widget.idKolam.toString(),
         tgl: widget.tgl,
         bulan: widget.bulan,
+        isoData: widget.isoString,
         dataPageTwo: widget.dataPageTwo,
         dataPageThree:widget.dataPageThree,
         tahun: widget.tahun,);
@@ -125,7 +128,7 @@ class _LaporanMainState extends State<LaporanMain> {
       if (!_statusSelected) {
         _selectedIndex = index;
       }
-      print(_selectedIndex);
+      // print(_selectedIndex);
     });
   }
 

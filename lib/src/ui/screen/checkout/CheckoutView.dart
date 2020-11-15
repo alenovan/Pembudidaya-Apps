@@ -1,7 +1,10 @@
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:intl/intl.dart';
+import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
 import 'package:lelenesia_pembudidaya/src/bloc/CheckoutBloc.dart' as checkout;
+import 'package:lelenesia_pembudidaya/src/bloc/KolamBloc.dart';
 import 'package:lelenesia_pembudidaya/src/bloc/ProfilBloc.dart' as profile;
 import 'package:flutter/material.dart';
 import 'package:lelenesia_pembudidaya/src/helper/DbHelper.dart';
@@ -11,6 +14,8 @@ import 'package:lelenesia_pembudidaya/src/ui/screen/checkout/CheckoutWidget.dart
 import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanMain.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
+import 'package:lelenesia_pembudidaya/src/ui/widget/AcceptanceDialog.dart';
+import 'package:lelenesia_pembudidaya/src/ui/widget/BottomSheetFeedback.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/CustomElevation.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:flutter/services.dart';
@@ -46,16 +51,46 @@ class _CheckoutViewState extends State<CheckoutView> {
   var target_fish_count = 0;
   var target_price = 0;
   var name_pakan = "";
-  var price = 0;
-  var url_pakan = "";
+  var pricex = "";
+  var url_pakanx = "";
+  var total_payment= "";
+  var total_kebutuhan_kilo = "";
   DbHelper _dbHelper;
   var dataPenentuan;
+  var id_order = 0;
+  var feed_idx = "";
+  void detailKolam() async {
+    // Future.delayed(new Duration(milliseconds: 1500), () {
+    //   showLoaderDialog(context);
+    // });
+    var detail = await bloc.getKolamDetail(widget.idKolam);
+    var data = detail['data'];
+    setState(() {
+      id_order = data['harvest']['last_order_id'];
+      feed_idx = data['harvest']['feed_id'].toString();
+    });
+    detailOrder();
+    getDataPanen();
+    // Navigator.of(context).pop();
+  }
+
+  void detailOrder() async {
+    var detail = await checkout.bloc.getOrderId(id_order.toString());
+    var data = detail['data'];
+
+    setState(() {
+      name_pakan = data["feed_name"];
+      pricex = data["feed_price"];
+      total_payment = data["total_payment"];
+      total_kebutuhan_kilo = data["order_amount"];
+
+    });
+  }
 
   void getDataPanen() async {
     dataPenentuan = await _dbHelper.select(int.parse(widget.idKolam));
-    var detail_pakan =
-        await checkout.bloc.getFeedDetail(dataPenentuan["feed_id"].toString());
-    print(detail_pakan["data"]);
+    var detail_pakan =  await checkout.bloc.getFeedDetail(feed_idx);
+    var data = detail_pakan;
     setState(() {
       sow_date = dataPenentuan["sow_date"].toString();
       seed_price = dataPenentuan["seed_price"];
@@ -65,9 +100,7 @@ class _CheckoutViewState extends State<CheckoutView> {
       feed_conversion_ratio = dataPenentuan["feed_conversion_ratio"];
       target_fish_count = dataPenentuan["target_fish_count"];
       target_price = dataPenentuan["target_price"];
-      name_pakan = detail_pakan["data"]["name"];
-      price = detail_pakan["data"]["price"];
-      url_pakan = detail_pakan["data"]["photo"];
+      url_pakanx = data["data"]["photo"].toString();
     });
   }
 
@@ -88,16 +121,60 @@ class _CheckoutViewState extends State<CheckoutView> {
 
   @override
   void initState() {
+    super.initState();
+    _phone = "Loading";
+    _nama = "Loading";
+    _alamat ="Loading";
+    name_pakan = "Loading";
+    pricex = "Loading";
+    total_payment = "Loading";
+    total_kebutuhan_kilo = "Loading";
+    detailKolam();
     _dbHelper = DbHelper.instance;
     update();
-    getDataPanen();
-    super.initState();
+    // getDataPanen();
+    // Navigator.pop(context);
+
   }
 
-  void _toggleButtonForgot() {
-    setState(() {
-      _clickForgot = !_clickForgot;
-    });
+  void _clickCheckOut() async {
+    Navigator.of(context).push(new MaterialPageRoute<Null>(
+        builder: (BuildContext context) {
+          return LoadingShow(context);
+        },
+        fullscreenDialog: true));
+    var status = await checkout.bloc.checkout(id_order.toString());
+    if(status){
+      Navigator.of(context).pop();
+      showDialog(
+        context: context,
+        builder: (BuildContext context) =>
+            AlertSuccess(context, LaporanMain(
+              idKolam: widget
+                  .idKolam
+                  .toString(),
+              page: 0,
+              laporan_page:
+              "home",
+            )),
+      );
+
+      Navigator.push(
+          context,
+          PageTransition(
+              type: PageTransitionType.fade,
+              child: LaporanMain(
+                idKolam: widget
+                    .idKolam
+                    .toString(),
+                page: 0,
+                laporan_page:
+                "home",
+              )));
+    }else{
+      Navigator.of(context).pop();
+      BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Silahkan ulangi kembali");
+    }
   }
 
   Widget getTitle() {
@@ -314,7 +391,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                             ],
                           ),
                           CardPenentuanPakan(context, name_pakan,
-                              "Rp." + formatter.format(price), "Kg", url_pakan),
+                              pricex, "", url_pakanx),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -349,7 +426,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                                 Container(
                                     alignment: Alignment.centerLeft,
                                     child: Text(
-                                      "Selasa, 22 September 2020",
+                                      "-",
                                       style: TextStyle(
                                           color: Colors.black,
                                           fontFamily: 'lato',
@@ -385,7 +462,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                                 Container(
                                     alignment: Alignment.centerLeft,
                                     child: Text(
-                                      "Kota Malang",
+                                      "-",
                                       style: TextStyle(
                                           color: Colors.black,
                                           fontFamily: 'lato',
@@ -421,7 +498,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                                 Container(
                                     alignment: Alignment.centerLeft,
                                     child: Text(
-                                      "3000 Kg",
+                                      total_kebutuhan_kilo,
                                       style: TextStyle(
                                           color: Colors.black,
                                           fontFamily: 'lato',
@@ -518,7 +595,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                                 Container(
                                     alignment: Alignment.centerLeft,
                                     child: Text(
-                                      "Rp.3.000.000,-",
+                                     total_payment,
                                       style: TextStyle(
                                           color: Colors.black,
                                           fontFamily: 'lato',
@@ -602,7 +679,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                                                 fontSize: 15.0),
                                           ),
                                           Text(
-                                            "Rp.5.000.000,-",
+                                            total_payment,
                                             style: TextStyle(
                                                 color: Colors.white,
                                                 fontFamily: 'poppins',
@@ -624,7 +701,14 @@ class _CheckoutViewState extends State<CheckoutView> {
                                             highlightColor: Colors.white,
                                             //Replace with actual colors
                                             color: Colors.white,
-                                            onPressed: () => {},
+                                            onPressed: () => {
+                                              showDialog(
+                                                context: context,
+                                                builder: (BuildContext context) =>
+                                                    AlertquestionInsert(
+                                                        context, DashboardView()),
+                                              )
+                                            },
                                             child: Text(
                                               "Pembayaran",
                                               style: TextStyle(
@@ -651,5 +735,95 @@ class _CheckoutViewState extends State<CheckoutView> {
             ],
           ),
         ));
+  }
+
+
+
+  Widget AlertquestionInsert(BuildContext context, Widget success) {
+    final Widget data = Container(
+      child: Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        elevation: 0.0,
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                "Apakah anda yakin melakukan checkout? ",
+                style: TextStyle(
+                    color: blackTextColor,
+                    fontFamily: 'poppins',
+                    letterSpacing: 0.25,
+                    fontSize: 15.0),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                      height: 35.0,
+                      margin: EdgeInsets.only(
+                          left: SizeConfig.blockVertical * 1,
+                          right: SizeConfig.blockVertical * 1,
+                          top: SizeConfig.blockVertical * 3),
+                      child: CustomElevation(
+                          height: 35.0,
+                          child: RaisedButton(
+                            highlightColor: colorPrimary,
+                            //Replace with actual colors
+                            color: colorPrimary,
+                            onPressed: () => {
+                              _clickCheckOut()
+                            },
+                            child: Text(
+                              "Ya",
+                              style: TextStyle(
+                                  color: backgroundColor,
+                                  fontWeight: FontWeight.w500,
+                                  fontFamily: 'poppins',
+                                  letterSpacing: 1.25,
+                                  fontSize: subTitleLogin),
+                            ),
+                            shape: new RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(30.0),
+                            ),
+                          ))),
+                  Container(
+                    height: 35.0,
+                    margin: EdgeInsets.only(
+                        left: SizeConfig.blockVertical * 1,
+                        right: SizeConfig.blockVertical * 1,
+                        top: SizeConfig.blockVertical * 3),
+                    child: CustomElevation(
+                        height: 35.0,
+                        child: RaisedButton(
+                          highlightColor: colorPrimary,
+                          //Replace with actual colors
+                          color: redTextColor,
+                          onPressed: () => {Navigator.pop(context, true)},
+                          child: Text(
+                            "Tidak",
+                            style: TextStyle(
+                                color: backgroundColor,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'poppins',
+                                letterSpacing: 1.25,
+                                fontSize: subTitleLogin),
+                          ),
+                          shape: new RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(30.0),
+                          ),
+                        )),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+    return data;
   }
 }

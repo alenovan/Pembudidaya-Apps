@@ -35,7 +35,7 @@ class KolamBloc {
     var status;
     var todo = await _repository.fetchAllKolam();
     final jsondata=json.decode(todo)['data'];
-    print(jsondata);
+    // print(jsondata);
     if(jsonEncode(jsondata).length > 2){
       status = false;
     }else{

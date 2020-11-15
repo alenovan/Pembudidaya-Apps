@@ -25,7 +25,7 @@ class PageOne extends StatefulWidget {
   final int tgl;
   final int bulan;
   final int tahun;
-  final String isoData;
+  final DateTime isoData;
   PageOne({Key key, this.idKolam, @required this.tgl, @required this.bulan, @required this.tahun, this.isoData}) : super(key: key);
 
   @override
@@ -40,12 +40,12 @@ class _PageOneState extends State<PageOne> {
 
   @override
   void initState() {
-    print(widget.tgl);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    print(widget.isoData);
     return AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle(
           statusBarIconBrightness: Brightness.dark,
@@ -58,11 +58,16 @@ class _PageOneState extends State<PageOne> {
               leading: IconButton(
                 icon: Icon(Icons.arrow_back, color: Colors.black),
                 onPressed: () => {
-                  Navigator.push(
-                      context,
-                      PageTransition(
-                          type: PageTransitionType.rightToLeft,
-                          child: DashboardView()))
+                  PageTransition(
+                      type: PageTransitionType.fade,
+                      child:  LaporanMain(
+                        idKolam: widget
+                            .idKolam
+                            .toString(),
+                        page: 2,
+                        laporan_page:
+                        "home",
+                      ))
                 },
               ),
               actions: <Widget>[],
@@ -132,6 +137,7 @@ class _PageOneState extends State<PageOne> {
                                                         bulan: widget.bulan,
                                                         tahun: widget.tahun,
                                                         page: 2,
+                                                        isoString: widget.isoData,
                                                         laporan_page: "dua",
                                                       )))
                                             },

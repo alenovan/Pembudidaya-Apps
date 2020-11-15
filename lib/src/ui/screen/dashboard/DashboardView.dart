@@ -8,11 +8,13 @@ import 'package:lelenesia_pembudidaya/src/Models/ListKolamModelsNew.dart';
 import 'package:lelenesia_pembudidaya/src/Models/SqliteDataPenentuanPanen.dart';
 import 'package:lelenesia_pembudidaya/src/bloc/KolamBloc.dart';
 import 'package:lelenesia_pembudidaya/src/helper/DbHelper.dart';
+import 'package:lelenesia_pembudidaya/src/typography.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/checkout/CheckoutView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/kolam/KolamWidget.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/kolam/PenentuanPakanView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/kolam/PenentuanPanenView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/kolam/TambahKolam.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/kolam/riwayat/RiwayatKolam.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanMain.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/notification/NotificationView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/profile/aktivasi/BiodataScreen.dart';
@@ -35,8 +37,7 @@ class DashboardView extends StatefulWidget {
 }
 
 class _DashboardViewState extends State<DashboardView> {
-  final GlobalKey<ScaffoldState> _scaffoldKey =
-  new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   DbHelper _dbHelper;
   var statusAktivasi = false;
   List<ListKolamModelsNew> dataKolam = new List();
@@ -49,7 +50,6 @@ class _DashboardViewState extends State<DashboardView> {
         dataKolam = value;
         items.addAll(dataKolam);
         // dataPakan.addAll(value);
-
       });
     });
   }
@@ -57,9 +57,8 @@ class _DashboardViewState extends State<DashboardView> {
   void cek_profil() async {
     var blox = await profile.bloc.getProfile();
     setState(() {
-      statusAktivasi = blox['data']['ktp_photo'].toString() == "null"
-          ? false
-          : true;
+      statusAktivasi =
+          blox['data']['ktp_photo'].toString() == "null" ? false : true;
     });
   }
 
@@ -88,7 +87,6 @@ class _DashboardViewState extends State<DashboardView> {
     }
   }
 
-
   @override
   void initState() {
     super.initState();
@@ -102,22 +100,12 @@ class _DashboardViewState extends State<DashboardView> {
     var db = await _dbHelper.select_count(id);
     print(db);
     if (db == 0) {
-      var data = SqliteDataPenentuanPanen(
-          id,
-          "",
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-      );
+      var data = SqliteDataPenentuanPanen(id, "", 0, 0, 0, 0, 0, 0, 0, 0, 0);
       _dbHelper.insert(data);
     }
   }
+
+
 
   @override
   void dispose() {
@@ -143,124 +131,98 @@ class _DashboardViewState extends State<DashboardView> {
     return Scaffold(
         key: _scaffoldKey,
         backgroundColor: Colors.white,
-        resizeToAvoidBottomPadding: false,
         drawer: Drawers(context),
-        body: Stack(
-          children: [
-            new Positioned(
-              child: ListView(
-                physics: const NeverScrollableScrollPhysics(),
-                padding: EdgeInsets.zero,
-                children: <Widget>[
-                  Container(
-                    // color: Colors.red,
-                    height: SizeConfig.blockHorizotal * 35,
-                    width: double.infinity,
-                    child: Stack(
-                      children: [
-                        Container(
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Container(
-                                  margin: EdgeInsets.only(
-                                      left: SizeConfig.blockVertical * 3),
-                                  child: IconButton(
-                                    onPressed: () =>
-                                        _scaffoldKey.currentState.openDrawer(),
-                                    tooltip: MaterialLocalizations
-                                        .of(context)
-                                        .openAppDrawerTooltip,
-                                    icon: Icon(FontAwesomeIcons.bars,
-                                        color: colorPrimary, size: 30.0),
-                                  )),
-                            )),
-                        Container(
-                            margin: EdgeInsets.only(
-                                right: SizeConfig.blockVertical * 5),
-                            child: Align(
-                              alignment: Alignment.centerRight,
-                              child: Container(
-                                  child: IconButton(
-                                      onPressed: () =>
-                                      {
-                                        Navigator.push(
-                                            context,
-                                            PageTransition(
-                                                type: PageTransitionType.fade,
-                                                // duration: Duration(microseconds: 1000),
-                                                child: NotificationView()))
-                                      },
-                                      tooltip: "Notifikasi",
-                                      icon: Icon(
-                                        FontAwesomeIcons.solidBell,
-                                        color: colorPrimary,
-                                        size: 30.0,
-                                      ))),
-                            )),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    transform: Matrix4.translationValues(0.0, -23.0, 0.0),
-                    margin: EdgeInsets.only(
-                        left: SizeConfig.blockVertical * 4,
-                        right: SizeConfig.blockVertical * 4),
-                    child: Column(
-                      children: [
-                        new Theme(
-                          data: new ThemeData(
-                            primaryColor: colorPrimary,
-                            primaryColorDark: colorPrimary,
-                          ),
-                          child: TextFormField(
-                            controller: _searchBoxController,
-                            onChanged: onItemChanged,
-                            decoration: EditTextSearch(
-                                context,
-                                "Cari Kolam",
-                                20.0,
-                                0,
-                                0,
-                                0,
-                                gs),
-                            keyboardType: TextInputType.text,
-                            style: TextStyle(
-                                color: blackTextColor,
-                                fontFamily: 'lato',
-                                letterSpacing: 0.4,
-                                fontSize: subTitleLogin),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    transform: Matrix4.translationValues(0.0, -20.0, 0.0),
-                    margin: EdgeInsets.only(
-                      left: SizeConfig.blockVertical * 4,
-                      right: SizeConfig.blockVertical * 4,),
-                    height: MediaQuery
-                        .of(context)
-                        .size
-                        .height,
-                    child: FutureBuilder(
-                      future: bloc.fetchAllKolam(),
-                      builder: (context, AsyncSnapshot<dynamic> snapshot) {
-                        if (snapshot.hasData) {
-                          return buildList(snapshot);
-                        } else if (snapshot.hasError) {
-                          return Text(snapshot.error.toString());
-                        }
-                        return Center(child: CircularProgressIndicator());
-                      },
-                    ),),
-                  SizedBox(
-                    height: 200,
-                  )
-                ],
-              ),
+        appBar: AppBar(
+          elevation: 0,
+          leading: Container(
+            margin: EdgeInsets.only(left: SizeConfig.blockVertical * 3),
+            child: IconButton(
+              icon:
+                  Icon(FontAwesomeIcons.bars, color: colorPrimary, size: 30.0),
+              onPressed: () => {_scaffoldKey.currentState.openDrawer()},
             ),
+          ),
+          actions: <Widget>[
+            Container(
+              margin: EdgeInsets.only(right: SizeConfig.blockVertical * 5),
+              child: Align(
+                  alignment: Alignment.centerRight,
+                  child: Container(
+                      child: IconButton(
+                          onPressed: () => {
+                                Navigator.push(
+                                    context,
+                                    PageTransition(
+                                        type: PageTransitionType.fade,
+                                        // duration: Duration(microseconds: 1000),
+                                        child: NotificationView()))
+                              },
+                          tooltip: "Notifikasi",
+                          icon: Icon(
+                            FontAwesomeIcons.solidBell,
+                            color: colorPrimary,
+                            size: 30.0,
+                          )))),
+            )
           ],
+          backgroundColor: Colors.white,
+          brightness: Brightness.light,
+        ),
+        body: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween, // add this
+            children: [
+              Container(
+                margin: EdgeInsets.only(
+                    top: SizeConfig.blockVertical * 2,
+                    left: SizeConfig.blockVertical * 4,
+                    right: SizeConfig.blockVertical * 4),
+                child: Column(
+                  children: [
+                    new Theme(
+                      data: new ThemeData(
+                        primaryColor: colorPrimary,
+                        primaryColorDark: colorPrimary,
+                      ),
+                      child: TextFormField(
+                        controller: _searchBoxController,
+                        onChanged: onItemChanged,
+                        decoration: EditTextSearch(
+                            context, "Cari Kolam", 20.0, 0, 0, 0, gs),
+                        keyboardType: TextInputType.text,
+                        style: TextStyle(
+                            color: blackTextColor,
+                            fontFamily: 'lato',
+                            letterSpacing: 0.4,
+                            fontSize: subTitleLogin),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                  child: Container(
+                // transform: Matrix4.translationValues(0.0, -20.0, 0.0),
+                margin: EdgeInsets.only(
+                  top: SizeConfig.blockVertical * 3,
+                  left: SizeConfig.blockVertical * 4,
+                  right: SizeConfig.blockVertical * 4,
+                ),
+                height: MediaQuery.of(context).size.height,
+                child: FutureBuilder(
+                  future: bloc.fetchAllKolam(),
+                  builder: (context, AsyncSnapshot<dynamic> snapshot) {
+                    if (snapshot.hasData) {
+                      return buildList(snapshot);
+                    } else if (snapshot.hasError) {
+                      return Text(snapshot.error.toString());
+                    }
+                    return Center(child: CircularProgressIndicator());
+                  },
+                ),
+              )),
+            ],
+          ),
         ));
   }
 
@@ -278,8 +240,7 @@ class _DashboardViewState extends State<DashboardView> {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) =>
-                        AlertquestionAktivasi(
-                            context),
+                        AlertquestionAktivasi(context),
                   );
                 } else {
                   Navigator.push(
@@ -287,7 +248,8 @@ class _DashboardViewState extends State<DashboardView> {
                       PageTransition(
                           type: PageTransitionType.fade,
                           child: TambahKolam(
-                            idKolam: items[index].id.toString(),)));
+                            idKolam: items[index].id.toString(),
+                          )));
                 }
               } else if (items[index].status.toString() == "1") {
                 Navigator.push(
@@ -295,7 +257,8 @@ class _DashboardViewState extends State<DashboardView> {
                     PageTransition(
                         type: PageTransitionType.fade,
                         child: PenentuanPanenView(
-                          idKolam: items[index].id.toString(),)));
+                          idKolam: items[index].id.toString(),
+                        )));
               } else {
                 Navigator.push(
                     context,
@@ -304,29 +267,24 @@ class _DashboardViewState extends State<DashboardView> {
                         child: LaporanMain(
                           page: 0,
                           laporan_page: "home",
-                          idKolam: items[index].id.toString(),)));
-              //   Navigator.push(
-              //       context,
-              //       PageTransition(
-              //           type: PageTransitionType.fade,
-              //           child: CheckoutView(
-              //             idKolam: items[index].id.toString(),)));
+                          idKolam: items[index].id.toString(),
+                        )));
+                //   Navigator.push(
+                //       context,
+                //       PageTransition(
+                //           type: PageTransitionType.fade,
+                //           child: CheckoutView(
+                //             idKolam: items[index].id.toString(),)));
               }
             },
             child: Container(
-              child: CardKolam(
-                  context,
-                  items[index].name,
-                  "Pilih untuk lihat detail",
-                  items[index].status.toString()),
-
-            )
-        );
+              child: CardKolam(context, items[index].name,
+                  "Pilih untuk lihat detail", items[index].status.toString()),
+            ));
       },
     );
   }
 }
-
 
 Widget AlertquestionAktivasi(BuildContext context) {
   final Widget data = Container(
@@ -350,13 +308,11 @@ Widget AlertquestionAktivasi(BuildContext context) {
               textAlign: TextAlign.center,
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Container(
                     height: 35.0,
                     margin: EdgeInsets.only(
-                        left: SizeConfig.blockVertical * 1,
-                        right: SizeConfig.blockVertical * 1,
                         top: SizeConfig.blockVertical * 3),
                     child: CustomElevation(
                         height: 35.0,
@@ -364,13 +320,12 @@ Widget AlertquestionAktivasi(BuildContext context) {
                           highlightColor: colorPrimary,
                           //Replace with actual colors
                           color: colorPrimary,
-                          onPressed: () =>
-                          {
+                          onPressed: () => {
                             Navigator.push(
                                 context,
                                 PageTransition(
                                     type: PageTransitionType.fade,
-                                    child: BiodataScreen()))
+                                    child: BiodataScreen(from: "dashboard",)))
                           },
                           child: Text(
                             "Ya",
@@ -388,8 +343,6 @@ Widget AlertquestionAktivasi(BuildContext context) {
                 Container(
                   height: 35.0,
                   margin: EdgeInsets.only(
-                      left: SizeConfig.blockVertical * 1,
-                      right: SizeConfig.blockVertical * 1,
                       top: SizeConfig.blockVertical * 3),
                   child: CustomElevation(
                       height: 35.0,

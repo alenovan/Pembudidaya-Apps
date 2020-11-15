@@ -49,6 +49,8 @@ dependencies:
   path_provider: ^1.6.24
   shimmer: ^1.1.2
   boxicons_flutter: ^1.1.0
+  date_range_picker: ^1.0.6
+  dropdown_search: ^0.4.6
 dev_dependencies:
   flutter_test:
     sdk: flutter

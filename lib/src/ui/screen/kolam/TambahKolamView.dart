@@ -70,6 +70,7 @@ class _TambahKolamViewState extends State<TambahKolamView> {
     SizeConfig().init(context);
 
     return Scaffold(
+        resizeToAvoidBottomPadding: false,
         key: _scaffoldKey,
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -212,13 +213,13 @@ class _TambahKolamViewState extends State<TambahKolamView> {
                     fontSize: 15.0),
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Container(
                       height: 35.0,
                       margin: EdgeInsets.only(
-                          left: SizeConfig.blockVertical * 1,
-                          right: SizeConfig.blockVertical * 1,
+                          // left: SizeConfig.blockVertical * 1,
+                          // right: SizeConfig.blockVertical * 1,
                           top: SizeConfig.blockVertical * 3),
                       child: CustomElevation(
                           height: 35.0,
@@ -243,8 +244,8 @@ class _TambahKolamViewState extends State<TambahKolamView> {
                   Container(
                     height: 35.0,
                     margin: EdgeInsets.only(
-                        left: SizeConfig.blockVertical * 1,
-                        right: SizeConfig.blockVertical * 1,
+                        // left: SizeConfig.blockVertical * 1,
+                        // right: SizeConfig.blockVertical * 1,
                         top: SizeConfig.blockVertical * 3),
                     child: CustomElevation(
                         height: 35.0,

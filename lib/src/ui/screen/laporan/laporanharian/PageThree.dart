@@ -29,7 +29,8 @@ class PageThree extends StatefulWidget {
   final int bulan;
   final int tahun;
   final String dataPageTwo;
-  PageThree({Key key, this.idKolam, this.tgl, this.bulan, this.tahun, this.dataPageTwo}) : super(key: key);
+  final DateTime isoData;
+  PageThree({Key key, this.idKolam, this.tgl, this.bulan, this.tahun, this.dataPageTwo, this.isoData}) : super(key: key);
 
   @override
   _PageThreeState createState() => _PageThreeState();
@@ -59,6 +60,7 @@ class _PageThreeState extends State<PageThree> {
                 tahun: widget.tahun,
                 dataPageTwo: widget.dataPageTwo,
                 dataPageThree: srController.text.toString(),
+                isoString: widget.isoData,
                 page: 2,
                 laporan_page: "empat",
               )));
@@ -70,12 +72,13 @@ class _PageThreeState extends State<PageThree> {
   TextEditingController srController = TextEditingController();
   @override
   void initState() {
-    print(widget.tgl);
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         statusBarIconBrightness: Brightness.dark,
