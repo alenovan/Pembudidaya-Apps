@@ -18,10 +18,11 @@ class CheckoutBloc {
   }
 
   getCheckOrderId(String id_order) async {
-    var status;
+    // var status;
     var todo = await _repository.getOrderId(id_order);
-    // print(todo.body);
-    if(todo.statusCode == 200){
+
+    var status = json.decode(todo.body)['data']["status"];
+    if(status == "0"){
       status = true;
     }else {
       status = false;

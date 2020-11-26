@@ -16,8 +16,8 @@ class Repository {
   Future register(String nama,String nohp) =>
       todoApiProvider.register(nama,nohp);
 
-  Future updateBiodataProfile(String address, String province, String city, String district) =>
-  todoApiProvider.UpdateBiodataProfile(address,province,city,district);
+  Future updateBiodataProfile(String nama,String address, String province, String city, String district) =>
+  todoApiProvider.UpdateBiodataProfile(nama,address,province,city,district);
 
 
   Future updateKtpProfile(String noKtp, String ktp, String selfie) =>
@@ -28,6 +28,8 @@ class Repository {
 
 
   Future fetchAllKolam() => todoApiProvider.fetchKolamList();
+
+  Future fetchRiwayatList() => todoApiProvider.fetchRiwayatList();
 
   getProfile() => todoApiProvider.getProfile();
 
@@ -67,6 +69,9 @@ class Repository {
 
   Future analyticsMonitor(String pond_id,String month,String year) =>
       todoApiProvider.analyticsMonitor(pond_id,month,year);
+
+  Future analyticsMonitorByDate(String pond_id,String date) =>
+      todoApiProvider.analyticsMonitorByDate(pond_id,date);
 
   Future analyticsCalendar(String pond_id,String from,String to) =>
       todoApiProvider.analyticsCalendar(pond_id,from,to);

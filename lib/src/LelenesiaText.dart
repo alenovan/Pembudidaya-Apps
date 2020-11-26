@@ -44,5 +44,5 @@ const String appBarOtp = "Kode OTP";
 const String titleVerifOtp = "Periksa Sms anda";
 
 //firstviewdashboard
-const String textNullFirst = "Anda belum punya berapa kolam ? ";
+const String textNullFirst = "Anda  punya berapa kolam ? ";
 const String subTextNullFirst = "Daftarkan kolam anda sendiri untuk menjadi pemasok tetap pakan bangsa indonesia";

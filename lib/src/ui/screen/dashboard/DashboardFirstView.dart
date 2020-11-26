@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lelenesia_pembudidaya/src/bloc/KolamBloc.dart';
 import 'package:lelenesia_pembudidaya/src/typography.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardView.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/notification/NotificationView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/otp/OtpView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/AcceptanceDialog.dart';
@@ -112,9 +113,15 @@ class _DashboardFirstViewState extends State<DashboardFirstView> {
                                 alignment: Alignment.centerRight,
                                 child: Container(
                                     child: IconButton(
-                                        onPressed: () => _scaffoldKey
-                                            .currentState
-                                            .openDrawer(),
+                                        onPressed: () =>
+                                        {
+                                          Navigator.push(
+                                              context,
+                                              PageTransition(
+                                                  type: PageTransitionType.fade,
+                                                  // duration: Duration(microseconds: 1000),
+                                                  child: NotificationView()))
+                                        },
                                         tooltip: "Notifikasi",
                                         icon: Icon(
                                           FontAwesomeIcons.solidBell,
@@ -158,7 +165,7 @@ class _DashboardFirstViewState extends State<DashboardFirstView> {
                             ),
                             Container(
                               margin: EdgeInsets.only(
-                                  left: 30.0, right: 30.0, top: 10.0),
+                                  left: 30.0, right: 30.0),
                               child: Center(
                                 child: Container(
                                   width: 200.0,
@@ -184,7 +191,7 @@ class _DashboardFirstViewState extends State<DashboardFirstView> {
                               margin: EdgeInsets.only(
                                   left: SizeConfig.blockVertical * 3,
                                   right: SizeConfig.blockVertical * 3,
-                                  top: SizeConfig.blockVertical * 3),
+                                  top: SizeConfig.blockVertical * 4),
                               child: CustomElevation(
                                   height: 30.0,
                                   child: RaisedButton(

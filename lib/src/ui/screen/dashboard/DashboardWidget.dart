@@ -35,7 +35,7 @@ Widget CardKolam(
   var text;
   var color;
   if (status == "0") {
-    text = "Belum Aktif";
+    text = "Kolam Belum Aktif";
     color = Colors.red;
   } else if (status == "1") {
     text = "Kosong";
@@ -46,6 +46,9 @@ Widget CardKolam(
   } else if (status == "3") {
     text = "Siap Panen";
     color = Colors.green;
+  } else if (status == "-1") {
+    text = "Belum Aktivasi Akun";
+    color = Colors.redAccent;
   } else {
     text = status;
     color = Colors.redAccent;
@@ -111,12 +114,11 @@ Widget CardKolam(
 // ignore: non_constant_identifier_names
 Widget DetailNull(BuildContext context) {
   SizeConfig().init(context);
-  final String assetName = "assets/svg/fishing.svg";
+  final String assetName = "assets/png/nullfishing.png";
   final Widget svgIcon = Container(
-    child: SvgPicture.asset(
+    child: Image.asset(
       assetName,
-      height: SizeConfig.blockVertical * 30,
-      width: SizeConfig.blockHorizotal * 30,
+      width: SizeConfig.blockHorizotal * 50,
     ),
   );
   return svgIcon;

@@ -81,7 +81,7 @@ class _BiodataScreenState extends State<BiodataScreen> {
       var status = await bloc.funUpdateProfile(
         namaLengkapController.text.toString(),
         alamatController.text.toString(),
-        selectedKota.text.toString(),
+        selectedKota.toString(),
         selectedProvinsi.toString(),
         selectedKecamatan.toString()
       );
@@ -100,10 +100,7 @@ class _BiodataScreenState extends State<BiodataScreen> {
 
   void checkInput() {
     if ((namaLengkapController.text.trim() != "") &&
-        (alamatController.text.trim() != "") &&
-        (kotaController.text.trim() != "") &&
-        (provinsiController.text.trim() != "") &&
-        (kecamatanController.text.trim() != "")) {
+        (alamatController.text.trim() != "")) {
       setState(() {
         isButtonEnabled = true;
       });
@@ -116,13 +113,8 @@ class _BiodataScreenState extends State<BiodataScreen> {
 
   void update() async {
     blox = await bloc.getProfile();
-    // namaLengkapController.text = blox['data']['name'];
-    // alamatController.text = blox['data']['address'];
-    // kotaController.text = blox['data']['city'];
-    // provinsiController.text = blox['data']['province'];
-    // kelurahanController.text = blox['data']['district'];
-    // kecamatanController.text = blox['data']['region'];
-    // kodePosController.text = blox['data']['postal_code'];
+    namaLengkapController.text = blox['data']['name'];
+    alamatController.text = blox['data']['address'];
     checkInput();
   }
 
@@ -134,11 +126,13 @@ class _BiodataScreenState extends State<BiodataScreen> {
       setState(() {
         dataKolam = value;
         itemsProvinsi.addAll(dataKolam);
+
       });
     });
   }
 
   void getKota(String id_provinsi) {
+
     itemsKota.clear();
     bloc.getKota(id_provinsi)
         .then((value) {
@@ -146,9 +140,12 @@ class _BiodataScreenState extends State<BiodataScreen> {
       setState(() {
         dataKolam = value;
         itemsKota.addAll(dataKolam);
+        Navigator.pop(context);
       });
     });
   }
+
+
 
   void getKecamatan(String id_kota) {
     itemsKecamatan.clear();
@@ -158,6 +155,7 @@ class _BiodataScreenState extends State<BiodataScreen> {
       setState(() {
         dataKolam = value;
         itemsKecamatan.addAll(dataKolam);
+        Navigator.pop(context);
       });
     });
   }
@@ -246,6 +244,7 @@ class _BiodataScreenState extends State<BiodataScreen> {
                       u == null ? "Provinsi Wajib di Isi " : null,
                       onChanged: (ProvinsiModel data) {
                         print(data.id);
+                        showLoaderDialog(context);
                         setState(() {
                           selectedProvinsi = data.id;
                         });
@@ -286,6 +285,7 @@ class _BiodataScreenState extends State<BiodataScreen> {
                       u == null ? "Kota Wajib di Isi " : null,
                       onChanged: (KotaModel data) {
                         print(data.cityId);
+                        showLoaderDialog(context);
                         setState(() {
                           selectedKota = data.cityId;
                         });
@@ -481,5 +481,10 @@ class _BiodataScreenState extends State<BiodataScreen> {
         ],
       ),
     );
+
+
   }
+
+
+
 }

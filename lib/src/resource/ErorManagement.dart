@@ -19,18 +19,33 @@ class ErrorManagement {
       };
       hasil = ({'status': 2, 'data': data});
     } else if (vals.statusCode == 400) {
-      var nama = cekColumn(val['message']['name'].toString()) == "null"
+      var nama = cekColumn(val['message'].toString()) == "null"
           ? "-"
-          : replaceJson(val['message']['name'].toString());
-      var phone = cekColumn(val['message']['phone_number'].toString()) == "null"
-          ? "-"
-          : replaceJson(val['message']['phone_number'].toString());
-
+          : replaceJson(val['message'].toString());
       var data = {
-        'nama': nama,
-        'phone': phone,
+        'message': nama,
       };
-      hasil = ({'status': 3, 'data': data});
+      hasil = ({'status': 2, 'data': data});
+    }
+    return hasil;
+  }
+
+  Future<dynamic> addWeightMonitor(dynamic vals) async {
+    var hasil;
+    var val = jsonDecode(vals.body);
+    if (vals.statusCode == 200) {
+      var data = {
+        'message': "",
+      };
+      hasil = ({'status': 1, 'data': data});
+    } else  {
+      var nama = cekColumn(val['message'].toString()) == "null"
+          ? "-"
+          : replaceJson(val['message'].toString());
+      var data = {
+        'message': nama,
+      };
+      hasil = ({'status': 2, 'data': data});
     }
     return hasil;
   }

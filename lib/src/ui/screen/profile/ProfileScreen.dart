@@ -100,7 +100,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 top: SizeConfig.blockHorizotal * 3,
                       bottom: SizeConfig.blockHorizotal * 3,),
                           child:  AppBarContainer(
-                              context, "", DashboardView(), Colors.white),
+                              context, "", null, Colors.white),
                         ),
                       //   Container(
                       //       child: Align(
@@ -252,10 +252,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   SizedBox(
                     height: 30.0,
                   ),
-                  ProfileMenu(context, "Ketentuan Layanan", BiodataScreen()),
-                  ProfileMenu(context, "Kebijakan Privasi", BiodataScreen()),
-                  ProfileMenu(context, "Pusat Bantuan", BiodataScreen()),
-                  ProfileMenu(context, "Saran", BiodataScreen()),
+                  ProfileMenu(context, "Ketentuan Layanan", null),
+                  ProfileMenu(context, "Kebijakan Privasi", null),
+                  ProfileMenu(context, "Pusat Bantuan", null),
+                  ProfileMenu(context, "Saran", null),
                 ],
               ),
             ),
@@ -299,4 +299,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ],
         ));
   }
+
+
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/home/HomeLaporan.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/laporanharian/Laporan.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/laporanharian/PageFour.dart';
@@ -8,6 +9,7 @@ import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/laporanharian/PageTh
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/laporanharian/PageTwo.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/lelang/DetailLelangView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/lelang/LelangView.dart';
+import 'package:page_transition/page_transition.dart';
 
 class LaporanMain extends StatefulWidget {
   final int page;
@@ -84,7 +86,9 @@ class _LaporanMainState extends State<LaporanMain> {
     if (_statusSelected) {
       _setDefault(widget.page);
     }
-    return Scaffold(
+    return WillPopScope(
+        onWillPop: _onBackPressed,
+        child:Scaffold(
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
         items: [
@@ -119,7 +123,7 @@ class _LaporanMainState extends State<LaporanMain> {
         fixedColor: purpleTextColor,
         onTap: _onItemTapped,
       ),
-    );
+    ));
   }
 
   void _onItemTapped(int index) {
@@ -137,4 +141,9 @@ class _LaporanMainState extends State<LaporanMain> {
       _selectedIndex = index;
     });
   }
+
+  Future<bool> _onBackPressed() {
+    Navigator.of(context).pop(true);
+  }
+
 }

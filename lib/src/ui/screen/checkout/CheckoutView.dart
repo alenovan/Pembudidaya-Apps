@@ -191,7 +191,9 @@ class _CheckoutViewState extends State<CheckoutView> {
         value: SystemUiOverlayStyle(
           statusBarIconBrightness: Brightness.dark,
         ),
-        child: Scaffold(
+        child:  WillPopScope(
+        onWillPop: _onBackPressed,
+        child:Scaffold(
           resizeToAvoidBottomPadding: false,
           appBar: AppBar(
             centerTitle: true,
@@ -734,10 +736,20 @@ class _CheckoutViewState extends State<CheckoutView> {
               ))
             ],
           ),
-        ));
+        )));
   }
 
-
+  Future<bool> _onBackPressed() {
+    Navigator.push(
+        context,
+        PageTransition(
+            type: PageTransitionType.fade,
+            child: LaporanMain(
+              page: 0,
+              laporan_page: "home",
+              idKolam: widget.idKolam,
+            )));
+  }
 
   Widget AlertquestionInsert(BuildContext context, Widget success) {
     final Widget data = Container(

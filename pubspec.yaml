@@ -73,6 +73,7 @@ flutter:
     - assets/svg/google_icon.svg
     - assets/svg/detail.svg
     - assets/svg/fishing.svg
+    - assets/png/nullfishing.png
   # To add assetss to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

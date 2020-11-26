@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -28,7 +29,7 @@ import 'package:page_transition/page_transition.dart';
 class DetailPenentuanPakan extends StatefulWidget {
   final String name;
   final int price;
-  final int stok;
+  final double stok;
   final String size; // ukuran
   final String type; // type
   final String desc;

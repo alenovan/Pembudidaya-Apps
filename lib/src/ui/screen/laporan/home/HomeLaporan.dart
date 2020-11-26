@@ -34,13 +34,14 @@ class HomeLaporan extends StatefulWidget {
 
 class _HomeLaporanState extends State<HomeLaporan> {
   var loop = 0;
-  var _stock_pakan = "";
+  var _stock_pakan = 0;
   var _tanggal_panen = "";
+  var _tanggal_tebar = "";
   var _target_jual = 0;
   DateTime time = DateTime.now();
   bool _disposed = false;
   var _jumlah_ikan = "";
-  var _berat_ikan = "";
+  var _berat_ikan = 0;
   var _informasi_modal = "0";
   var _perkiraan_omset = "";
   var _laba = "";
@@ -49,7 +50,10 @@ class _HomeLaporanState extends State<HomeLaporan> {
   var _nama_kolam = "";
   var _omset;
   var id_order = "";
+  var _berat_ikan_cart_total = 0;
+  var current_sr_percent = 0.0;
   var status_checkout = false;
+  var text_status_checkout = "Loading";
   final formatter = new NumberFormat("#,###");
 
   //for kematian
@@ -64,25 +68,29 @@ class _HomeLaporanState extends State<HomeLaporan> {
   List<DateTime> tingkatPakanDateRange = [];
   var itemsPakan = List<ChartKematianModel>();
 
-
   void update() async {
     var detail = await bloc.getKolamDetail(widget.idKolam);
     var data = detail['data'];
     setState(() {
       _nama_kolam = data['name'].toString();
-      _stock_pakan = data['harvest']['current_stocked_feed'].toString() + " gr";
+      _stock_pakan = data['harvest']['current_stocked_feed'];
       _tanggal_panen = data['harvest']['harvest_date_estimation'].toString();
       _target_jual = data['harvest']['target_price'];
       _jumlah_ikan = data['harvest']['current_amount'].toString();
-      _berat_ikan = data['harvest']['harvest_weight_estimation'].toString();
+      _berat_ikan_current = (data['harvest']['current_weight'] *
+          data['harvest']['current_amount']);
       _jumlah_ikan_first = data['harvest']['seed_amount'];
-      _berat_ikan_current = data['harvest']['current_weight'];
+      _berat_ikan = data['harvest']['harvest_weight_estimation'];
+      current_sr_percent =
+          double.parse(data['harvest']['current_sr'].toString());
       _laba =
           formatter.format(data['harvest']['profit_estimation']).toString() +
               ",-";
       _omset = formatter.format(data['harvest']['revenue']).toString();
       _informasi_modal = formatter.format(data['harvest']['budget']).toString();
       id_order = data['harvest']['last_order_id'].toString();
+      _tanggal_tebar = DateFormat('dd/MM/yyyy').format(DateTime.parse(data['harvest']['sow_date']));
+      _berat_ikan_cart_total = 0;
     });
     // print("id_order  $id_order");
     detailOrder();
@@ -91,11 +99,16 @@ class _HomeLaporanState extends State<HomeLaporan> {
   void detailOrder() async {
     var detail = await checkout.bloc.getCheckOrderId(id_order.toString());
     await WidgetsBinding.instance.addPostFrameCallback((_) {
-      // print(detail);
       setState(() {
         status_checkout = detail;
+        if (status_checkout) {
+          text_status_checkout = "Checkout";
+        } else {
+          text_status_checkout = "Request";
+        }
       });
     });
+
     Navigator.pop(context);
   }
 
@@ -131,6 +144,7 @@ class _HomeLaporanState extends State<HomeLaporan> {
       List<ChartKematianModel> dataKolam = new List();
       setState(() {
         dataKolam = value;
+
         itemsKematian.addAll(dataKolam);
       });
     });
@@ -147,6 +161,7 @@ class _HomeLaporanState extends State<HomeLaporan> {
       List<ChartKematianModel> dataKolam = new List();
       setState(() {
         dataKolam = value;
+        print("test" + dataKolam[0].y.toString());
         itemsBerat.addAll(dataKolam);
       });
     });
@@ -156,9 +171,9 @@ class _HomeLaporanState extends State<HomeLaporan> {
     itemsPakan.clear();
     laporan.bloc
         .analyticsPakan(
-        widget.idKolam,
-        tingkatPakanDateRange[0].toIso8601String(),
-        tingkatPakanDateRange[1].toIso8601String())
+            widget.idKolam,
+            tingkatPakanDateRange[0].toIso8601String(),
+            tingkatPakanDateRange[1].toIso8601String())
         .then((value) {
       List<ChartKematianModel> dataKolam = new List();
       setState(() {
@@ -183,11 +198,12 @@ class _HomeLaporanState extends State<HomeLaporan> {
     tingkatPakanDateRange.add((new DateTime.now()).add(new Duration(days: 7)));
 
     _nama_kolam = "...";
-    _stock_pakan = "Loading";
+    _stock_pakan = 0;
     _tanggal_panen = "Loading";
+    _tanggal_tebar = "Loading";
     _target_jual = 0;
     _jumlah_ikan = "0";
-    _berat_ikan = "0";
+    _berat_ikan = 0;
     _jumlah_ikan_first = 0;
     _berat_ikan_current = 0;
     _informasi_modal = "Loading";
@@ -481,7 +497,7 @@ class _HomeLaporanState extends State<HomeLaporan> {
                             )),
                             Container(
                                 child: Text(
-                              _stock_pakan,
+                              (_stock_pakan / 1000).toString() + " Kg",
                               style: h3.copyWith(
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold,
@@ -519,7 +535,9 @@ class _HomeLaporanState extends State<HomeLaporan> {
                                       }
                                   },
                                   child: Text(
-                                    status_checkout ? "Checkout" : "Request",
+                                    status_checkout
+                                        ? "Checkout"
+                                        : text_status_checkout,
                                     style:
                                         overline.copyWith(color: Colors.white),
                                   ),
@@ -533,6 +551,11 @@ class _HomeLaporanState extends State<HomeLaporan> {
           ),
         ),
         Container(
+          child: CardColumn(context, "Tanggal Tebar Benih", _tanggal_tebar,
+              Alignment.centerLeft, SizeConfig.blockVertical * 3),
+        ),
+
+        Container(
           child: CardColumn(context, "Tanggal Panen", _tanggal_panen,
               Alignment.centerLeft, SizeConfig.blockVertical * 3),
         ),
@@ -540,16 +563,16 @@ class _HomeLaporanState extends State<HomeLaporan> {
         Container(
           child: CardColumn(
               context,
-              "Jumlah Ikan",
-              "${_jumlah_ikan_first.toString()}/${_jumlah_ikan.toString()}",
+              "Jumlah ikan (Terkini/Awal)",
+              "${_jumlah_ikan.toString()} / ${_jumlah_ikan_first.toString()} Ekor",
               Alignment.centerLeft,
               SizeConfig.blockVertical * 3),
         ),
         Container(
           child: CardColumn(
               context,
-              "Berat Ikan ",
-              "${_berat_ikan.toString()}/${_jumlah_ikan.toString()} gr",
+              "Berat Ikan (Terkini/Perkiraan)",
+              "${(_berat_ikan_current / 1000).toStringAsFixed(1)} / ${_berat_ikan / 1000} Kg",
               Alignment.centerLeft,
               SizeConfig.blockVertical * 3),
         ),
@@ -594,7 +617,7 @@ class _HomeLaporanState extends State<HomeLaporan> {
                             padding: EdgeInsets.only(
                                 left: SizeConfig.blockVertical * 2),
                             child: Text(
-                              "95" + "%",
+                              current_sr_percent.floor().toString() + "%",
                               style: body2,
                             ),
                           ),
@@ -608,7 +631,12 @@ class _HomeLaporanState extends State<HomeLaporan> {
                                 size: 12.0,
                               ),
                               Text(
-                                " " + "4" + "%",
+                                " " +
+                                    (current_sr_percent - 100)
+                                        .floor()
+                                        .abs()
+                                        .toString() +
+                                    "%",
                                 style: overline.copyWith(color: Colors.red),
                               )
                             ]),
@@ -693,7 +721,7 @@ class _HomeLaporanState extends State<HomeLaporan> {
                             padding: EdgeInsets.only(
                                 left: SizeConfig.blockVertical * 2),
                             child: Text(
-                              "10000 " + "gram",
+                              "0 " + "Gram",
                               style: body2,
                             ),
                           ),
@@ -723,7 +751,7 @@ class _HomeLaporanState extends State<HomeLaporan> {
                                           initialFirstDate:
                                               tingkatPakanDateRange[0],
                                           initialLastDate:
-                                          tingkatPakanDateRange[1],
+                                              tingkatPakanDateRange[1],
                                           firstDate: new DateTime(2015),
                                           lastDate: new DateTime(2021));
                                   if (picked != null && picked.length == 2) {
@@ -747,8 +775,8 @@ class _HomeLaporanState extends State<HomeLaporan> {
                   statusCount: "4",
                   context: context,
                   date:
-                      " ${DateFormat('d MMMM').format(tingkatPakanDateRange[0])} - ${DateFormat('d MMMM').format(tingkatPakanDateRange[1])}",
-                  chartData: _createKematianData())
+                      "${DateFormat('d MMMM').format(tingkatPakanDateRange[0])} - ${DateFormat('d MMMM').format(tingkatPakanDateRange[1])}",
+                  chartData: _createPakanData())
             ],
           ),
         ),
@@ -767,7 +795,7 @@ class _HomeLaporanState extends State<HomeLaporan> {
                             left: SizeConfig.blockVertical * 2,
                             top: SizeConfig.blockHorizotal * 3),
                         child: Text(
-                          "Berat Lele",
+                          "Pertumbuhan",
                           style: subtitle2,
                         ),
                       ),
@@ -777,24 +805,9 @@ class _HomeLaporanState extends State<HomeLaporan> {
                             padding: EdgeInsets.only(
                                 left: SizeConfig.blockVertical * 2),
                             child: Text(
-                              "95" + "%",
+                              "${_berat_ikan_cart_total}" + " Gr",
                               style: body2,
                             ),
-                          ),
-                          Container(
-                            padding: EdgeInsets.only(
-                                left: SizeConfig.blockVertical * 1),
-                            child: Row(children: <Widget>[
-                              Icon(
-                                Icons.trending_down,
-                                color: Colors.red,
-                                size: 12.0,
-                              ),
-                              Text(
-                                " " + "4" + "%",
-                                style: overline.copyWith(color: Colors.red),
-                              )
-                            ]),
                           ),
                         ],
                       )
@@ -846,8 +859,8 @@ class _HomeLaporanState extends State<HomeLaporan> {
                   statusCount: "4",
                   context: context,
                   date:
-                      " ${DateFormat('d MMMM').format(tingkatBeratDateRange[0])} - ${DateFormat('d MMMM').format(tingkatBeratDateRange[1])}",
-                  chartData: _createKematianData())
+                      "${DateFormat('d MMMM').format(tingkatBeratDateRange[0])} - ${DateFormat('d MMMM').format(tingkatBeratDateRange[1])}",
+                  chartData: _createBeratData())
             ],
           ),
         ),
@@ -871,7 +884,7 @@ class _HomeLaporanState extends State<HomeLaporan> {
           child: CardColumn(
               context,
               "Target Harga Jual",
-              "Rp.${formatter.format(_target_jual).toString()},-",
+              "Rp.${formatter.format(_target_jual).toString()}/ Kg",
               Alignment.centerLeft,
               SizeConfig.blockVertical * 3),
         ),
@@ -921,6 +934,18 @@ class _HomeLaporanState extends State<HomeLaporan> {
         domainFn: (ChartKematianModel income, _) => income.x,
         measureFn: (ChartKematianModel income, _) => income.y,
         data: itemsBerat,
+      )
+    ];
+  }
+
+  List<charts.Series<ChartKematianModel, DateTime>> _createPakanData() {
+    return [
+      new charts.Series<ChartKematianModel, DateTime>(
+        id: 'Tingkat Berat',
+        colorFn: (_, __) => charts.ColorUtil.fromDartColor(colorPrimary),
+        domainFn: (ChartKematianModel income, _) => income.x,
+        measureFn: (ChartKematianModel income, _) => income.y,
+        data: itemsPakan,
       )
     ];
   }

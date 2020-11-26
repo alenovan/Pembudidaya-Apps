@@ -15,6 +15,7 @@ class ApiProvider {
   final String _url = "https://pembudidaya.lelenesia.panen-panen.com/v0";
 
   Future login(String nohp) async {
+
     final response =
         await client.post("$_url/login", body: {'phone_number': nohp});
     return response;
@@ -26,12 +27,13 @@ class ApiProvider {
       return response;
   }
 
-  Future UpdateBiodataProfile(String address, String province, String city,
+  Future UpdateBiodataProfile(String nama,String address, String province, String city,
       String district) async {
     dynamic token = await FlutterSession().get("token");
     final response = await client.put("$_url/user/change/profile", headers: {
       'Authorization': 'Bearer $token'
     }, body: {
+      'name':nama,
       'address': address,
       'province': province,
       'city': city,
@@ -102,6 +104,18 @@ class ApiProvider {
     // print('panggil data Kolam');
     final response = await client
         .get("$_url/ponds/", headers: {'Authorization': 'Bearer $token'});
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception('Failed to Load');
+    }
+  }
+
+  Future fetchRiwayatList() async {
+    dynamic token = await FlutterSession().get("token");
+    final response = await client
+        .get("$_url/orders/", headers: {'Authorization': 'Bearer $token'});
+    print(response.body);
     if (response.statusCode == 200) {
       return response.body;
     } else {
@@ -206,6 +220,15 @@ class ApiProvider {
     dynamic token = await FlutterSession().get("token");
     final response =
         await client.get("$_url/analytics?pond_id=${pond_id}&month=${month}&year=${year}", headers: {
+      'Authorization': 'Bearer $token'
+    });
+    return response;
+  }
+
+  Future analyticsMonitorByDate(String pond_id,String date) async {
+    dynamic token = await FlutterSession().get("token");
+    final response =
+    await client.get("$_url/analytics/daily?pond_id=${pond_id}&date=${date}", headers: {
       'Authorization': 'Bearer $token'
     });
     return response;

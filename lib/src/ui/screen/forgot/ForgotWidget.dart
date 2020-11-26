@@ -90,10 +90,15 @@ Widget AppBarContainer(BuildContext context, String title, Widget page,Color col
                 left: SizeConfig.blockHorizotal*5),
             child: GestureDetector(
               onTap: () {
-                Navigator.push(
-                    context,
-                    PageTransition(
-                        type: PageTransitionType.rightToLeft, child: page));
+                if(page == null){
+                  Navigator.of(context).pop(true);
+                }else{
+                  Navigator.push(
+                      context,
+                      PageTransition(
+                          type: PageTransitionType.rightToLeft, child: page));
+                }
+
                 /* Write listener code here */
               },
               child: IconTheme(

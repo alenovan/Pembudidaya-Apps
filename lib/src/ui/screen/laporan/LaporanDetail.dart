@@ -1,12 +1,16 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:lelenesia_pembudidaya/src/typography.dart';
+import 'package:lelenesia_pembudidaya/src/bloc/MonitorBloc.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanMain.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanWidget.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
+import 'package:lelenesia_pembudidaya/src/ui/widget/AcceptanceDialog.dart';
 import 'package:page_transition/page_transition.dart';
 
 class LaporanDetail extends StatefulWidget {
@@ -25,6 +29,7 @@ class _LaporanDetailState extends State<LaporanDetail> {
   var now = new DateTime.now();
   bool _showDetail = true;
   int activeMonth = 0;
+  bool _disposed = false;
   var bulan = [
     "",
     'Januari',
@@ -46,6 +51,57 @@ class _LaporanDetailState extends State<LaporanDetail> {
       _showDetail = !_showDetail;
     });
   }
+  var total_fish_died = 0;
+  var total_feed_spent = 0;
+  var last_fish_weight = 0;
+  var date = "";
+  List<String> values = List<String>();
+
+  void dataDetail() async {
+    var data = await bloc.analyticsMonitorByDate(
+        widget.idKolam, widget.isoDate);
+    var datax = json.decode(json.encode(data));
+    print(datax["date"].toString());
+    setState(() {
+      total_fish_died = tryCoba(datax["fish_died"].toString());
+      total_feed_spent = tryCoba(datax["feed_spent"].toString());
+      last_fish_weight = tryCoba(datax["weight"].toString());
+      date = datax["date"].toString();
+      Navigator.pop(context);
+    });
+
+
+  }
+
+  int tryCoba(String data) {
+    try {
+      return int.parse(data);
+    } catch (_) {
+      return 0;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration.zero, () {
+      if (!_disposed)
+        setState(() {
+          showLoaderDialog(context);
+        });
+    });
+
+    dataDetail();
+
+  }
+
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
+  }
+
+
 
 
   @override
@@ -112,7 +168,7 @@ class _LaporanDetailState extends State<LaporanDetail> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              "${bulan[int.parse(widget.bulan.toString())]} ${widget.tahun}",
+                              "${date}",
                               style: body1.copyWith(color: colorPrimary),
                             ),
                             Container(
@@ -136,11 +192,11 @@ class _LaporanDetailState extends State<LaporanDetail> {
                         child: Column(
                           children: [
                             CardRekap(context, "Pakan",
-                                "0 Kg", ""),
+                                "${total_feed_spent/1000} Kg", ""),
                             CardRekap(context, "Ikan Mati",
-                                "0", ""),
+                                "${total_fish_died} Ekor", ""),
                             CardRekap(context, "Berat Ikan",
-                                "0 Kg", ""),
+                                "${last_fish_weight}", ""),
                           ],
                         ),
                       ))

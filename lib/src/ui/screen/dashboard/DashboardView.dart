@@ -105,12 +105,11 @@ class _DashboardViewState extends State<DashboardView> {
     }
   }
 
-
-
   @override
   void dispose() {
-    bloc.dispose();
     super.dispose();
+    bloc.dispose();
+
   }
 
   @override
@@ -128,102 +127,190 @@ class _DashboardViewState extends State<DashboardView> {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
     ));
-    return Scaffold(
-        key: _scaffoldKey,
-        backgroundColor: Colors.white,
-        drawer: Drawers(context),
-        appBar: AppBar(
-          elevation: 0,
-          leading: Container(
-            margin: EdgeInsets.only(left: SizeConfig.blockVertical * 3),
-            child: IconButton(
-              icon:
-                  Icon(FontAwesomeIcons.bars, color: colorPrimary, size: 30.0),
-              onPressed: () => {_scaffoldKey.currentState.openDrawer()},
+    return WillPopScope(
+        onWillPop: _onBackPressed,
+        child: Scaffold(
+            key: _scaffoldKey,
+            backgroundColor: Colors.white,
+            drawer: Drawers(context),
+            appBar: AppBar(
+              elevation: 0,
+              leading: Container(
+                margin: EdgeInsets.only(left: SizeConfig.blockVertical * 3),
+                child: IconButton(
+                  icon: Icon(FontAwesomeIcons.bars,
+                      color: colorPrimary, size: 30.0),
+                  onPressed: () => {_scaffoldKey.currentState.openDrawer()},
+                ),
+              ),
+              actions: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(right: SizeConfig.blockVertical * 5),
+                  child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Container(
+                          child: IconButton(
+                              onPressed: () => {
+                                    Navigator.push(
+                                        context,
+                                        PageTransition(
+                                            type: PageTransitionType.fade,
+                                            // duration: Duration(microseconds: 1000),
+                                            child: NotificationView()))
+                                  },
+                              tooltip: "Notifikasi",
+                              icon: Icon(
+                                FontAwesomeIcons.solidBell,
+                                color: colorPrimary,
+                                size: 30.0,
+                              )))),
+                )
+              ],
+              backgroundColor: Colors.white,
+              brightness: Brightness.light,
             ),
-          ),
-          actions: <Widget>[
-            Container(
-              margin: EdgeInsets.only(right: SizeConfig.blockVertical * 5),
-              child: Align(
-                  alignment: Alignment.centerRight,
-                  child: Container(
-                      child: IconButton(
-                          onPressed: () => {
-                                Navigator.push(
-                                    context,
-                                    PageTransition(
-                                        type: PageTransitionType.fade,
-                                        // duration: Duration(microseconds: 1000),
-                                        child: NotificationView()))
-                              },
-                          tooltip: "Notifikasi",
-                          icon: Icon(
-                            FontAwesomeIcons.solidBell,
-                            color: colorPrimary,
-                            size: 30.0,
-                          )))),
-            )
-          ],
-          backgroundColor: Colors.white,
-          brightness: Brightness.light,
-        ),
-        body: Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween, // add this
-            children: [
-              Container(
-                margin: EdgeInsets.only(
-                    top: SizeConfig.blockVertical * 2,
-                    left: SizeConfig.blockVertical * 4,
-                    right: SizeConfig.blockVertical * 4),
-                child: Column(
-                  children: [
-                    new Theme(
-                      data: new ThemeData(
-                        primaryColor: colorPrimary,
-                        primaryColorDark: colorPrimary,
-                      ),
-                      child: TextFormField(
-                        controller: _searchBoxController,
-                        onChanged: onItemChanged,
-                        decoration: EditTextSearch(
-                            context, "Cari Kolam", 20.0, 0, 0, 0, gs),
-                        keyboardType: TextInputType.text,
-                        style: TextStyle(
-                            color: blackTextColor,
-                            fontFamily: 'lato',
-                            letterSpacing: 0.4,
-                            fontSize: subTitleLogin),
-                      ),
+            body: Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween, // add this
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(
+                        top: SizeConfig.blockVertical * 2,
+                        left: SizeConfig.blockVertical * 4,
+                        right: SizeConfig.blockVertical * 4),
+                    child: Column(
+                      children: [
+                        new Theme(
+                          data: new ThemeData(
+                            primaryColor: colorPrimary,
+                            primaryColorDark: colorPrimary,
+                          ),
+                          child: TextFormField(
+                            controller: _searchBoxController,
+                            onChanged: onItemChanged,
+                            decoration: EditTextSearch(
+                                context, "Cari Kolam", 20.0, 0, 0, 0, gs),
+                            keyboardType: TextInputType.text,
+                            style: TextStyle(
+                                color: blackTextColor,
+                                fontFamily: 'lato',
+                                letterSpacing: 0.4,
+                                fontSize: subTitleLogin),
+                          ),
+                        ),
+                      ],
                     ),
+                  ),
+                  Expanded(
+                      child: Container(
+                    // transform: Matrix4.translationValues(0.0, -20.0, 0.0),
+                    margin: EdgeInsets.only(
+                      top: SizeConfig.blockVertical * 3,
+                      left: SizeConfig.blockVertical * 4,
+                      right: SizeConfig.blockVertical * 4,
+                    ),
+                    height: MediaQuery.of(context).size.height,
+                    child: FutureBuilder(
+                      future: bloc.fetchAllKolam(),
+                      builder: (context, AsyncSnapshot<dynamic> snapshot) {
+                        if (snapshot.hasData) {
+                          return buildList(snapshot);
+                        } else if (snapshot.hasError) {
+                          return Text(snapshot.error.toString());
+                        }
+                        return Center(child: CircularProgressIndicator());
+                      },
+                    ),
+                  )),
+                ],
+              ),
+            )));
+  }
+
+  Future<bool> _onBackPressed() {
+    return showDialog(
+          context: context,
+          builder: (context) => Container(
+            child: Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0),
+              ),
+              elevation: 0.0,
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      "Apakah anda ingin keluar dari aplikasi ini ? ",
+                      style: TextStyle(
+                          color: blackTextColor,
+                          fontFamily: 'poppins',
+                          letterSpacing: 0.25,
+                          fontSize: 15.0),
+                      textAlign: TextAlign.center,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Container(
+                            height: 35.0,
+                            margin: EdgeInsets.only(top: SizeConfig.blockVertical * 3),
+                            child: CustomElevation(
+                                height: 35.0,
+                                child: RaisedButton(
+                                  highlightColor: colorPrimary,
+                                  //Replace with actual colors
+                                  color: colorPrimary,
+                                  onPressed: () => {
+                                    SystemNavigator.pop()
+                                  },
+                                  child: Text(
+                                    "Ya",
+                                    style: TextStyle(
+                                        color: backgroundColor,
+                                        fontWeight: FontWeight.w500,
+                                        fontFamily: 'poppins',
+                                        letterSpacing: 1.25,
+                                        fontSize: subTitleLogin),
+                                  ),
+                                  shape: new RoundedRectangleBorder(
+                                    borderRadius: new BorderRadius.circular(30.0),
+                                  ),
+                                ))),
+                        Container(
+                          height: 35.0,
+                          margin: EdgeInsets.only(top: SizeConfig.blockVertical * 3),
+                          child: CustomElevation(
+                              height: 35.0,
+                              child: RaisedButton(
+                                highlightColor: colorPrimary,
+                                //Replace with actual colors
+                                color: redTextColor,
+                                onPressed: () => {Navigator.pop(context, false)},
+                                child: Text(
+                                  "Tidak",
+                                  style: TextStyle(
+                                      color: backgroundColor,
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: 'poppins',
+                                      letterSpacing: 1.25,
+                                      fontSize: subTitleLogin),
+                                ),
+                                shape: new RoundedRectangleBorder(
+                                  borderRadius: new BorderRadius.circular(30.0),
+                                ),
+                              )),
+                        ),
+                      ],
+                    )
                   ],
                 ),
               ),
-              Expanded(
-                  child: Container(
-                // transform: Matrix4.translationValues(0.0, -20.0, 0.0),
-                margin: EdgeInsets.only(
-                  top: SizeConfig.blockVertical * 3,
-                  left: SizeConfig.blockVertical * 4,
-                  right: SizeConfig.blockVertical * 4,
-                ),
-                height: MediaQuery.of(context).size.height,
-                child: FutureBuilder(
-                  future: bloc.fetchAllKolam(),
-                  builder: (context, AsyncSnapshot<dynamic> snapshot) {
-                    if (snapshot.hasData) {
-                      return buildList(snapshot);
-                    } else if (snapshot.hasError) {
-                      return Text(snapshot.error.toString());
-                    }
-                    return Center(child: CircularProgressIndicator());
-                  },
-                ),
-              )),
-            ],
+            ),
           ),
-        ));
+        ) ??
+        false;
   }
 
   Widget buildList(AsyncSnapshot<dynamic> snapshot) {
@@ -279,7 +366,7 @@ class _DashboardViewState extends State<DashboardView> {
             },
             child: Container(
               child: CardKolam(context, items[index].name,
-                  "Pilih untuk lihat detail", items[index].status.toString()),
+                  "Pilih untuk lihat detail",  !statusAktivasi ? "-1" : items[index].status.toString()),
             ));
       },
     );
@@ -312,8 +399,7 @@ Widget AlertquestionAktivasi(BuildContext context) {
               children: [
                 Container(
                     height: 35.0,
-                    margin: EdgeInsets.only(
-                        top: SizeConfig.blockVertical * 3),
+                    margin: EdgeInsets.only(top: SizeConfig.blockVertical * 3),
                     child: CustomElevation(
                         height: 35.0,
                         child: RaisedButton(
@@ -325,7 +411,9 @@ Widget AlertquestionAktivasi(BuildContext context) {
                                 context,
                                 PageTransition(
                                     type: PageTransitionType.fade,
-                                    child: BiodataScreen(from: "dashboard",)))
+                                    child: BiodataScreen(
+                                      from: "dashboard",
+                                    )))
                           },
                           child: Text(
                             "Ya",
@@ -342,8 +430,7 @@ Widget AlertquestionAktivasi(BuildContext context) {
                         ))),
                 Container(
                   height: 35.0,
-                  margin: EdgeInsets.only(
-                      top: SizeConfig.blockVertical * 3),
+                  margin: EdgeInsets.only(top: SizeConfig.blockVertical * 3),
                   child: CustomElevation(
                       height: 35.0,
                       child: RaisedButton(

@@ -5,23 +5,17 @@ import 'package:flutter/services.dart';
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
-import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
 import 'package:lelenesia_pembudidaya/src/bloc/MonitorBloc.dart';
 import 'package:lelenesia_pembudidaya/src/typography.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardView.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/forgot/ForgotWidget.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanDetail.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanHome.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/laporanharian/PageOne.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanMain.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginView.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanWidget.dart';
 import 'package:intl/intl.dart' show DateFormat;
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginWidget.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
+import 'package:lelenesia_pembudidaya/src/ui/widget/AcceptanceDialog.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/BottomSheetFeedback.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:lelenesia_pembudidaya/src/bloc/KolamBloc.dart' as kolam;
 
 class Laporan extends StatefulWidget {
   final String idKolam;
@@ -38,9 +32,11 @@ class _LaporanState extends State<Laporan> {
   int activeMonth = 0;
   int activeYear = 0;
   var fistDateInMonth = "";
+  DateTime _tanggal_tebar;
   var total_fish_died = 0;
   var total_feed_spent = 0;
   var last_fish_weight = 0;
+  bool _disposed = false;
   List<String> values = List<String>();
   var bulan = [
     '',
@@ -78,35 +74,41 @@ class _LaporanState extends State<Laporan> {
   DateTime _currentDate = DateTime.now();
   var lastDateInMonth = DateTime.now().toIso8601String();
 
-  void dataCalendar() async {
+  void dataCalendar(int status) async {
     var data = await bloc.analyticsMonitor(
         widget.idKolam, activeMonth.toString(), activeYear.toString());
     var datax = json.decode(json.encode(data));
-    try {
-      setState(() {
-        total_fish_died = tryCoba(datax["total_fish_died"]);
-        total_feed_spent = tryCoba(datax["total_feed_spent"]);
-        last_fish_weight = tryCoba(datax["last_fish_weight"]);
-      });
-    } catch (_) {
-      setState(() {
-        total_fish_died = 0;
-        total_feed_spent = 0;
-        last_fish_weight = 0;
-      });
-    }
-
+    setState(() {
+      total_fish_died = tryCoba(datax["total_fish_died"].toString());
+      total_feed_spent = tryCoba(datax["total_feed_spent"].toString());
+      last_fish_weight = tryCoba(datax["last_fish_weight"].toString());
+    });
     var dataEvent = await bloc.analyticsCalendar(
-        widget.idKolam, "${activeYear}-${activeMonth}-01T00:00:00Z","${activeYear}-${activeMonth}-31T00:00:00Z");
+        widget.idKolam,
+        "${activeYear}-${activeMonth}-01T00:00:00Z",
+        "${activeYear}-${activeMonth}-31T00:00:00Z");
     print(dataEvent);
     setState(() {
       values = dataEvent;
+      if(status == 1){
+        Navigator.pop(context);
+      }else{
+
+      }
     });
   }
 
-  int tryCoba(int data) {
+  void detailKolam() async {
+    var detail = await kolam.bloc.getKolamDetail(widget.idKolam);
+    var data = detail['data'];
+    setState(() {
+      _tanggal_tebar = DateTime.parse(data['harvest']['sow_date']);
+    });
+  }
+
+  int tryCoba(String data) {
     try {
-      return data;
+      return int.parse(data);
     } catch (_) {
       return 0;
     }
@@ -114,12 +116,27 @@ class _LaporanState extends State<Laporan> {
 
   @override
   void initState() {
+    super.initState();
+    Future.delayed(Duration.zero, () {
+      if (!_disposed)
+        setState(() {
+          showLoaderDialog(context);
+        });
+    });
+    detailKolam();
     setState(() {
       activeMonth = now.month;
       activeYear = now.year;
+
     });
-    dataCalendar();
-    super.initState();
+
+    dataCalendar(1);
+  }
+
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
   }
 
   @override
@@ -170,7 +187,13 @@ class _LaporanState extends State<Laporan> {
                   elevation: 0,
                   leading: IconButton(
                     icon: Icon(Icons.arrow_back, color: Colors.black),
-                    onPressed: () => Navigator.of(context).pop(),
+                    onPressed: () => {
+                      Navigator.push(
+                          context,
+                          PageTransition(
+                              type: PageTransitionType.fade,
+                              child: DashboardView()))
+                    },
                   ),
                   bottom: PreferredSize(
                       child: TabBar(
@@ -235,26 +258,6 @@ class _LaporanState extends State<Laporan> {
                                                 if (date.day == now.day &&
                                                     date.month == now.month &&
                                                     date.year == now.year) {
-                                                  Navigator.push(
-                                                      context,
-                                                      PageTransition(
-                                                          type:
-                                                              PageTransitionType
-                                                                  .fade,
-                                                          // duration: Duration(microseconds: 1000),
-                                                          child: LaporanMain(
-                                                            idKolam: widget
-                                                                .idKolam
-                                                                .toString(),
-                                                            tgl: date.day,
-                                                            bulan: date.month,
-                                                            tahun: date.year,
-                                                            isoString: date,
-                                                            page: 2,
-                                                            laporan_page:
-                                                                "satu",
-                                                          )));
-                                                } else if (date.day < now.day) {
                                                   var tambahan = "";
                                                   if (date.day < 10) {
                                                     tambahan = "0";
@@ -265,17 +268,19 @@ class _LaporanState extends State<Laporan> {
                                                         context,
                                                         PageTransition(
                                                             type:
-                                                                PageTransitionType
-                                                                    .leftToRight,
+                                                            PageTransitionType
+                                                                .leftToRight,
                                                             child:
-                                                                LaporanDetail(
-                                                                  isoDate: date.toIso8601String(),
-                                                                  idKolam: widget.idKolam,
-                                                                  tanggal: date.day,
-                                                                  tahun: date.year,
-                                                                  bulan: date.month,
-                                                                )));
-                                                  } else {
+                                                            LaporanDetail(
+                                                              isoDate: date
+                                                                  .toIso8601String(),
+                                                              idKolam: widget
+                                                                  .idKolam,
+                                                              tanggal: date.day,
+                                                              tahun: date.year,
+                                                              bulan: date.month,
+                                                            )));
+                                                  }else{
                                                     Navigator.push(
                                                         context,
                                                         PageTransition(
@@ -295,6 +300,60 @@ class _LaporanState extends State<Laporan> {
                                                               laporan_page:
                                                               "satu",
                                                             )));
+                                                  }
+
+                                                } else if (date.day < now.day) {
+                                                  var tambahan = "";
+                                                  if (date.day < 10) {
+                                                    tambahan = "0";
+                                                  }
+                                                  if (values.contains(
+                                                      "${date.year}-${date.month}-${tambahan}${date.day}")) {
+                                                    Navigator.push(
+                                                        context,
+                                                        PageTransition(
+                                                            type:
+                                                                PageTransitionType
+                                                                    .leftToRight,
+                                                            child:
+                                                                LaporanDetail(
+                                                              isoDate: date
+                                                                  .toIso8601String(),
+                                                              idKolam: widget
+                                                                  .idKolam,
+                                                              tanggal: date.day,
+                                                              tahun: date.year,
+                                                              bulan: date.month,
+                                                            )));
+                                                  } else {
+                                                    if(_tanggal_tebar.day > date.day  && date.month <= _tanggal_tebar.month){
+                                                      BottomSheetFeedback.show(
+                                                          context,
+                                                          title: "Mohon Maaf",
+                                                          description:
+                                                          "laporan hanya bisa di lakukan setelah tanggal tebar benih");
+                                                    }else{
+                                                      Navigator.push(
+                                                          context,
+                                                          PageTransition(
+                                                              type:
+                                                              PageTransitionType
+                                                                  .fade,
+                                                              // duration: Duration(microseconds: 1000),
+                                                              child: LaporanMain(
+                                                                idKolam: widget
+                                                                    .idKolam
+                                                                    .toString(),
+                                                                tgl: date.day,
+                                                                bulan: date.month,
+                                                                tahun: date.year,
+                                                                isoString: date,
+                                                                page: 2,
+                                                                laporan_page:
+                                                                "satu",
+                                                              )));
+                                                    }
+
                                                   }
                                                 } else {
                                                   BottomSheetFeedback.show(
@@ -415,15 +474,21 @@ class _LaporanState extends State<Laporan> {
                                                           style: body2));
                                                 }
                                               },
-                                              todayButtonColor: values.contains("${now.year}-${now.month}-${now.day}") ? Colors.green[400]:colorPrimary,
+                                              todayButtonColor: values.contains(
+                                                      "${now.year}-${now.month}-${now.day}")
+                                                  ? Colors.green[400]
+                                                  : colorPrimary,
                                               // dayButtonColor:values.contains("${now.year}-${now.month}-${now.day}") ? Colors.green:colorPrimary,
-                                              daysTextStyle:TextStyle(
+                                              daysTextStyle: TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.w500,
                                                   fontFamily: 'poppins',
                                                   letterSpacing: 0.14,
                                                   fontSize: 18.02),
-                                              todayBorderColor: values.contains("${now.year}-${now.month}-${now.day}") ? Colors.green[400]:colorPrimary,
+                                              todayBorderColor: values.contains(
+                                                      "${now.year}-${now.month}-${now.day}")
+                                                  ? Colors.green[400]
+                                                  : colorPrimary,
                                               todayTextStyle: TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.w500,
@@ -451,7 +516,7 @@ class _LaporanState extends State<Laporan> {
                                               daysHaveCircularBorder: false,
                                               onCalendarChanged:
                                                   (DateTime date) {
-                                                dataCalendar();
+                                                dataCalendar(0);
                                                 this.setState(() {
                                                   setMontActive(date);
                                                 });

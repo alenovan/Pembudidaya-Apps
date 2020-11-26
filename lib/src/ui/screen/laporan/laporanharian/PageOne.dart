@@ -46,7 +46,9 @@ class _PageOneState extends State<PageOne> {
   @override
   Widget build(BuildContext context) {
     print(widget.isoData);
-    return AnnotatedRegion<SystemUiOverlayStyle>(
+    return WillPopScope(
+        onWillPop: _onBackPressed,
+        child:AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle(
           statusBarIconBrightness: Brightness.dark,
         ),
@@ -58,16 +60,7 @@ class _PageOneState extends State<PageOne> {
               leading: IconButton(
                 icon: Icon(Icons.arrow_back, color: Colors.black),
                 onPressed: () => {
-                  PageTransition(
-                      type: PageTransitionType.fade,
-                      child:  LaporanMain(
-                        idKolam: widget
-                            .idKolam
-                            .toString(),
-                        page: 2,
-                        laporan_page:
-                        "home",
-                      ))
+                  Navigator.of(context).pop(true)
                 },
               ),
               actions: <Widget>[],
@@ -102,7 +95,7 @@ class _PageOneState extends State<PageOne> {
                                     Container(
                                       margin: EdgeInsets.only(top: 10.0),
                                       child: Text(
-                                        "Laporan Hari ini kosong , segera buat laporan anda !",
+                                        "Laporan tanggal ${widget.tgl} kosong  , segera buat laporan anda !",
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             color: blackTextColor,
@@ -161,6 +154,10 @@ class _PageOneState extends State<PageOne> {
                       ],
                     )))
               ],
-          )),);
+          )),));
+
+  }
+  Future<bool> _onBackPressed() {
+    Navigator.of(context).pop(true);
   }
 }

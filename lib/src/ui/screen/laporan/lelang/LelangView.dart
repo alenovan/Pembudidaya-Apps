@@ -25,6 +25,7 @@ import 'package:page_transition/page_transition.dart';
 class LelangView extends StatefulWidget {
   final String idKolam;
   final String halaman;
+
   LelangView({Key key, this.idKolam, this.halaman}) : super(key: key);
 
   @override
@@ -53,7 +54,8 @@ class _LelangViewState extends State<LelangView> {
             elevation: 0,
             leading: IconButton(
               icon: Icon(Icons.arrow_back, color: Colors.black),
-              onPressed: () => {
+              onPressed: () =>
+              {
                 Navigator.push(
                     context,
                     PageTransition(
@@ -62,7 +64,6 @@ class _LelangViewState extends State<LelangView> {
               },
             ),
             actions: <Widget>[
-
             ],
             backgroundColor: Colors.white,
             brightness: Brightness.light,
@@ -80,35 +81,72 @@ class _LelangViewState extends State<LelangView> {
                       right: SizeConfig.blockVertical * 3),
                   child: Column(
                     children: [
-                      Container(
-                          width: double.infinity,
-                          margin: EdgeInsets.only(
-                            top: SizeConfig.blockVertical * 3,
-                          ),
-                          child: CustomElevation(
-                              height: 40.0,
-                              child: RaisedButton(
-                                highlightColor: colorPrimary,
-                                //Replace with actual colors
-                                color: colorPrimary,
-                                onPressed: () => {
-                                  Navigator.push(
-                                      context,
-                                      PageTransition(
-                                          type: PageTransitionType.fade,
-                                          // duration: Duration(microseconds: 1000),
-                                          child: TambahLelang()))
-                                },
-                                child: Text(
-                                  "Lelang",
-                                  style: subtitle2.copyWith(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w700),
-                                ),
-                                shape: new RoundedRectangleBorder(
-                                  borderRadius: new BorderRadius.circular(30.0),
-                                ),
-                              ))),
+                      Row(
+                        children: [
+                          Expanded(child: Container(
+                              margin: EdgeInsets.only(
+                                top: SizeConfig.blockVertical * 3,
+                                right: 5.0,
+                              ),
+                              child: CustomElevation(
+                                  height: 40.0,
+                                  child: RaisedButton(
+                                    highlightColor: colorPrimary,
+                                    //Replace with actual colors
+                                    color: colorPrimary,
+                                    onPressed: () =>
+                                    {
+                                      Navigator.push(
+                                          context,
+                                          PageTransition(
+                                              type: PageTransitionType.fade,
+                                              // duration: Duration(microseconds: 1000),
+                                              child: TambahLelang()))
+                                    },
+                                    child: Text(
+                                      "Jual",
+                                      style: subtitle2.copyWith(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w700),
+                                    ),
+                                    shape: new RoundedRectangleBorder(
+                                      borderRadius: new BorderRadius.circular(
+                                          30.0),
+                                    ),
+                                  ))),),
+                          Expanded(child: Container(
+                              margin: EdgeInsets.only(
+                                top: SizeConfig.blockVertical * 3,
+                              ),
+                              child: CustomElevation(
+                                  height: 40.0,
+                                  child: RaisedButton(
+                                    highlightColor: colorPrimary,
+                                    //Replace with actual colors
+                                    color: colorPrimary,
+                                    onPressed: () =>
+                                    {
+                                      Navigator.push(
+                                          context,
+                                          PageTransition(
+                                              type: PageTransitionType.fade,
+                                              // duration: Duration(microseconds: 1000),
+                                              child: TambahLelang()))
+                                    },
+                                    child: Text(
+                                      "Lelang",
+                                      style: subtitle2.copyWith(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w700),
+                                    ),
+                                    shape: new RoundedRectangleBorder(
+                                      borderRadius: new BorderRadius.circular(
+                                          30.0),
+                                    ),
+                                  ))),)
+                        ],
+                      ),
+
                       Container(
                           margin: EdgeInsets.only(
                               top: SizeConfig.blockVertical * 3,

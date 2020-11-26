@@ -95,9 +95,9 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
         int.parse(jumlahBibitController.text.toString() == null
             ? "0"
             : jumlahBibitController.text.toString()),
-        int.parse(jumlahBibitController.text.toString() == null
+        int.parse(gramPerEkorController.text.toString() == null
             ? "0"
-            : jumlahBibitController.text.toString()),
+            : gramPerEkorController.text.toString()),
         int.parse(hargaBibitController.text.toString() == null
             ? "0"
             : hargaBibitController.text.toString()),
@@ -233,7 +233,9 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
         value: SystemUiOverlayStyle(
           statusBarIconBrightness: Brightness.dark,
         ),
-        child: Scaffold(
+        child: WillPopScope(
+        onWillPop: _onBackPressed,
+        child:Scaffold(
           backgroundColor: Colors.white,
           // resizeToAvoidBottomPadding: false,
           body: Column(
@@ -756,7 +758,15 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
                       ))),
             ],
           ),
-        ));
+        )));
+  }
+
+
+  Future<bool> _onBackPressed() {
+    Navigator.push(
+        context,
+        PageTransition(
+            type: PageTransitionType.rightToLeft, child: DashboardView()));
   }
 
   Widget AlertMessage(BuildContext context) {

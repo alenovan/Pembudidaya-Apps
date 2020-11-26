@@ -78,11 +78,7 @@ class _TambahKolamViewState extends State<TambahKolamView> {
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
             onPressed: () => {
-              Navigator.push(
-                  context,
-                  PageTransition(
-                      type: PageTransitionType.rightToLeft,
-                      child: DashboardView()))
+              Navigator.of(context).pop(true)
             },
           ),
           actions: <Widget>[],
@@ -130,7 +126,7 @@ class _TambahKolamViewState extends State<TambahKolamView> {
                             ),
                             Container(
                               margin: EdgeInsets.only(
-                                  left: 30.0, right: 30.0, top: 10.0),
+                                  left: 30.0, right: 30.0,top: SizeConfig.blockVertical * 1),
                               child: Center(
                                 child: Container(
                                   width: 200.0,

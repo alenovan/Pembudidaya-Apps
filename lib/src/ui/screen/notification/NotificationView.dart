@@ -56,7 +56,7 @@ class _NotificationViewState extends State<NotificationView> {
           body: Column(
             children: [
               AppBarContainer(
-                  context, "Notifkasi", DashboardView(), Colors.white),
+                  context, "Notifkasi", null, Colors.white),
               Expanded(child:
               SingleChildScrollView(
                   physics: new BouncingScrollPhysics(),

@@ -50,8 +50,9 @@ class _PageFourState extends State<PageFour> {
         },
         fullscreenDialog: true));
     if(status_all){
-      var status = await bloc.weightMonitor(widget.idKolam,weightController.text.toString(),dateSelected);
-      if(status){
+      var data = await bloc.weightMonitor(widget.idKolam,weightController.text.toString(),dateSelected);
+      var status = data['status'];
+      if(status == 1){
         var statusFeed = await bloc.feedMonitor(widget.idKolam,widget.dataPageTwo,dateSelected);
         if(statusFeed){
           var statusSr = await bloc.feedSR(widget.idKolam,widget.dataPageThree,dateSelected);
@@ -94,7 +95,8 @@ class _PageFourState extends State<PageFour> {
       }else{
         Navigator.of(context).pop();
         Navigator.of(context).pop();
-        BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Silahkan ulangi kembali di halaman berat ikan");
+        var message  = data['data']['message'].toString();
+        BottomSheetFeedback.show(context, title: "Mohon Maaf", description: message);
       }
     }else{
         var statusFeed = await bloc.feedMonitor(widget.idKolam,widget.dataPageTwo,dateSelected);
@@ -265,7 +267,7 @@ class _PageFourState extends State<PageFour> {
                                               colorPrimary, //Replace with actual colors
                                               color: colorPrimary,
                                               onPressed: () => {
-                                                if(weightController.text.trim().length <= 1){
+                                                if(weightController.text.trim().length < 1){
                                                   showDialog(
                                                     context: context,
                                                     builder: (BuildContext context) =>

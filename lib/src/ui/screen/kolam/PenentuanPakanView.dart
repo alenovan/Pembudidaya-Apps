@@ -12,6 +12,7 @@ import 'package:lelenesia_pembudidaya/src/typography.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/checkout/CheckoutView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/kolam/KolamWidget.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/kolam/PenentuanPanenView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/kolam/pakan/DetailPenentuanPakan.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
@@ -112,7 +113,9 @@ class _PenentuanPakanViewState extends State<PenentuanPakanView> {
         value: SystemUiOverlayStyle(
         statusBarIconBrightness: Brightness.dark,
     ),
-    child:Scaffold(
+    child: WillPopScope(
+        onWillPop: _onBackPressed,
+        child:Scaffold(
         backgroundColor: Colors.grey[100],
     resizeToAvoidBottomPadding: false,
         appBar: AppBar(
@@ -124,7 +127,7 @@ class _PenentuanPakanViewState extends State<PenentuanPakanView> {
                   context,
                   PageTransition(
                       type: PageTransitionType.rightToLeft,
-                      child: DashboardView()))
+                      child: PenentuanPanenView(idKolam: widget.idKolam,)))
             },
           ),
           actions: <Widget>[],
@@ -182,10 +185,16 @@ class _PenentuanPakanViewState extends State<PenentuanPakanView> {
               ],
             )
 
-        )));
+        ))));
   }
 
 
+  Future<bool> _onBackPressed() {
+    Navigator.push(
+        context,
+        PageTransition(
+            type: PageTransitionType.rightToLeft, child: PenentuanPanenView(idKolam: widget.idKolam,)));
+  }
   Widget buildList(AsyncSnapshot<dynamic> snapshot) {
     return ListView.builder(
       physics: new BouncingScrollPhysics(),

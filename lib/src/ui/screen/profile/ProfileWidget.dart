@@ -106,8 +106,10 @@ Widget ProfileMenu(BuildContext context, String title, Widget page) {
   final Widget appBar = Container(
       child: GestureDetector(
     onTap: () => {
-      Navigator.push(
-          context, PageTransition(type: PageTransitionType.fade, child: page))
+      if(page != null){
+        Navigator.push(
+            context, PageTransition(type: PageTransitionType.fade, child: page))
+      }
     },
     child: Container(
         height: 50.0,

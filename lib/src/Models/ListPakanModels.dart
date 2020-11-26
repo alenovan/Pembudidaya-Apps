@@ -26,7 +26,7 @@ class ListPakanModels {
   String type;
   String size;
   int price;
-  int stock;
+  double stock;
   String description;
   String photo;
   Manufacturer manufacturer;
@@ -37,7 +37,7 @@ class ListPakanModels {
     type: json["type"],
     size: json["size"],
     price: json["price"],
-    stock: json["stock"],
+    stock: json["stock"] == null ? null : json["stock"].toDouble(),
     description: json["description"],
     photo: json["photo"],
     manufacturer: Manufacturer.fromJson(json["manufacturer"]),
@@ -49,7 +49,7 @@ class ListPakanModels {
     "type": type,
     "size": size,
     "price": price,
-    "stock": stock,
+    "stock": stock == null ? null : stock,
     "description": description,
     "photo": photo,
     "manufacturer": manufacturer.toJson(),

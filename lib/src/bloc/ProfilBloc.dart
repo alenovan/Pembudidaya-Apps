@@ -14,7 +14,7 @@ class ProfilBloc {
   Future<bool> funUpdateProfile(nama,address,province,city,district) async {
     var status;
     print("Update Profile");
-    var val = await _repository.updateBiodataProfile(address,province,city,district);
+    var val = await _repository.updateBiodataProfile(nama,address,province,city,district);
     Map<String, dynamic> responseJson = json.decode(val.body);
     if(responseJson['status'] == 200){
       status = true;
