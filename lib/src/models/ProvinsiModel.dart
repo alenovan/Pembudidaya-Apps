@@ -1,6 +1,3 @@
-// To parse this JSON data, do
-//
-//     final provinsiModel = provinsiModelFromJson(jsonString);
 
 import 'dart:convert';
 

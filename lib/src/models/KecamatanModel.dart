@@ -1,6 +1,3 @@
-// To parse this JSON data, do
-//
-//     final kecamatanModel = kecamatanModelFromJson(jsonString);
 
 import 'dart:convert';
 

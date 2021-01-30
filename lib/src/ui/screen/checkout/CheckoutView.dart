@@ -1,34 +1,39 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:ui';
 
+import 'package:flutter_boxicons/flutter_boxicons.dart';
 import 'package:intl/intl.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
+import 'package:lelenesia_pembudidaya/src/LelenesiaText.dart';
 import 'package:lelenesia_pembudidaya/src/bloc/CheckoutBloc.dart' as checkout;
 import 'package:lelenesia_pembudidaya/src/bloc/KolamBloc.dart';
 import 'package:lelenesia_pembudidaya/src/bloc/ProfilBloc.dart' as profile;
 import 'package:flutter/material.dart';
 import 'package:lelenesia_pembudidaya/src/helper/DbHelper.dart';
+import 'package:lelenesia_pembudidaya/src/models/ListAlamatModels.dart';
 import 'package:lelenesia_pembudidaya/src/typography.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/checkout/Alamat/ListAlamatPengiriman.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/checkout/CheckoutWidget.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardView.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/kolam/DetailKolam.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanMain.dart';
+import 'package:lelenesia_pembudidaya/src/ui/tools/ScreenUtil.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
-import 'package:lelenesia_pembudidaya/src/ui/widget/AcceptanceDialog.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/BottomSheetFeedback.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/CustomElevation.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:flutter/services.dart';
+import 'package:lelenesia_pembudidaya/src/ui/widget/LoadingDialog.dart';
 import 'package:page_transition/page_transition.dart';
-
+import 'package:lelenesia_pembudidaya/src/ui/tools/extensions.dart' as AppExt;
+import 'package:shimmer/shimmer.dart';
+import 'package:lelenesia_pembudidaya/src/bloc/PakanBloc.dart' as order;
 class CheckoutView extends StatefulWidget {
-  final String name_pakan;
-  final int price;
   final String idKolam;
-  final String url_pakan;
 
   CheckoutView(
-      {Key key, this.name_pakan, this.price, this.url_pakan, this.idKolam})
+      {Key key,this.idKolam})
       : super(key: key);
 
   @override
@@ -44,54 +49,67 @@ class _CheckoutViewState extends State<CheckoutView> {
   var _phone = " ";
   var sow_date = "";
   var seed_price = 0;
+  var ongkir = 25000;
   var seed_amount = 0;
+  var feed_amount = 1;
   var seed_weight = 0;
   var survival_rate = 0;
   var feed_conversion_ratio = 0;
   var target_fish_count = 0;
   var target_price = 0;
   var name_pakan = "";
-  var pricex = "";
+  var pricex = 0;
   var url_pakanx = "";
-  var total_payment= "";
+  var total_payment= 0;
   var total_kebutuhan_kilo = "";
   DbHelper _dbHelper;
   var dataPenentuan;
   var id_order = 0;
   var feed_idx = "";
+  var tglTebarController = "";
+  var hargaBibitController = 0;
+  var jumlahBibitController = 0;
+  var gramPerEkorController = 0;
+  var survivalRateController = 0;
+  var feedConvController = 0;
+  var targetJumlahController = 0;
+  var targetHargaController = 0;
+  var id_pakan = 0;
+  var id_ikan = 0;
+  var items = List<ListAlamatModels>();
+  List<ListAlamatModels> dataAlamat = new List();
   void detailKolam() async {
-    // Future.delayed(new Duration(milliseconds: 1500), () {
-    //   showLoaderDialog(context);
-    // });
     var detail = await bloc.getKolamDetail(widget.idKolam);
     var data = detail['data'];
     setState(() {
-      id_order = data['harvest']['last_order_id'];
-      feed_idx = data['harvest']['feed_id'].toString();
+      // id_order = data['harvest']['last_order_id'];
+      // feed_idx = data['harvest']['feed_id'].toString();
     });
-    detailOrder();
+    // detailOrder();
     getDataPanen();
-    // Navigator.of(context).pop();
   }
 
   void detailOrder() async {
     var detail = await checkout.bloc.getOrderId(id_order.toString());
-    var data = detail['data'];
-
-    setState(() {
-      name_pakan = data["feed_name"];
-      pricex = data["feed_price"];
-      total_payment = data["total_payment"];
-      total_kebutuhan_kilo = data["order_amount"];
-
-    });
+    // var data = detail['data'];
+    // setState(() {
+    //   name_pakan = data["feed_name"];
+    //   pricex = data["feed_price"];
+    //   total_payment = data["total_payment"];
+    //   total_kebutuhan_kilo = data["order_amount"];
+    //
+    // });
   }
 
   void getDataPanen() async {
     dataPenentuan = await _dbHelper.select(int.parse(widget.idKolam));
-    var detail_pakan =  await checkout.bloc.getFeedDetail(feed_idx);
+
+    var detail_pakan =  await checkout.bloc.getFeedDetail(dataPenentuan["feed_id"].toString());
     var data = detail_pakan;
+    print(dataPenentuan);
     setState(() {
+      id_pakan = dataPenentuan["feed_id"];
+      id_ikan = dataPenentuan["fish_type_id"];
       sow_date = dataPenentuan["sow_date"].toString();
       seed_price = dataPenentuan["seed_price"];
       seed_amount = dataPenentuan["seed_amount"];
@@ -101,36 +119,61 @@ class _CheckoutViewState extends State<CheckoutView> {
       target_fish_count = dataPenentuan["target_fish_count"];
       target_price = dataPenentuan["target_price"];
       url_pakanx = data["data"]["photo"].toString();
+      name_pakan = data["data"]["name"].toString();
+      pricex = data["data"]["price"];
+      total_kebutuhan_kilo = (feed_amount * 30).toString() +" Kg";
+      total_payment = ((pricex * feed_amount) + ongkir);
+
+    //  order
+      tglTebarController = dataPenentuan["sow_date"].toString();
+      hargaBibitController = dataPenentuan["seed_price"];
+      jumlahBibitController = dataPenentuan["seed_amount"];
+      gramPerEkorController = dataPenentuan["seed_weight"];
+      survivalRateController = dataPenentuan["survival_rate"];
+      feedConvController = dataPenentuan["feed_conversion_ratio"];
+      targetJumlahController = dataPenentuan["target_fish_count"];
+      targetHargaController = dataPenentuan["target_price"];
+    });
+  }
+
+  void updatePrice(){
+    setState(() {
+      total_kebutuhan_kilo = (feed_amount * 30).toString() +" Kg";
+      total_payment = ((pricex * feed_amount) + ongkir);
     });
   }
 
   void update() async {
-    blox = await profile.bloc.getProfile();
-    setState(() {
-      _phone = blox['data']['phone_number'].toString() == "null"
-          ? " "
-          : blox['data']['phone_number'].toString();
-      _nama = blox['data']['name'].toString() == "null"
-          ? " "
-          : blox['data']['name'].toString();
-      _alamat = blox['data']['address'].toString() == "null"
-          ? " "
-          : blox['data']['address'].toString();
+    profile.bloc.fetchAllAlamat().then((value) {
+      setState(() {
+        dataAlamat = value;
+        items.addAll(dataAlamat);
+        for (var data in items) {
+          if(data.isMain == 1){
+           setState(() {
+             _nama = data.name.toString();
+             _phone = data.phoneNumber.toString();
+             _alamat = "${data.address.toString()} ${data.province.name.toString()}  ${data.city.name.toString()}   ${data.district.name.toString()}";
+           });
+          }
+        }
+      });
     });
   }
 
   @override
   void initState() {
     super.initState();
+    _dbHelper = DbHelper.instance;
     _phone = "Loading";
     _nama = "Loading";
     _alamat ="Loading";
     name_pakan = "Loading";
-    pricex = "Loading";
-    total_payment = "Loading";
+    pricex = 0;
+    total_payment = 0;
     total_kebutuhan_kilo = "Loading";
     detailKolam();
-    _dbHelper = DbHelper.instance;
+
     update();
     // getDataPanen();
     // Navigator.pop(context);
@@ -138,48 +181,55 @@ class _CheckoutViewState extends State<CheckoutView> {
   }
 
   void _clickCheckOut() async {
-    Navigator.of(context).push(new MaterialPageRoute<Null>(
-        builder: (BuildContext context) {
-          return LoadingShow(context);
-        },
-        fullscreenDialog: true));
-    var status = await checkout.bloc.checkout(id_order.toString());
-    if(status){
-      Navigator.of(context).pop();
-      showDialog(
-        context: context,
-        builder: (BuildContext context) =>
-            AlertSuccess(context, LaporanMain(
-              idKolam: widget
-                  .idKolam
-                  .toString(),
-              page: 0,
-              laporan_page:
-              "home",
-            )),
-      );
+    AppExt.popScreen(context);
+    LoadingDialog.show(context);
+    var data = await order.bloc.funInsertPenentuanPakan(
+        widget.idKolam.toString(),
+        tglTebarController.toString(),
+        id_ikan.toString(),
+        jumlahBibitController.toString(),
+        gramPerEkorController.toString(),
+        hargaBibitController.toString(),
+        survivalRateController.toString(),
+        feedConvController.toString(),
+        id_pakan.toString(),
+        targetJumlahController.toString(),
+        targetHargaController.toString(),
+        feed_amount.toString());
+    var statusOrder = data['status'];
+    if (statusOrder == 1) {
+      var detail = await bloc.getKolamDetail(widget.idKolam);
+      var data = detail['data'];
+      setState(() {
+        id_order = data['harvest']['last_order_id'];
+      });
+      var statusCheckout = await checkout.bloc.checkout(id_order.toString());
+      if(statusCheckout){
+        AppExt.popScreen(context);
+        BottomSheetFeedback.show_success(context, title: "Selamat", description: "Pembelian anda berhasil di checkout");
 
-      Navigator.push(
-          context,
-          PageTransition(
-              type: PageTransitionType.fade,
-              child: LaporanMain(
-                idKolam: widget
-                    .idKolam
-                    .toString(),
-                page: 0,
-                laporan_page:
-                "home",
-              )));
+
+        Timer(const Duration(seconds: 2), () {
+          Navigator.push(
+              context,
+              PageTransition(
+                  type: PageTransitionType.fade,
+                  child: DetailKolam(
+                    idKolam: widget
+                        .idKolam
+                        .toString(),
+                  )));
+        });
+      }else{
+        AppExt.popScreen(context);
+        BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Silahkan ulangi kembali");
+      }
     }else{
-      Navigator.of(context).pop();
+      AppExt.popScreen(context);
       BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Silahkan ulangi kembali");
     }
   }
 
-  Widget getTitle() {
-    return const Text('Checkout', style: subtitle2);
-  }
 
   BackButton getBackButton() {
     return const BackButton();
@@ -187,6 +237,8 @@ class _CheckoutViewState extends State<CheckoutView> {
 
   @override
   Widget build(BuildContext context) {
+    final double _screenWidth = MediaQuery.of(context).size.width;
+    ScreenUtil.instance = ScreenUtil()..init(context);
     return AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle(
           statusBarIconBrightness: Brightness.dark,
@@ -201,15 +253,16 @@ class _CheckoutViewState extends State<CheckoutView> {
             leading: IconButton(
               icon: Icon(Icons.arrow_back, color: Colors.black),
               onPressed: () => {
-                Navigator.push(
-                    context,
-                    PageTransition(
-                        type: PageTransitionType.fade,
-                        child: LaporanMain(
-                          page: 0,
-                          laporan_page: "home",
-                          idKolam: widget.idKolam,
-                        )))
+                // Navigator.push(
+                //     context,
+                //     PageTransition(
+                //         type: PageTransitionType.fade,
+                //         child: LaporanMain(
+                //           page: 0,
+                //           laporan_page: "home",
+                //           idKolam: widget.idKolam,
+                //         )))
+                Navigator.of(context).pop(true)
               },
             ),
             actions: <Widget>[],
@@ -247,7 +300,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                                         fontFamily: 'lato',
                                         letterSpacing: 0.4,
                                         fontWeight: FontWeight.w700,
-                                        fontSize: 17.0),
+                                        fontSize: ScreenUtil(allowFontScaling: false).setSp(45)),
                                   )),
                               Container(
                                   alignment: Alignment.centerLeft,
@@ -287,89 +340,95 @@ class _CheckoutViewState extends State<CheckoutView> {
                                       MainAxisAlignment.spaceBetween,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Container(
-                                      margin: EdgeInsets.only(
-                                        left: SizeConfig.blockVertical * 3,
-                                        top: SizeConfig.blockVertical * 2,
-                                        right: SizeConfig.blockVertical * 2,
-                                      ),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            _nama,
-                                            style: TextStyle(
-                                                fontFamily: 'poppins',
-                                                letterSpacing: 0.4,
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 14.0),
-                                          ),
-                                          Container(
-                                            margin: EdgeInsets.only(
-                                                top: SizeConfig.blockVertical *
-                                                    2),
-                                            child: Text(
-                                              _alamat,
+                                    Flexible(
+                                      flex: 4,
+                                      child:  Container(
+                                        margin: EdgeInsets.only(
+                                          left: SizeConfig.blockVertical * 3,
+                                          top: SizeConfig.blockVertical * 2,
+                                          right: SizeConfig.blockVertical * 2,
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              _nama,
                                               style: TextStyle(
                                                   fontFamily: 'poppins',
                                                   letterSpacing: 0.4,
-                                                  fontSize: 13.0),
+                                                  fontWeight: FontWeight.w700,
+                                                  fontSize: 14.0),
                                             ),
-                                          ),
-                                          // Container(
-                                          //   child: Text(
-                                          //     "Kel. Jatimulyo, Kec. Klojen",
-                                          //     style: TextStyle(
-                                          //         fontFamily: 'poppins',
-                                          //         letterSpacing: 0.4,
-                                          //         fontSize: 13.0),
-                                          //   ),
-                                          // ),
-                                          // Container(
-                                          //   child: Text(
-                                          //     "Kota Malang, Jawa Timur",
-                                          //     style: TextStyle(
-                                          //         fontFamily: 'poppins',
-                                          //         letterSpacing: 0.4,
-                                          //         fontSize: 13.0),
-                                          //   ),
-                                          // ),
-                                          Container(
-                                            margin: EdgeInsets.only(
-                                                top: SizeConfig.blockVertical *
-                                                    2,
-                                                bottom:
-                                                    SizeConfig.blockVertical *
-                                                        2),
-                                            child: Text(
-                                              _phone,
-                                              style: TextStyle(
-                                                  fontFamily: 'poppins',
-                                                  letterSpacing: 0.4,
-                                                  fontSize: 13.0),
+                                            Container(
+                                              margin: EdgeInsets.only(
+                                                  top: SizeConfig.blockVertical *
+                                                      2),
+                                              child: Text(
+                                                _alamat,
+                                                style: TextStyle(
+                                                    fontFamily: 'poppins',
+                                                    letterSpacing: 0.4,
+                                                    fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
+                                              ),
+                                            ),
+                                            // Container(
+                                            //   child: Text(
+                                            //     "Kel. Jatimulyo, Kec. Klojen",
+                                            //     style: TextStyle(
+                                            //         fontFamily: 'poppins',
+                                            //         letterSpacing: 0.4,
+                                            //         fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
+                                            //   ),
+                                            // ),
+                                            // Container(
+                                            //   child: Text(
+                                            //     "Kota Malang, Jawa Timur",
+                                            //     style: TextStyle(
+                                            //         fontFamily: 'poppins',
+                                            //         letterSpacing: 0.4,
+                                            //         fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
+                                            //   ),
+                                            // ),
+                                            Container(
+                                              margin: EdgeInsets.only(
+                                                  top: SizeConfig.blockVertical *
+                                                      2,
+                                                  bottom:
+                                                  SizeConfig.blockVertical *
+                                                      2),
+                                              child: Text(
+                                                _phone,
+                                                style: TextStyle(
+                                                    fontFamily: 'poppins',
+                                                    letterSpacing: 0.4,
+                                                    fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Flexible(
+                                      flex: 1,
+                                      child:    Column(
+                                        children: [
+                                          Center(
+                                            child: Container(
+                                              margin: EdgeInsets.only(
+                                                  right:
+                                                  SizeConfig.blockVertical *
+                                                      3),
+                                              child: Icon(
+                                                Icons.check_circle,
+                                                color: purpleTextColor,
+                                                size: 30.0,
+                                              ),
                                             ),
                                           )
                                         ],
                                       ),
-                                    ),
-                                    Column(
-                                      children: [
-                                        Center(
-                                          child: Container(
-                                            margin: EdgeInsets.only(
-                                                right:
-                                                    SizeConfig.blockVertical *
-                                                        3),
-                                            child: Icon(
-                                              Icons.check_circle,
-                                              color: purpleTextColor,
-                                              size: 30.0,
-                                            ),
-                                          ),
-                                        )
-                                      ],
-                                    ),
+                                    )
                                   ],
                                 ),
                               ),
@@ -388,12 +447,149 @@ class _CheckoutViewState extends State<CheckoutView> {
                                         fontFamily: 'lato',
                                         letterSpacing: 0.4,
                                         fontWeight: FontWeight.w700,
-                                        fontSize: 17.0),
+                                        fontSize: ScreenUtil(allowFontScaling: false).setSp(45)),
                                   )),
                             ],
                           ),
-                          CardPenentuanPakan(context, name_pakan,
-                              pricex, "", url_pakanx),
+                          // CardPenentuanPakan(context, name_pakan,
+                          //     "Rp.${formatter.format(pricex)} / 30 Kg", "", url_pakanx),
+                          Container(
+                            margin: EdgeInsets.only(top: 10.0,bottom: 10.0),
+                            height: ScreenUtil().setHeight(200),
+                            child: Container(
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: ScreenUtil().setHeight(200),
+                                      child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(8.0),
+                                          child: Image.network(
+                                            url_pakanx,
+                                            fit: BoxFit.cover,
+                                            height: SizeConfig.blockHorizotal * 17,
+                                            errorBuilder: (BuildContext context, Object exception,
+                                                StackTrace stackTrace) {
+                                              return Image.network(
+                                                url_pakanx,
+                                                height: SizeConfig.blockHorizotal * 17,
+                                                fit: BoxFit.cover,
+                                                frameBuilder: (context, child, frame,
+                                                    wasSynchronouslyLoaded) {
+                                                  if (wasSynchronouslyLoaded) {
+                                                    return child;
+                                                  } else {
+                                                    return AnimatedSwitcher(
+                                                      duration: const Duration(milliseconds: 500),
+                                                      child: frame != null
+                                                          ? child
+                                                          : Shimmer.fromColors(
+                                                        baseColor: Colors.grey[300],
+                                                        highlightColor: Colors.grey[200],
+                                                        period: Duration(milliseconds: 1000),
+                                                        child: Container(
+                                                          width: _screenWidth * (20 / 100),
+                                                          height: _screenWidth * (15 / 100),
+                                                          decoration: BoxDecoration(
+                                                              borderRadius:
+                                                              BorderRadius.circular(10),
+                                                              color: Colors.white),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  }
+                                                },
+                                              );
+                                            },
+                                          )),
+                                    ),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                              child: Text(
+                                                name_pakan,
+                                                style: TextStyle(
+                                                    color: purpleTextColor,
+                                                    fontFamily: 'poppins',
+                                                    letterSpacing: 0.4,
+                                                    fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
+                                              )),
+                                          Container(
+                                              margin: EdgeInsets.only(top: 5.0),
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      Container(
+                                                        child: Text(
+                                                          "Rp.${formatter.format(pricex)} / 30 Kg",
+                                                          style: TextStyle(
+                                                              color: Colors.black,
+                                                              fontFamily: 'lato',
+                                                              letterSpacing: 0.4,
+                                                              fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      InkWell(
+                                                        child: Container(
+                                                          child: Icon(
+                                                            Boxicons.bx_minus_circle,
+                                                            color: colorPrimary, size: ScreenUtil(allowFontScaling: false).setSp(70),
+                                                          ),
+                                                        ),
+                                                        onTap: () {
+                                                          setState(() {
+                                                            if(feed_amount <=1){
+                                                              feed_amount = 1;
+                                                            }else{
+                                                              feed_amount--;
+                                                            }
+                                                            updatePrice();
+                                                          });
+                                                        },
+                                                      ),
+                                                      Container(
+                                                        padding: EdgeInsets.only(left: 5.0,right: 5.0),
+                                                        child: Text(
+                                                          "${feed_amount}",
+                                                          style: TextStyle(
+                                                              color: Colors.black,
+                                                              fontFamily: 'lato',
+                                                              letterSpacing: 0.4,
+                                                              fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
+                                                        ),
+                                                      ),
+                                                      InkWell(
+                                                        child: Container(
+                                                          child: Icon(
+                                                            Boxicons.bx_plus_circle,
+                                                            color: colorPrimary, size: ScreenUtil(allowFontScaling: false).setSp(70),
+                                                          ),
+                                                        ),
+                                                        onTap: () {
+                                                          setState(() {
+                                                            feed_amount++;
+                                                            updatePrice();
+                                                          });
+                                                        },
+                                                      ),
+                                                    ],
+                                                  )
+                                                ],
+                                              )),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                )),
+                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -405,7 +601,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                                         fontFamily: 'lato',
                                         letterSpacing: 0.4,
                                         fontWeight: FontWeight.w700,
-                                        fontSize: 17.0),
+                                        fontSize: ScreenUtil(allowFontScaling: false).setSp(45)),
                                   )),
                             ],
                           ),
@@ -423,7 +619,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                                           color: Colors.black,
                                           fontFamily: 'lato',
                                           letterSpacing: 0.4,
-                                          fontSize: 13.0),
+                                          fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
                                     )),
                                 Container(
                                     alignment: Alignment.centerLeft,
@@ -433,7 +629,8 @@ class _CheckoutViewState extends State<CheckoutView> {
                                           color: Colors.black,
                                           fontFamily: 'lato',
                                           letterSpacing: 0.4,
-                                          fontSize: 13.0),
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
                                     ))
                               ],
                             ),
@@ -459,7 +656,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                                           color: Colors.black,
                                           fontFamily: 'lato',
                                           letterSpacing: 0.4,
-                                          fontSize: 13.0),
+                                          fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
                                     )),
                                 Container(
                                     alignment: Alignment.centerLeft,
@@ -469,7 +666,8 @@ class _CheckoutViewState extends State<CheckoutView> {
                                           color: Colors.black,
                                           fontFamily: 'lato',
                                           letterSpacing: 0.4,
-                                          fontSize: 13.0),
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
                                     ))
                               ],
                             ),
@@ -495,7 +693,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                                           color: Colors.black,
                                           fontFamily: 'lato',
                                           letterSpacing: 0.4,
-                                          fontSize: 13.0),
+                                          fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
                                     )),
                                 Container(
                                     alignment: Alignment.centerLeft,
@@ -505,7 +703,8 @@ class _CheckoutViewState extends State<CheckoutView> {
                                           color: Colors.black,
                                           fontFamily: 'lato',
                                           letterSpacing: 0.4,
-                                          fontSize: 13.0),
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
                                     ))
                               ],
                             ),
@@ -530,7 +729,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                                           color: Colors.black,
                                           fontFamily: 'lato',
                                           letterSpacing: 0.4,
-                                          fontSize: 13.0),
+                                          fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
                                     )),
                                 Container(
                                     padding: EdgeInsets.all(
@@ -553,7 +752,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                                           fontWeight: FontWeight.w500,
                                           fontFamily: 'poppins',
                                           letterSpacing: 1.25,
-                                          fontSize: 13.0),
+                                          fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
                                       maxLines: 8,
                                       decoration: InputDecoration.collapsed(
                                           hintText: "Tambahkan catatan khusus"),
@@ -574,7 +773,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                                         fontFamily: 'lato',
                                         letterSpacing: 0.4,
                                         fontWeight: FontWeight.w700,
-                                        fontSize: 17.0),
+                                        fontSize: ScreenUtil(allowFontScaling: false).setSp(45)),
                                   )),
                             ],
                           ),
@@ -592,17 +791,18 @@ class _CheckoutViewState extends State<CheckoutView> {
                                           color: Colors.black,
                                           fontFamily: 'lato',
                                           letterSpacing: 0.4,
-                                          fontSize: 13.0),
+                                          fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
                                     )),
                                 Container(
                                     alignment: Alignment.centerLeft,
                                     child: Text(
-                                     total_payment,
+                                     "Rp.${formatter.format(total_payment-ongkir)}",
                                       style: TextStyle(
                                           color: Colors.black,
                                           fontFamily: 'lato',
                                           letterSpacing: 0.4,
-                                          fontSize: 13.0),
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
                                     ))
                               ],
                             ),
@@ -628,17 +828,18 @@ class _CheckoutViewState extends State<CheckoutView> {
                                           color: Colors.black,
                                           fontFamily: 'lato',
                                           letterSpacing: 0.4,
-                                          fontSize: 13.0),
+                                          fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
                                     )),
                                 Container(
                                     alignment: Alignment.centerLeft,
                                     child: Text(
-                                      "Rp.25.000,-",
+                                      "Rp.${formatter.format(ongkir)}",
                                       style: TextStyle(
                                           color: Colors.black,
                                           fontFamily: 'lato',
+                                          fontWeight: FontWeight.w700,
                                           letterSpacing: 0.4,
-                                          fontSize: 13.0),
+                                          fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
                                     ))
                               ],
                             ),
@@ -655,7 +856,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                         child: new Align(
                             alignment: FractionalOffset.bottomCenter,
                             child: Container(
-                              height: SizeConfig.blockVertical * 12,
+                              height: ScreenUtil().setHeight(200),
                               width: MediaQuery.of(context).size.width,
                               color: purpleTextColor,
                               child: Row(
@@ -678,25 +879,26 @@ class _CheckoutViewState extends State<CheckoutView> {
                                                 color: Colors.white,
                                                 fontFamily: 'lato',
                                                 letterSpacing: 0.4,
-                                                fontSize: 15.0),
+                                                fontSize: ScreenUtil(allowFontScaling: false).setSp(45)),
                                           ),
                                           Text(
-                                            total_payment,
+                                            "Rp.${formatter.format(total_payment)}",
                                             style: TextStyle(
                                                 color: Colors.white,
                                                 fontFamily: 'poppins',
                                                 letterSpacing: 0.4,
                                                 fontWeight: FontWeight.w700,
-                                                fontSize: 20.0),
+                                                fontSize: ScreenUtil(allowFontScaling: false).setSp(50)),
                                           )
                                         ],
                                       )),
                                   Container(
                                     padding: EdgeInsets.only(
+                                      top: ScreenUtil().setHeight(35),
                                         right: SizeConfig.blockVertical * 4),
                                     alignment: Alignment.centerLeft,
                                     child: Container(
-                                      height: 35.0,
+                                      height: ScreenUtil().setHeight(100),
                                       child: CustomElevation(
                                           height: 35.0,
                                           child: RaisedButton(
@@ -718,7 +920,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                                                   fontWeight: FontWeight.w500,
                                                   fontFamily: 'poppins',
                                                   letterSpacing: 1.25,
-                                                  fontSize: 14.0),
+                                                  fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
                                             ),
                                             shape: new RoundedRectangleBorder(
                                               borderRadius:
@@ -740,15 +942,16 @@ class _CheckoutViewState extends State<CheckoutView> {
   }
 
   Future<bool> _onBackPressed() {
-    Navigator.push(
-        context,
-        PageTransition(
-            type: PageTransitionType.fade,
-            child: LaporanMain(
-              page: 0,
-              laporan_page: "home",
-              idKolam: widget.idKolam,
-            )));
+    // Navigator.push(
+    //     context,
+    //     PageTransition(
+    //         type: PageTransitionType.fade,
+    //         child: LaporanMain(
+    //           page: 0,
+    //           laporan_page: "home",
+    //           idKolam: widget.idKolam,
+    //         )));
+    Navigator.of(context).pop(true);
   }
 
   Widget AlertquestionInsert(BuildContext context, Widget success) {

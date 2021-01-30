@@ -1,20 +1,13 @@
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_calendar_carousel/classes/event.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lelenesia_pembudidaya/src/typography.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardView.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanDetail.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/profile/ProfileScreen.dart';
+import 'package:lelenesia_pembudidaya/src/ui/tools/ScreenUtil.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
-import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
-import 'package:lelenesia_pembudidaya/src/LelenesiaText.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart'
-    show CalendarCarousel, EventList;
 
 class ProfileWidget extends StatelessWidget {
   const ProfileWidget({Key key}) : super(key: key);
@@ -102,6 +95,7 @@ Widget AppbarForgot(BuildContext context, String title,Color color,String status
 }
 // ignore: non_constant_identifier_names
 Widget ProfileMenu(BuildContext context, String title, Widget page) {
+  ScreenUtil.instance = ScreenUtil()..init(context);
   SizeConfig().init(context);
   final Widget appBar = Container(
       child: GestureDetector(
@@ -112,8 +106,8 @@ Widget ProfileMenu(BuildContext context, String title, Widget page) {
       }
     },
     child: Container(
-        height: 50.0,
-        padding: EdgeInsets.only(left: 20.0, right: 20.0),
+        height: ScreenUtil().setHeight(120),
+        padding: EdgeInsets.only(left: 30.0, right: 30.0),
         color: Colors.white,
         child: Column(
           children: [
@@ -140,7 +134,7 @@ Widget ProfileMenu(BuildContext context, String title, Widget page) {
             ),
             Container(
               margin: EdgeInsets.only(right: 20.0),
-              color: greyLineColor,
+              color: editTextField,
               height: 0.5,
             ),
           ],

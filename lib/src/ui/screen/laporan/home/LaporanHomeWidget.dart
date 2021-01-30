@@ -2,24 +2,16 @@ import 'dart:ffi';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_calendar_carousel/classes/event.dart';
-import 'package:flutter_icons/flutter_icons.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:lelenesia_pembudidaya/src/typography.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanDetail.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/profile/ProfileScreen.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/LocalizedTimeFactory.dart';
+import 'package:lelenesia_pembudidaya/src/ui/tools/ScreenUtil.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
-import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
-import 'package:lelenesia_pembudidaya/src/LelenesiaText.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/AreaAndLineChart.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/CustomElevation.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
-import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
+import 'package:shimmer/shimmer.dart';
 
 class LaporanHomeWidget extends StatelessWidget {
   const LaporanHomeWidget({Key key}) : super(key: key);
@@ -88,17 +80,17 @@ Widget CardRow(BuildContext context, String title, String sub) {
                   children: [
                     Container(
                         child: Text(
-                          title,
-                          style: subtitle2.copyWith(color: colorPrimary),
-                        )),
+                      title,
+                      style: subtitle2.copyWith(color: colorPrimary),
+                    )),
                     Container(
                         child: Text(
-                          sub,
-                          style: h3.copyWith(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500,
-                              letterSpacing: 1.15),
-                        )),
+                      sub,
+                      style: h3.copyWith(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: 1.15),
+                    )),
                   ],
                 ),
                 Container(
@@ -125,14 +117,15 @@ Widget CardRow(BuildContext context, String title, String sub) {
   return svgIcon;
 }
 
-Widget buildCardChart({@required String title,
-  @required filter,
-  @required int percent,
-  @required int status,
-  @required String statusCount,
-  @required String date,
-  @required chartData,
-  @required context}) {
+Widget buildCardChart(
+    {@required String title,
+    @required filter,
+    @required int percent,
+    @required int status,
+    @required String statusCount,
+    @required String date,
+    @required chartData,
+    @required context}) {
   print(filter);
   initializeDateFormatting();
   var statusData;
@@ -183,10 +176,11 @@ Widget buildCardChart({@required String title,
           child: charts.TimeSeriesChart(
             chartData,
             animate: true,
-            dateTimeFactory:LocalizedTimeFactory(Localizations.localeOf(context)),
+            dateTimeFactory:
+                LocalizedTimeFactory(Localizations.localeOf(context)),
             primaryMeasureAxis: new charts.NumericAxisSpec(
-                tickProviderSpec: new charts.BasicNumericTickProviderSpec(zeroBound: false)
-            ),
+                tickProviderSpec:
+                    new charts.BasicNumericTickProviderSpec(zeroBound: false)),
             domainAxis: charts.DateTimeAxisSpec(
               tickFormatterSpec: charts.AutoDateTimeTickFormatterSpec(
                 day: charts.TimeFormatterSpec(
@@ -202,12 +196,13 @@ Widget buildCardChart({@required String title,
   );
 }
 
-Widget buildCardChartGram({@required String title,
-  @required int percent,
-  @required int status,
-  @required String statusCount,
-  @required String date,
-  @required chartData}) {
+Widget buildCardChartGram(
+    {@required String title,
+    @required int percent,
+    @required int status,
+    @required String statusCount,
+    @required String date,
+    @required chartData}) {
   var statusData;
   if (status == 1) {
     statusData = Row(children: <Widget>[
@@ -257,7 +252,7 @@ Widget buildCardChartGram({@required String title,
                   children: [
                     Container(
                       padding:
-                      EdgeInsets.only(left: SizeConfig.blockVertical * 2),
+                          EdgeInsets.only(left: SizeConfig.blockVertical * 2),
                       child: Text(
                         percent.toString() + " gram",
                         style: body2,
@@ -265,7 +260,7 @@ Widget buildCardChartGram({@required String title,
                     ),
                     Container(
                       padding:
-                      EdgeInsets.only(left: SizeConfig.blockVertical * 1),
+                          EdgeInsets.only(left: SizeConfig.blockVertical * 1),
                       child: statusData,
                     ),
                   ],
@@ -316,4 +311,248 @@ Widget buildCardChartGram({@required String title,
       ],
     ),
   );
+}
+
+Widget CardKolamDetail(BuildContext context, String title, String sub,
+    String status, String stock, String checkout) {
+  var text;
+  var color;
+  ScreenUtil.instance = ScreenUtil()..init(context);
+  if (status == "0") {
+    text = "Belum Teraktivasi";
+    color = Colors.grey;
+  } else if (status == "1") {
+    text = "Kosong";
+    color = Colors.redAccent;
+  } else if (status == "2") {
+    text = "Sedang Budidaya";
+    color = blueAqua;
+  } else if (status == "3") {
+    text = "Siap Panen";
+    color = Colors.green;
+  } else if (status == "-1") {
+    text = "Belum Aktivasi Akun";
+    color = Colors.redAccent;
+  } else {
+    text = status;
+    color = Colors.redAccent;
+  }
+
+  final Widget svgIcon = Container(
+    height: ScreenUtil().setHeight(300),
+    child: Card(
+        elevation: 4,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(ScreenUtil().setWidth(50)),
+        ),
+        child: Container(
+            padding: EdgeInsets.only(left: ScreenUtil().setWidth(40), right: ScreenUtil().setWidth(40)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.circle,
+                          color: color,
+                          size: 15.0,
+                        ),
+                        Container(
+                            margin: EdgeInsets.only(left: 5.0),
+                            child: title != "null"?Text(
+                              text,
+                              style: caption.copyWith(color: color,fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
+                            ):Shimmer.fromColors(
+                                baseColor: Colors.grey[300],
+                                highlightColor: Colors.white,
+                                child: Container(
+                                  height: 20.0,
+                                  width: ScreenUtil().setWidth(300),
+                                  decoration: BoxDecoration(
+                                      color: Colors.grey[300],
+                                      borderRadius:
+                                      BorderRadius.all(
+                                          Radius.circular(
+                                              16.0))),
+                                ))),
+                      ],
+                    ),
+                    Container(
+                        margin: EdgeInsets.only(top: 5.0, left: 20),
+                        child: title != "null"?Text(
+                          "Kolam "+title,
+                          style:
+                              subtitle1.copyWith(fontWeight: FontWeight.bold,fontSize: ScreenUtil(allowFontScaling: false).setSp(50)),
+                        ):Shimmer.fromColors(
+                            baseColor: Colors.grey[300],
+                            highlightColor: Colors.white,
+                            child: Container(
+                              height: 20.0,
+                              width: ScreenUtil().setWidth(300),
+                              decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                  borderRadius:
+                                  BorderRadius.all(
+                                      Radius.circular(
+                                          16.0))),
+                            ))),
+                    Container(
+                        margin: EdgeInsets.only(top: 2.0, left: 20),
+                        child:  title != "null"?Text(
+                          sub,
+                          style: overline.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: greyTextColor,fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
+                        ):Shimmer.fromColors(
+                            baseColor: Colors.grey[300],
+                            highlightColor: Colors.white,
+                            child: Container(
+                              height: 20.0,
+                              width: ScreenUtil().setWidth(300),
+                              decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                  borderRadius:
+                                  BorderRadius.all(
+                                      Radius.circular(
+                                          16.0))),
+                            ))),
+                  ],
+                ),
+                Container(
+                    alignment: Alignment.centerRight,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        RichText(
+                          text: TextSpan(
+                            style: TextStyle(color: Colors.black),
+                            children: <TextSpan>[
+                              TextSpan(
+                                  text: 'Stock Pakan :     ',
+                                  style: overline.copyWith(
+                                      color: greyTextColor,
+                                      fontSize: ScreenUtil(allowFontScaling: false).setSp(35),
+                                      fontWeight: FontWeight.bold)),
+                            stock != "null"?TextSpan(
+                                  text: stock,
+                                  style: subtitle1.copyWith(
+                                      fontWeight: FontWeight.bold,fontSize: ScreenUtil(allowFontScaling: false).setSp(40))):Shimmer.fromColors(
+                                  baseColor: Colors.grey[300],
+                                  highlightColor: Colors.white,
+                                  child: Container(
+                                    height: 20.0,
+                                    width: ScreenUtil().setWidth(300),
+                                    decoration: BoxDecoration(
+                                        color: Colors.grey[300],
+                                        borderRadius:
+                                        BorderRadius.all(
+                                            Radius.circular(
+                                                16.0))),
+                                  )),
+                            ],
+                          ),
+                        ),
+                        Wrap(
+                          children: [
+                            Container(
+                                margin: EdgeInsets.only(top: 10.0),
+                                alignment: Alignment.centerRight,
+                                child: CustomElevation(
+                                    height: ScreenUtil().setHeight(75),
+                                    child: RaisedButton(
+                                      highlightColor: colorPrimary,
+                                      //Replace with actual colors
+                                      color: colorPrimary,
+                                      onPressed: () => {},
+                                      child: Text(
+                                        checkout == "null"?"....":checkout,
+                                        style: overline.copyWith(
+                                            color: Colors.white,fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
+                                      ),
+                                      shape: new RoundedRectangleBorder(
+                                        borderRadius:
+                                            new BorderRadius.circular(30.0),
+                                      ),
+                                    )))
+                          ],
+                        ),
+                      ],
+                    )),
+              ],
+            ))),
+  );
+  return svgIcon;
+}
+
+Widget CollapseDetailText(
+    BuildContext context, String title, String Value, Color clr) {
+  final Widget svgIcon = Container(
+      child: RichText(
+    text: TextSpan(
+      style: TextStyle(color: Colors.black),
+      children: <TextSpan>[
+        TextSpan(
+            text: title,
+            style: body2.copyWith(color: textPrimary, fontSize: ScreenUtil(allowFontScaling: false).setSp(38))),
+        TextSpan(
+            text: Value,
+            style: body2.copyWith(
+                fontWeight: FontWeight.bold, color: clr, fontSize: ScreenUtil(allowFontScaling: false).setSp(38))),
+      ],
+    ),
+  ));
+  return svgIcon;
+}
+
+Widget DetailCard(BuildContext context, String title, String value, Color clr) {
+  var dataValue;
+  ScreenUtil.instance = ScreenUtil()..init(context);
+  if (value.length <= 1 || value == "null" || value == "null gram ( null )") {
+    dataValue = Shimmer.fromColors(
+        baseColor: Colors.grey[300],
+        highlightColor: Colors.white,
+        child: Container(
+          height: 20.0,
+          decoration: BoxDecoration(
+              color: Colors.grey[300],
+              borderRadius:
+              BorderRadius.all(
+                  Radius.circular(
+                      16.0))),
+        ));
+  } else {
+    dataValue = Text(value,
+        style: body2.copyWith(
+            fontWeight: FontWeight.bold, color: clr, fontSize: ScreenUtil(allowFontScaling: false).setSp(45)));
+  }
+  final Widget svgIcon = Container(
+      height: ScreenUtil().setHeight(200),
+      child: Card(
+        elevation: 3.0,
+        shape: RoundedRectangleBorder(
+            side: BorderSide(width: 0.2),
+            borderRadius: BorderRadius.circular(ScreenUtil().setWidth(50))),
+        child: Container(
+          padding: EdgeInsets.only(left: ScreenUtil().setWidth(40), right: ScreenUtil().setWidth(40)),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title,
+                  style: overline.copyWith(
+                      fontWeight: FontWeight.bold, color: greyTextColor,fontSize: ScreenUtil(allowFontScaling: false).setSp(35))),
+              SizedBox(
+                height: 5,
+              ),
+              dataValue,
+            ],
+          ),
+        ),
+      ));
+  return svgIcon;
 }

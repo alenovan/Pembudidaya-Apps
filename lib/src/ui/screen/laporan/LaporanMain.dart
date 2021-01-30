@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_boxicons/flutter_boxicons.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/home/HomeLaporan.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/laporanharian/Laporan.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/laporanharian/PageFour.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/laporanharian/PageOne.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/laporanharian/PageThree.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/laporanharian/PageTwo.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/laporanv2/LaporanScreen.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/lelang/DetailLelangView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/lelang/LelangView.dart';
-import 'package:page_transition/page_transition.dart';
+import 'package:lelenesia_pembudidaya/src/ui/tools/ScreenUtil.dart';
 
 class LaporanMain extends StatefulWidget {
   final int page;
@@ -34,43 +35,10 @@ class _LaporanMainState extends State<LaporanMain> {
   var _widgetOptions;
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.instance = ScreenUtil()..init(context);
     var laporanPage;
     var laporanLelang;
-    if (widget.laporan_page == "home") {
-      laporanPage = Laporan(idKolam: widget.idKolam.toString(),);
-    } else if (widget.laporan_page == "satu") {
-      laporanPage = PageOne(
-        idKolam: widget.idKolam.toString(),
-        tgl: widget.tgl,
-        bulan: widget.bulan,
-        isoData: widget.isoString,
-        tahun: widget.tahun,);
-    } else if (widget.laporan_page == "dua") {
-      // print(widget.idKolam.toString());
-      laporanPage = PageTwo(idKolam: widget.idKolam.toString(),
-        tgl: widget.tgl,
-        bulan: widget.bulan,
-        isoData: widget.isoString,
-        tahun: widget.tahun,);
-    } else if (widget.laporan_page == "tiga") {
-      laporanPage = PageThree(idKolam: widget.idKolam.toString(),
-        tgl: widget.tgl,
-        bulan: widget.bulan,
-        isoData: widget.isoString,
-        dataPageTwo:widget.dataPageTwo,
-        tahun: widget.tahun,);
-    } else if (widget.laporan_page == "empat") {
-      laporanPage = PageFour(idKolam: widget.idKolam.toString(),
-        tgl: widget.tgl,
-        bulan: widget.bulan,
-        isoData: widget.isoString,
-        dataPageTwo: widget.dataPageTwo,
-        dataPageThree:widget.dataPageThree,
-        tahun: widget.tahun,);
-    }else{
-      laporanPage = Laporan(idKolam: widget.idKolam.toString());
-    }
-
+    laporanPage = Laporan(idKolam: widget.idKolam.toString());
     if (widget.laporan_page == "detail_lelang") {
       laporanLelang =  DetailLelangView(idKolam: widget.idKolam.toString(),idLelang: widget.idLelang.toString(),);
     }else {
@@ -80,8 +48,8 @@ class _LaporanMainState extends State<LaporanMain> {
 
     _widgetOptions = [
       HomeLaporan(idKolam: widget.idKolam.toString()),
+      LaporanScreen(idKolam: widget.idKolam.toString()),
       laporanLelang,
-      laporanPage,
     ];
     if (_statusSelected) {
       _setDefault(widget.page);
@@ -90,40 +58,52 @@ class _LaporanMainState extends State<LaporanMain> {
         onWillPop: _onBackPressed,
         child:Scaffold(
       body: _widgetOptions.elementAt(_selectedIndex),
-      bottomNavigationBar: BottomNavigationBar(
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+              color: Colors.grey[100],
+              spreadRadius: 4,
+              blurRadius: 7,
+              offset:
+              Offset(0, 3), // changes position of shadow
+            ),
+          ],
+        ),child:BottomNavigationBar(
         items: [
           BottomNavigationBarItem(
-              icon: Icon(Icons.home),
+              icon: Icon(Boxicons.bxs_report,size: ScreenUtil(allowFontScaling: true).setSp(75),),
               title: Text(
                 "Detail Kolam",
                 style: TextStyle(
-                    fontFamily: 'lato', letterSpacing: 0.25, fontSize: 12.0),
+                    fontFamily: 'lato', letterSpacing: 0.25, fontSize: ScreenUtil(allowFontScaling: true).setSp(35)),
               )),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.store,
-            ),
-            title: Text(
-              "Lelang",
-              style: TextStyle(
-                  fontFamily: 'lato', letterSpacing: 0.25, fontSize: 12.0),
-            ),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),
+              Boxicons.bx_calendar,size: ScreenUtil(allowFontScaling: true).setSp(75),),
             title: Text(
               "Laporan",
               style: TextStyle(
-                  fontFamily: 'lato', letterSpacing: 0.25, fontSize: 12.0),
+                  fontFamily: 'lato', letterSpacing: 0.25, fontSize: ScreenUtil(allowFontScaling: true).setSp(35)),
+            ),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.store,size: ScreenUtil(allowFontScaling: true).setSp(75),),
+            title: Text(
+              "Pasarkan",
+              style: TextStyle(
+                  fontFamily: 'lato', letterSpacing: 0.25, fontSize: ScreenUtil(allowFontScaling: true).setSp(35)),
             ),
           ),
         ],
         type: BottomNavigationBarType.fixed,
         currentIndex: _selectedIndex,
         fixedColor: purpleTextColor,
+        backgroundColor: Colors.white,
         onTap: _onItemTapped,
+
       ),
-    ));
+    )));
   }
 
   void _onItemTapped(int index) {

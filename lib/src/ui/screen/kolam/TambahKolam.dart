@@ -3,30 +3,25 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lelenesia_pembudidaya/src/bloc/KolamBloc.dart';
 import 'package:lelenesia_pembudidaya/src/typography.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardView.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/forgot/ForgotResetView.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/forgot/ForgotVerifView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/kolam/PenentuanPanenView.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginView.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/profile/ProfileScreen.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/kolam/menu/menu_screen.dart';
+import 'package:lelenesia_pembudidaya/src/ui/tools/ScreenUtil.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
-import 'package:lelenesia_pembudidaya/src/ui/widget/AcceptanceDialog.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/BottomSheetFeedback.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/CustomElevation.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/forgot/ForgotWidget.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginWidget.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
-import 'package:lelenesia_pembudidaya/src/LelenesiaText.dart';
 import 'package:flutter/services.dart';
+import 'package:lelenesia_pembudidaya/src/ui/widget/LoadingDialog.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:dotted_border/dotted_border.dart';
-
+import 'package:lelenesia_pembudidaya/src/ui/tools/extensions.dart' as AppExt;
 class TambahKolam extends StatefulWidget {
   final String idKolam;
 
@@ -43,26 +38,18 @@ class _TambahKolamState extends State<TambahKolam> {
   void _toggleButtonForgot() async {
     // print(base64IKolam);
     if(base64IKolam != null){
-      showDialog(
-        context: context,
-        builder: (BuildContext context) =>
-            LoadingShow(context),
-      );
+      LoadingDialog.show(context);
       var status = await bloc.funAktivasiKolam(
           widget.idKolam,base64IKolam);
-      Navigator.of(context).pop(true);
+      AppExt.popScreen(context);
       if(status){
-        showDialog(
-          context: context,
-          builder: (BuildContext context) => AlertSuccess(context, ProfileScreen()),
-        );
+        BottomSheetFeedback.show_success(context, title: "Selamat", description: "Aktivasi Kolam Anda Berhasil");
         Timer(const Duration(seconds: 1), () {
           Navigator.push(
                     context,
                     PageTransition(
                         type: PageTransitionType.fade,
-                        // duration: Duration(microseconds: 1000),
-                        child: PenentuanPanenView(idKolam: widget.idKolam,)));
+                        child: MenuScreen(idKolam: widget.idKolam,)));
         });
       }else{
         BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Silahkan ulangi kembali");
@@ -101,6 +88,7 @@ class _TambahKolamState extends State<TambahKolam> {
 
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.instance = ScreenUtil();
     return AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle(
         statusBarIconBrightness: Brightness.dark,
@@ -111,43 +99,47 @@ class _TambahKolamState extends State<TambahKolam> {
         body: Stack(
           children: [
             Container(
+              width: double.infinity,
+              child: Image.asset(
+                "assets/png/header_laporan.png",
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: ScreenUtil().setHeight(550),
+              ),
+            ),
+            Container(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    AppBarContainer(context, "Aktivasi Kolam", DashboardView(),Colors.white),
-                    // Container(
-                    //   margin: EdgeInsets.only(
-                    //       left: SizeConfig.blockVertical * 5,
-                    //       right: SizeConfig.blockVertical * 5),
-                    //   child: Text(
-                    //     "Nama Kolam",
-                    //     style: TextStyle(
-                    //         color: appBarTextColor,
-                    //         fontFamily: 'lato',
-                    //         letterSpacing: 0.4,
-                    //         fontSize: 14.0),
-                    //   ),
-                    // ),
-                    // Container(
-                    //   margin: EdgeInsets.only(
-                    //       left: SizeConfig.blockVertical * 5,
-                    //       top: SizeConfig.blockVertical * 1,
-                    //       right: SizeConfig.blockVertical * 5),
-                    //   child: TextFormField(
-                    //     decoration:
-                    //     EditTextDecorationText(context, "Nama", 20.0, 0, 0, 0),
-                    //     keyboardType: TextInputType.number,
-                    //     style: TextStyle(
-                    //         color: blackTextColor,
-                    //         fontFamily: 'lato',
-                    //         letterSpacing: 0.4,
-                    //         fontSize: subTitleLogin),
-                    //   ),
-                    // ),
+                    AppBarContainer(context, "", DashboardView(),Colors.transparent),
+                    Container(
+                      margin: EdgeInsets.only(
+                          top: ScreenUtil().setHeight(10),
+                          left: ScreenUtil().setWidth(70),
+                          right: ScreenUtil().setWidth(50)),
+                      child:  Text(
+                        "Aktivasi Kolam ",
+                        style:  h3.copyWith(color: Colors.black,fontWeight: FontWeight.bold,fontSize: ScreenUtil(allowFontScaling: false).setSp(60)),
+                        textAlign: TextAlign.start,
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(
+                          top: ScreenUtil().setHeight(10),
+                          left: ScreenUtil().setWidth(70),
+                          right: ScreenUtil().setWidth(50)),
+                      child: Text(
+                        "Hai Fotokan kolam anda agar kami tau bahwa anda mempunyai kolam !",
+                        style: caption.copyWith(
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w700,fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
+                        textAlign: TextAlign.start,
+                      ),
+                    ),
                     Container(
                       margin: EdgeInsets.only(
                           left: SizeConfig.blockVertical * 5,
-                          top: SizeConfig.blockVertical * 2,
+                          top: ScreenUtil().setHeight(80),
                           right: SizeConfig.blockVertical * 5),
                       child: Text(
                         "Foto Kolam",
@@ -155,7 +147,7 @@ class _TambahKolamState extends State<TambahKolam> {
                             color: appBarTextColor,
                             fontFamily: 'lato',
                             letterSpacing: 0.4,
-                            fontSize: 14.0),
+                            fontSize: ScreenUtil(allowFontScaling: false).setSp(45)),
                       ),
                     ),
                     Container(
@@ -208,7 +200,7 @@ class _TambahKolamState extends State<TambahKolam> {
                                         fontWeight: FontWeight.w500,
                                         fontFamily: 'poppins',
                                         letterSpacing: 1.25,
-                                        fontSize: subTitleLogin),
+                                        fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
                                   ),
                                   shape: new RoundedRectangleBorder(
                                     borderRadius:
@@ -251,7 +243,7 @@ class _TambahKolamState extends State<TambahKolam> {
                                         fontWeight: FontWeight.w500,
                                         fontFamily: 'poppins',
                                         letterSpacing: 1.25,
-                                        fontSize: subTitleLogin),
+                                        fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
                                   ),
                                   shape: new RoundedRectangleBorder(
                                     borderRadius:
@@ -267,12 +259,13 @@ class _TambahKolamState extends State<TambahKolam> {
   }
 
   void _showPicker(context) {
+
     showModalBottomSheet(
         context: context,
         builder: (BuildContext bc) {
           return SafeArea(
             child: Container(
-              height: 130,
+              height: ScreenUtil().setHeight(380),
               padding: const EdgeInsets.all(30),
               decoration: BoxDecoration(
                 color: Colors.white,

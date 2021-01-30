@@ -13,9 +13,7 @@ class RiwayatBloc {
 
   fetchRiwayatList() async {
     var kolam = await _repository.fetchRiwayatList();
-    // print(kolam.body);
     var enc = json.encode(json.decode(kolam)['data']);
-    print(json.decode(kolam)['data']);
     var data = listOrdersFeedModelsFromJson(enc);
     return data;
   }

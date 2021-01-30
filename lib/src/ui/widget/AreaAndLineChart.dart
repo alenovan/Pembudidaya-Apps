@@ -7,14 +7,6 @@ class AreaAndLineChart extends StatelessWidget {
 
   AreaAndLineChart(this.seriesList, {this.animate});
 
-  /// Creates a [LineChart] with sample data and no transition.
-  // factory AreaAndLineChart.withSampleData() {
-  //   return new AreaAndLineChart(
-  //     _createSampleData(),
-  //     // Disable animations for image tests.
-  //     animate: false,
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +14,6 @@ class AreaAndLineChart extends StatelessWidget {
       seriesList,
       animate: animate,
       defaultRenderer: new charts.LineRendererConfig(
-        // ID used to link series to this renderer.
-        // customRendererId: 'customArea',
         includeArea: true,
       ),
 

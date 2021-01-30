@@ -1,25 +1,22 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lelenesia_pembudidaya/src/bloc/LoginBloc.dart';
 import 'package:lelenesia_pembudidaya/src/typography.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/forgot/ForgotPasswordView.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanHome.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanMain.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/otp/OtpView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/register/RegisterView.dart';
+import 'package:lelenesia_pembudidaya/src/ui/tools/ScreenUtil.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
-import 'package:lelenesia_pembudidaya/src/ui/widget/AcceptanceDialog.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/CustomElevation.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginWidget.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaText.dart';
 import 'package:flutter/services.dart';
+import 'package:lelenesia_pembudidaya/src/ui/widget/LoadingDialog.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-import 'package:toast/toast.dart';
+import 'package:lelenesia_pembudidaya/src/ui/tools/extensions.dart' as AppExt;
 
 class LoginView extends StatefulWidget {
   const LoginView({Key key}) : super(key: key);
@@ -35,6 +32,7 @@ class _LoginViewState extends State<LoginView> {
   bool _statusLogin = false;
   TextEditingController nohpController = new TextEditingController();
   TextEditingController sandiController = new TextEditingController();
+
   void _togglevisibility() {
     setState(() {
       _showPassword = !_showPassword;
@@ -42,17 +40,13 @@ class _LoginViewState extends State<LoginView> {
   }
 
   void _toggleButtonLogin() async {
-    Navigator.of(context).push(new MaterialPageRoute<Null>(
-        builder: (BuildContext context) {
-          return LoadingShow(context);
-        },
-        fullscreenDialog: true));
+    LoadingDialog.show(context);
     var status = await bloc.funLogin(nohpController.text.toString());
-    if(status){
+    if (status) {
       setState(() {
         _statusLogin = false;
       });
-      Navigator.of(context).pop();
+      AppExt.popScreen(context);
       Navigator.push(
           context,
           PageTransition(
@@ -60,213 +54,302 @@ class _LoginViewState extends State<LoginView> {
               child: OtpView(
                 no_phone: nohpController.text.toString(),
               )));
-    }else{
-      Navigator.of(context).pop();
+    } else {
+      AppExt.popScreen(context);
       setState(() {
         _statusLogin = true;
       });
     }
-
   }
 
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.instance = ScreenUtil()..init(context);
     SizeConfig().init(context);
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+    SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(statusBarColor: Colors.transparent));
     return AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle(
-        statusBarIconBrightness: Brightness.dark,
-    ),
-    child:Scaffold(
-        resizeToAvoidBottomPadding: false,
-        backgroundColor: Colors.white,
-        body: Stack(
-          children: [
-            new Positioned(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      // color: Colors.red,
-                      height: SizeConfig.blockHorizotal * 50,
-                      width: double.infinity,
-                      child: Stack(
-                        children: [
-                          Container(
-                              child: Align(
-                            alignment: Alignment.topRight,
-                            child: RightLiquid(context),
-                          )),
-                          Container(
-                              margin: EdgeInsets.only(
-                                  left: SizeConfig.blockVertical * 3),
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: Logo(context),
-                              )),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      transform: Matrix4.translationValues(0.0, -20.0, 0.0),
-                      margin: EdgeInsets.only(
-                          left: SizeConfig.blockVertical * 3,
-                          right: SizeConfig.blockVertical * 3),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            titleLoginText,
-                            style:h1,
-                          ),
-                          Text(
-                            subTitleLoginText,
-                            style: caption,
-                          )
-                        ],
-                      ),
-                    ),
-                    Container(
-                      transform: Matrix4.translationValues(0.0, -20.0, 0.0),
-                      margin: EdgeInsets.only(
-                          left: SizeConfig.blockVertical * 3,
-                          top: SizeConfig.blockVertical * 3,
-                          right: SizeConfig.blockVertical * 3),
-                      child: Column(
-                        children: [
-                          TextFormField(
-                            controller: nohpController,
-                            decoration: EditTextDecorationNumber(
-                                context, "Nomor Handphone"),
-                            keyboardType: TextInputType.number,
-                            style: TextStyle(
-                                color: blackTextColor,
-                                fontFamily: 'lato',
-                                letterSpacing: 0.4,
-                                fontSize: subTitleLogin),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Visibility(
-                      visible: _statusLogin? true : false,
-                      child:  Container(
-                        transform: Matrix4.translationValues(0.0, -20.0, 0.0),
-                        margin: EdgeInsets.only(
-                            left: SizeConfig.blockVertical * 5,
-                            top: SizeConfig.blockVertical * 1,
-                            right: SizeConfig.blockVertical * 3),
-                        child: Text(
-                          "Nomor handphone anda belum terdaftar",
-                          style: TextStyle(
-                              color: Colors.red,
-                              fontFamily: 'lato',
-                              letterSpacing: 0.4,
-                              fontSize: 12.0),
-                        ),
-                      ),
-                    ),
-
-                    Container(
-                      transform: Matrix4.translationValues(0.0, -20.0, 0.0),
-                      height: 45.0,
-                      width: MediaQuery.of(context).size.width,
-                      margin: EdgeInsets.only(
-                          left: SizeConfig.blockVertical * 3,
-                          right: SizeConfig.blockVertical * 3,
-                          top: SizeConfig.blockVertical * 3),
-                      child: CustomElevation(
-                          height: 30.0,
-                          child: RaisedButton(
-                            highlightColor:
-                                colorPrimary, //Replace with actual colors
-                            color: _clickLogin ? colorPrimary : editTextBgColor,
-                            onPressed: () => _toggleButtonLogin(),
-                            child: Text(
-                              buttonLoginText,
-                              style: TextStyle(
-                                  color: _clickLogin
-                                      ? backgroundColor
-                                      : blackTextColor,
-                                  fontWeight: FontWeight.w500,
-                                  fontFamily: 'poppins',
-                                  letterSpacing: 1.25,
-                                  fontSize: subTitleLogin),
-                            ),
-                            shape: new RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(30.0),
-                            ),
-                          )),
-                    ),
-                    Container(
-                        transform: Matrix4.translationValues(0.0, -20.0, 0.0),
-                        margin: EdgeInsets.only(
-                            left: SizeConfig.blockVertical * 3,
-                            right: SizeConfig.blockVertical * 3,
-                            top: SizeConfig.blockVertical * 3),
-                        child: new Align(
-                            alignment: FractionalOffset.center,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "Belum punya akun ?",
-                                  style: body2,
-                                ),
-                                InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          PageTransition(
-                                              type: PageTransitionType.fade,
-                                              // duration: Duration(microseconds: 100),
-                                              child: RegisterView()));
-                                    },
-                                    child: Text(
-                                      " Daftar",
-                                      style: body2.copyWith(color: colorPrimary),
-                                    ))
-                              ],
-                            )))
-                  ],
+          statusBarIconBrightness: Brightness.dark,
+        ),
+        child: Scaffold(
+            resizeToAvoidBottomPadding: false,
+            backgroundColor: Colors.white,
+            body: Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(70),
+                    bottomRight: Radius.circular(70),
+                  ),
+                  child: Image.asset(
+                    "assets/png/login_background.png",
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    height: ScreenUtil().setHeight(1400),
+                  ),
                 ),
-              ),
-            ),
-            new Positioned(
-              child: Container(
-                  margin: EdgeInsets.only(bottom: 20.0),
-                  child: new Align(
-                      alignment: FractionalOffset.bottomCenter,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Hubungi admin ?",
-                            style: body2,
+                new Positioned(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(
+                              top: ScreenUtil().setHeight(120),),
+                          width: double.infinity,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                  margin: EdgeInsets.only(
+                                      left: ScreenUtil().setWidth(60),top: ScreenUtil().setHeight(50)),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Logo(context,Colors.white),
+                                  )),
+                              Container(
+                                  margin: EdgeInsets.only(
+                                      right: ScreenUtil().setWidth(60),
+                                      top: ScreenUtil().setHeight(70)),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: LogoPanen(context,colorPrimary),
+                                  ))
+                            ],
                           ),
-                          InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    PageTransition(
-                                        type: PageTransitionType.fade,
-                                        // duration: Duration(microseconds: 100),
-                                        child: RegisterView()));
-                              },
-                              child: Text(
-                                " Klik Disini",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    color: colorPrimary,
-                                    fontFamily: 'lato',
-                                    letterSpacing: 0.25,
-                                    fontSize: subTitleLogin),
-                              ))
-                        ],
-                      ))),
-            )
-          ],
-        )));
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(
+                              top: ScreenUtil().setHeight(250),
+                              left: ScreenUtil().setWidth(50),
+                              right: ScreenUtil().setWidth(50)),
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(ScreenUtil().setHeight(60)),
+                            ),
+                            child: Container(
+                              child: Container(
+                                padding: EdgeInsets.only(
+                                    top: ScreenUtil().setHeight(80),
+                                    bottom: ScreenUtil().setHeight(80)),
+                                margin: EdgeInsets.only(
+                                    left: ScreenUtil().setWidth(60),
+                                    right: ScreenUtil().setWidth(60)),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      titleLoginText,
+                                      style: h1.copyWith(
+                                        fontSize: ScreenUtil(
+                                            allowFontScaling: false)
+                                            .setSp(80)),
+                                    ),
+                                    Container(
+                                      margin: EdgeInsets.only(
+                                        top: ScreenUtil().setHeight(20),
+                                      ),
+                                      child: Text(
+                                        subTitleLoginText,
+                                        style: caption.copyWith(
+                                            fontSize: ScreenUtil(
+                                                    allowFontScaling: false)
+                                                .setSp(40),
+                                            color: greyTextColor),
+                                      ),
+                                    ),
+                                    Container(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            margin: EdgeInsets.only(
+                                                top: ScreenUtil().setHeight(50),
+                                                bottom:
+                                                    ScreenUtil().setHeight(30)),
+                                            child: Text(
+                                              "Nomor Handphone",
+                                              style: body2.copyWith(
+                                                  fontSize: ScreenUtil(
+                                                          allowFontScaling:
+                                                              false)
+                                                      .setSp(40)),
+                                            ),
+                                          ),
+                                          TextFormField(
+                                            controller: nohpController,
+                                            decoration:
+                                                EditTextDecorationNumber(
+                                                    context, "Nomor Handphone"),
+                                            keyboardType: TextInputType.number,
+                                            style: TextStyle(
+                                                color: blackTextColor,
+                                                fontFamily: 'lato',
+                                                letterSpacing: 0.4,
+                                                fontSize: ScreenUtil(
+                                                    allowFontScaling:
+                                                    false)
+                                                    .setSp(45)),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Visibility(
+                                      visible: _statusLogin ? true : false,
+                                      child: Container(
+                                        margin: EdgeInsets.only(
+                                            left: ScreenUtil().setWidth(60),
+                                            top: ScreenUtil().setHeight(30),
+                                            right:ScreenUtil().setWidth(60)),
+                                        child: Text(
+                                          "Nomor handphone anda belum terdaftar",
+                                          style: TextStyle(
+                                              color: Colors.red,
+                                              fontFamily: 'lato',
+                                              letterSpacing: 0.4,
+                                              fontSize: ScreenUtil(
+                                                  allowFontScaling:
+                                                  true)
+                                                  .setSp(45)),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: ScreenUtil().setHeight(50),
+                                    ),
+                                    Container(
+                                      transform: Matrix4.translationValues(
+                                          0.0, -ScreenUtil().setHeight(40), 0.0),
+                                      height: ScreenUtil().setHeight(110),
+                                      width: MediaQuery.of(context).size.width,
+                                      margin: EdgeInsets.only(
+                                          top: ScreenUtil().setHeight(50)),
+                                      child: CustomElevation(
+                                          height: ScreenUtil().setHeight(110),
+                                          child: RaisedButton(
+                                            highlightColor: colorPrimary,
+                                            //Replace with actual colors
+                                            color: _clickLogin
+                                                ? colorPrimary
+                                                : editTextBgColor,
+                                            onPressed: () =>
+                                                _toggleButtonLogin(),
+                                            child: Text(
+                                              buttonLoginText,
+                                              style: TextStyle(
+                                                  color: _clickLogin
+                                                      ? backgroundColor
+                                                      : blackTextColor,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontFamily: 'poppins',
+                                                  letterSpacing: 1.25,
+                                                  fontSize: ScreenUtil(
+                                                      allowFontScaling:
+                                                      true)
+                                                      .setSp(45)),
+                                            ),
+                                            shape: new RoundedRectangleBorder(
+                                              borderRadius:
+                                                  new BorderRadius.circular(
+                                                      30.0),
+                                            ),
+                                          )),
+                                    ),
+                                    Container(
+                                        transform: Matrix4.translationValues(
+                                            0.0, -ScreenUtil().setHeight(50), 0.0),
+                                        margin: EdgeInsets.only(
+                                            left: ScreenUtil().setWidth(60),
+                                            top: ScreenUtil().setHeight(50),
+                                            right:ScreenUtil().setWidth(60)),
+                                        child: new Align(
+                                            alignment: FractionalOffset.center,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  "Belum punya akun ?",
+                                                  style: body2.copyWith(
+                                                      fontSize: ScreenUtil(
+                                                              allowFontScaling:
+                                                                  false)
+                                                          .setSp(40)),
+                                                ),
+                                                InkWell(
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                          context,
+                                                          PageTransition(
+                                                              type:
+                                                                  PageTransitionType
+                                                                      .fade,
+                                                              // duration: Duration(microseconds: 100),
+                                                              child:
+                                                                  RegisterView()));
+                                                    },
+                                                    child: Text(
+                                                      " Daftar",
+                                                      style: body2.copyWith(
+                                                        fontSize: ScreenUtil(
+                                                            allowFontScaling:
+                                                            false)
+                                                            .setSp(40),color: colorPrimary),
+                                                    ))
+                                              ],
+                                            ))),
+                                    Container(
+                                        margin: EdgeInsets.only(bottom: ScreenUtil().setHeight(50)),
+                                        child: new Align(
+                                            alignment:
+                                                FractionalOffset.bottomCenter,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  "Hubungi admin ?",
+                                                  style: body2.copyWith(
+                                                    fontSize: ScreenUtil(
+                                                        allowFontScaling:
+                                                        false)
+                                                        .setSp(42)),
+                                                ),
+                                                InkWell(
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                          context,
+                                                          PageTransition(
+                                                              type:
+                                                                  PageTransitionType
+                                                                      .fade,
+                                                              // duration: Duration(microseconds: 100),
+                                                              child:
+                                                                  RegisterView()));
+                                                    },
+                                                    child: Text(
+                                                      " Klik Disini",
+                                                      style: body2.copyWith(
+                                                          fontSize: ScreenUtil(
+                                                              allowFontScaling:
+                                                              false)
+                                                              .setSp(42),color: colorPrimary),
+                                                    ))
+                                              ],
+                                            )))
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            )));
   }
 }

@@ -13,7 +13,6 @@ class RegisterBloc {
     var hasil;
     var val = await _repository.register(_nama, _nohp);
     hasil   = await _errManage.registerError(val);
-    // print(val.body);
     return hasil;
     }
 

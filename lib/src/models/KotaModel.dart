@@ -1,6 +1,3 @@
-// To parse this JSON data, do
-//
-//     final kotaModel = kotaModelFromJson(jsonString);
 
 import 'dart:convert';
 

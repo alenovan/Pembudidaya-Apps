@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:lelenesia_pembudidaya/src/bloc/KolamBloc.dart';
@@ -90,7 +89,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 SizedBox(
                   height: 25,
                 ),
-                Text("Lelenesia", style: h1Inv),
+                Text("Panen Ikan", style: h1Inv),
               ],
             ),
             Column(

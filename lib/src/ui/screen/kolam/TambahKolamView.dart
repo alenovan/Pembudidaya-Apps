@@ -2,14 +2,10 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lelenesia_pembudidaya/src/bloc/KolamBloc.dart';
 import 'package:lelenesia_pembudidaya/src/typography.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardView.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/otp/OtpView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
-import 'package:lelenesia_pembudidaya/src/ui/widget/AcceptanceDialog.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/BottomSheetFeedback.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/CustomElevation.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardWidget.dart';
@@ -18,9 +14,11 @@ import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaText.dart';
 import 'package:flutter/services.dart';
+import 'package:lelenesia_pembudidaya/src/ui/widget/ImagesSvg.dart';
+import 'package:lelenesia_pembudidaya/src/ui/widget/LoadingDialog.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:toast/toast.dart';
-
+import 'package:lelenesia_pembudidaya/src/ui/tools/extensions.dart' as AppExt;
 class TambahKolamView extends StatefulWidget {
   const TambahKolamView({Key key}) : super(key: key);
 
@@ -29,9 +27,9 @@ class TambahKolamView extends StatefulWidget {
 }
 
 class _TambahKolamViewState extends State<TambahKolamView> {
-  TextEditingController countController = new TextEditingController();
-  final GlobalKey<ScaffoldState> _scaffoldKey =
-  new GlobalKey<ScaffoldState>();
+    TextEditingController countController = new TextEditingController();
+    final GlobalKey<ScaffoldState> _scaffoldKey =
+    new GlobalKey<ScaffoldState>();
   @override
   void initState() {
     countController.text = "3";
@@ -39,20 +37,13 @@ class _TambahKolamViewState extends State<TambahKolamView> {
   }
 
   void _btnTambahKolam() async {
-    Navigator.of(context).push(new MaterialPageRoute<Null>(
-        builder: (BuildContext context) {
-          return LoadingShow(context);
-        },
-        fullscreenDialog: true));
+    LoadingDialog.show(context);
     var status = await bloc.funInsertKolam(countController.text.toString());
-    Navigator.of(context).pop();
+    AppExt.popScreen(context);
     print(status);
     if (status) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) =>
-            AlertSuccess(context, DashboardView()),
-      );
+      BottomSheetFeedback.show_success(context,
+          title: "Selamat", description: "Kolam anda berhasil di tambahkan");
       Timer(const Duration(seconds: 1), () {
         Navigator.push(
             context,

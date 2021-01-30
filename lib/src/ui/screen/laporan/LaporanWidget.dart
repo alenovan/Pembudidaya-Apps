@@ -7,10 +7,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lelenesia_pembudidaya/src/typography.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanDetail.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanMain.dart';
+import 'package:lelenesia_pembudidaya/src/ui/tools/ScreenUtil.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
-import 'package:lelenesia_pembudidaya/src/LelenesiaText.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart'
     show CalendarCarousel, EventList;
@@ -240,8 +240,9 @@ Widget CardDateLapora(BuildContext context, String title) {
 
 Widget CardLelang(
     BuildContext context, String title, String number, String date) {
+  ScreenUtil.instance = ScreenUtil();
   final Widget svgIcon = Container(
-    height: SizeConfig.blockVertical * 14,
+    height: ScreenUtil().setHeight(300),
     child: Card(
         elevation: 2,
         shape: RoundedRectangleBorder(
@@ -262,13 +263,13 @@ Widget CardLelang(
                           color: greyTextColor,
                           fontFamily: 'lato',
                           letterSpacing: 0.4,
-                          fontSize: 12.0),
+                          fontSize:  ScreenUtil(allowFontScaling: true).setSp(40)),
                     ),
                     Container(
                         margin: EdgeInsets.only(top: 5.0),
                         child: Text(
                           title,
-                          style: subtitle2.copyWith(color:Colors.black,fontSize: 20.0),
+                          style: subtitle2.copyWith(color:Colors.black,fontSize: ScreenUtil(allowFontScaling: true).setSp(50)),
                         ))
                   ],
                 ),
@@ -276,7 +277,7 @@ Widget CardLelang(
                     alignment: Alignment.centerRight,
                     child: Text(
                       number,
-                      style: subtitle2.copyWith(color:Colors.black),
+                      style: subtitle2.copyWith(color:Colors.black,fontSize: ScreenUtil(allowFontScaling: true).setSp(50)),
                     ))
               ],
             ))),

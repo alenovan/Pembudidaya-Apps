@@ -1,12 +1,10 @@
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lelenesia_pembudidaya/src/typography.dart';
+import 'package:lelenesia_pembudidaya/src/ui/tools/ScreenUtil.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
-import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
-import 'package:lelenesia_pembudidaya/src/LelenesiaText.dart';
 import 'package:page_transition/page_transition.dart';
 
 class LoginWidget extends StatelessWidget {
@@ -103,7 +101,7 @@ Widget AppBarContainer(BuildContext context, String title, Widget page,Color col
               },
               child: IconTheme(
                 data: IconThemeData(color: appBarTextColor),
-                child: Icon(Icons.arrow_back),
+                child: Icon(Icons.arrow_back,size: ScreenUtil(allowFontScaling: true).setSp(80)),
               ),
             )),
        Container(

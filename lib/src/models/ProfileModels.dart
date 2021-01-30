@@ -1,15 +1,8 @@
-// To parse this JSON data, do
-//
-//     final profileModels = profileModelsFromJson(jsonString);
 
 import 'dart:convert';
 
 ProfileModels profileModelsFromJson(String str) => ProfileModels.fromJson(json.decode(str));
 
-// List<ProfileModels> profileModelsFromJson(String str) {
-//   final jsonData = json.decode(str);
-//   return new List<ProfileModels>.from(jsonData.map((x) => ProfileModels.fromJson(x)));
-// }
 String profileModelsToJson(ProfileModels data) => json.encode(data.toJson());
 
 class ProfileModels {

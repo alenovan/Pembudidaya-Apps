@@ -1,8 +1,9 @@
 class SqliteDataPenentuanPanen {
   int _pond_id;
+  int _fish_type_id;
   String _sow_date;
   int _seed_amount;
-  int _seed_weight;
+  double _seed_weight;
   int _seed_price;
   int _survival_rate;
   int _feed_conversion_ratio;
@@ -13,6 +14,7 @@ class SqliteDataPenentuanPanen {
 
   SqliteDataPenentuanPanen(
       this._pond_id,
+      this._fish_type_id,
       this._sow_date,
       this._seed_amount,
       this._seed_weight,
@@ -27,6 +29,7 @@ class SqliteDataPenentuanPanen {
 // konstruktor versi 2: konversi dari Map ke Contact
   SqliteDataPenentuanPanen.fromMap(Map<String, dynamic> map) {
     this._pond_id = map['pond_id'];
+    this._fish_type_id = map['fish_type_id'];
     this._sow_date = map['sow_date'];
     this._seed_amount = map['seed_amount'];
     this._seed_weight = map['seed_weight'];
@@ -51,6 +54,7 @@ class SqliteDataPenentuanPanen {
     Map<String, dynamic> map = Map<String, dynamic>();
     map['pond_id'] = this._pond_id;
     map['sow_date'] = this._sow_date;
+    map['fish_type_id'] = this._fish_type_id;
     map['seed_amount'] = this._seed_amount;
     map['seed_weight'] = this._seed_weight;
     map['seed_price'] = this._seed_price;
@@ -106,9 +110,9 @@ class SqliteDataPenentuanPanen {
     _seed_price = value;
   }
 
-  int get seed_weight => _seed_weight;
+  double get seed_weight => _seed_weight;
 
-  set seed_weight(int value) {
+  set seed_weight(double value) {
     _seed_weight = value;
   }
 
@@ -116,6 +120,12 @@ class SqliteDataPenentuanPanen {
 
   set seed_amount(int value) {
     _seed_amount = value;
+  }
+
+  int get fish_type_id => _fish_type_id;
+
+  set fish_type_id(int value) {
+    _fish_type_id = value;
   }
 
   set sow_date(String value) {

@@ -8,7 +8,6 @@ import 'dart:async';
 import 'dart:io';
 //bekerja pada file dan directory
 import 'package:path_provider/path_provider.dart';
-//pubspec.yml
 
 class DbHelper {
   static DbHelper _dbHelper;
@@ -33,7 +32,7 @@ class DbHelper {
     String path = directory.path + 'lele.db';
     print(directory.path);
     //create, read databases
-    var todoDatabase = openDatabase(path, version: 1, onCreate: _createDb);
+    var todoDatabase = openDatabase(path, version: 2, onCreate: _createDb);
     print("baru");
     //mengembalikan nilai object sebagai hasil dari fungsinya
     return todoDatabase;
@@ -45,6 +44,7 @@ class DbHelper {
       CREATE TABLE tb_penentuan_panen (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         pond_id INTEGER, 
+        fish_type_id INTEGER, 
         sow_date INTEGER, 
         seed_amount INTEGER,
         seed_weight INTEGER,

@@ -1,24 +1,14 @@
-import 'dart:async';
-import 'dart:io';
 
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:geolocation/geolocation.dart';
 import 'package:lelenesia_pembudidaya/src/Models/KecamatanModel.dart';
 import 'package:lelenesia_pembudidaya/src/Models/KotaModel.dart';
-import 'package:lelenesia_pembudidaya/src/Models/ProfileModels.dart';
 import 'package:lelenesia_pembudidaya/src/Models/ProvinsiModel.dart';
 import 'package:lelenesia_pembudidaya/src/bloc/ProfilBloc.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardView.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/forgot/ForgotResetView.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/forgot/ForgotVerifView.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/kolam/PenentuanPanenView.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginWidget.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/profile/ProfileScreen.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/profile/ProfileWidget.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/profile/aktivasi/BiodataMapsScreen.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/profile/aktivasi/KtpScreen.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/AcceptanceDialog.dart';
@@ -26,12 +16,10 @@ import 'package:lelenesia_pembudidaya/src/ui/widget/BottomSheetFeedback.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/CustomElevation.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
-import 'package:lelenesia_pembudidaya/src/LelenesiaText.dart';
 import 'package:flutter/services.dart';
+import 'package:lelenesia_pembudidaya/src/ui/widget/LoadingDialog.dart';
+import 'package:lelenesia_pembudidaya/src/ui/tools/extensions.dart' as AppExt;
 import 'package:page_transition/page_transition.dart';
-import 'package:dotted_border/dotted_border.dart';
-import 'package:progress_dialog/progress_dialog.dart';
-
 class BiodataScreen extends StatefulWidget {
   final String from;
   const BiodataScreen({Key key, this.from}) : super(key: key);
@@ -43,7 +31,8 @@ class BiodataScreen extends StatefulWidget {
 class _BiodataScreenState extends State<BiodataScreen> {
   var blox;
   var loop = 0;
-
+  double latitude;
+  double longtitude;
   //provinsigetKecamatan
   List<ProvinsiModel> itemsProvinsi = [];
   //kota
@@ -72,27 +61,24 @@ class _BiodataScreenState extends State<BiodataScreen> {
   TextEditingController kecamatanController = TextEditingController();
 
   void _toggleSimpan() async {
+    LoadingDialog.show(context);
     if (isButtonEnabled) {
-      Navigator.of(context).push(new MaterialPageRoute<Null>(
-          builder: (BuildContext context) {
-            return LoadingShow(context);
-          },
-          fullscreenDialog: true));
       var status = await bloc.funUpdateProfile(
         namaLengkapController.text.toString(),
         alamatController.text.toString(),
+          selectedProvinsi.toString(),
         selectedKota.toString(),
-        selectedProvinsi.toString(),
         selectedKecamatan.toString()
       );
-      Navigator.of(context).pop();
+      AppExt.popScreen(context);
       Navigator.push(
           context,
           PageTransition(
               type: PageTransitionType.fade,
               // duration: Duration(microseconds: 1000),
-              child: KtpScreen(from:widget.from)));
+              child: BiodataMapsScreen(from:widget.from,latitude: latitude,longtitude: longtitude,)));
     } else {
+      AppExt.popScreen(context);
       BottomSheetFeedback.show(context,
           title: "Mohon Maaf", description: "Pastikan data terisi semua");
     }
@@ -132,7 +118,6 @@ class _BiodataScreenState extends State<BiodataScreen> {
   }
 
   void getKota(String id_provinsi) {
-
     itemsKota.clear();
     bloc.getKota(id_provinsi)
         .then((value) {
@@ -160,9 +145,23 @@ class _BiodataScreenState extends State<BiodataScreen> {
     });
   }
 
+  _getCurrentLocation()  async{
+    Geolocation.enableLocationServices().then((result) {}).catchError((e) {});
+
+    Geolocation.currentLocation(accuracy: LocationAccuracy.best)
+        .listen((result) {
+      if (result.isSuccessful) {
+        setState(() {
+          latitude = result.location.latitude;
+          longtitude = result.location.longitude;
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-   
+    _getCurrentLocation();
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
@@ -421,7 +420,10 @@ class _BiodataScreenState extends State<BiodataScreen> {
                                       color: isButtonEnabled
                                           ? colorPrimary
                                           : editTextBgColor,
-                                      onPressed: () => _toggleSimpan(),
+                                      onPressed: () => {
+                                          _toggleSimpan()
+
+                                      },
                                       child: Text(
                                         isButtonEnabled
                                             ? "NEXT"

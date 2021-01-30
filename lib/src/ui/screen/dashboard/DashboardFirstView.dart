@@ -2,13 +2,11 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lelenesia_pembudidaya/src/bloc/KolamBloc.dart';
 import 'package:lelenesia_pembudidaya/src/typography.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/notification/NotificationView.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/otp/OtpView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/AcceptanceDialog.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/BottomSheetFeedback.dart';
@@ -19,8 +17,8 @@ import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaText.dart';
 import 'package:flutter/services.dart';
+import 'package:lelenesia_pembudidaya/src/ui/widget/ImagesSvg.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:toast/toast.dart';
 
 class DashboardFirstView extends StatefulWidget {
   const DashboardFirstView({Key key}) : super(key: key);
@@ -78,60 +76,13 @@ class _DashboardFirstViewState extends State<DashboardFirstView> {
         drawer: Drawers(context),
         body: Stack(
           children: [
-            new Positioned(
+            new Align(
+              alignment: Alignment.center,
               child: SingleChildScrollView(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Container(
-                      // color: Colors.red,
-                      height: SizeConfig.blockHorizotal * 40,
-                      width: double.infinity,
-                      child: Stack(
-                        children: [
-                          Container(
-                              child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Container(
-                                margin: EdgeInsets.only(
-                                    left: SizeConfig.blockVertical * 3,
-                                    bottom: SizeConfig.blockVertical * 3),
-                                child: IconButton(
-                                  onPressed: () =>
-                                      _scaffoldKey.currentState.openDrawer(),
-                                  tooltip: MaterialLocalizations.of(context)
-                                      .openAppDrawerTooltip,
-                                  icon: Icon(FontAwesomeIcons.bars,
-                                      color: colorPrimary, size: 30.0),
-                                )),
-                          )),
-                          Container(
-                              margin: EdgeInsets.only(
-                                  right: SizeConfig.blockVertical * 5,
-                                  bottom: SizeConfig.blockVertical * 3),
-                              child: Align(
-                                alignment: Alignment.centerRight,
-                                child: Container(
-                                    child: IconButton(
-                                        onPressed: () =>
-                                        {
-                                          Navigator.push(
-                                              context,
-                                              PageTransition(
-                                                  type: PageTransitionType.fade,
-                                                  // duration: Duration(microseconds: 1000),
-                                                  child: NotificationView()))
-                                        },
-                                        tooltip: "Notifikasi",
-                                        icon: Icon(
-                                          FontAwesomeIcons.solidBell,
-                                          color: colorPrimary,
-                                          size: 30.0,
-                                        ))),
-                              )),
-                        ],
-                      ),
-                    ),
                     Container(
                         margin: EdgeInsets.only(
                             left: SizeConfig.blockVertical * 3,
@@ -165,7 +116,7 @@ class _DashboardFirstViewState extends State<DashboardFirstView> {
                             ),
                             Container(
                               margin: EdgeInsets.only(
-                                  left: 30.0, right: 30.0),
+                                  left: 30.0, right: 30.0,top: SizeConfig.blockVertical * 4),
                               child: Center(
                                 child: Container(
                                   width: 200.0,

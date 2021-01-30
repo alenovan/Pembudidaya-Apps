@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
-import 'package:lelenesia_pembudidaya/src/LelenesiaText.dart';
+import 'package:lelenesia_pembudidaya/src/ui/tools/ScreenUtil.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 
@@ -41,28 +40,67 @@ Widget LeftLiquid(BuildContext context) {
 }
 
 // ignore: non_constant_identifier_names
-Widget Logo(BuildContext context) {
+Widget Logo(BuildContext context,Color clr) {
   SizeConfig().init(context);
-  final String assetName = "assets/svg/logo_placeholder.svg";
+   String assetName = "";
+  if(clr == Colors.white){
+    assetName = "assets/svg/img_logo_white.svg";
+  }else{
+    assetName = "assets/svg/logo_placeholder.svg";
+  }
+
   final Widget svgIcon = Container(
-    child: Row(
+    child: Column(
       children: [
         SvgPicture.asset(
           assetName,
-          height: SizeConfig.blockVertical * 8,
-          width: SizeConfig.blockHorizotal * 8,
+          height: ScreenUtil().setHeight(150),
         ),
+
+
         Container(
             padding: EdgeInsets.only(left: 10),
-            child: Text(
-              "LELENESIA",
-              style: TextStyle(
-                  color: purpleTextColor,
-                  fontWeight: FontWeight.w700,
-                  fontFamily: 'lato',
-                  letterSpacing: 2.75,
-                  fontSize: 16.0),
+            child:  RichText(
+              text: TextSpan(
+                children: <TextSpan>[
+                  TextSpan(text: 'Panen', style:TextStyle(
+                      color: clr,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 0.75,
+                      fontFamily: 'poppins',
+                      fontSize: 15.0),),
+                  TextSpan(text: 'Ikan',style: TextStyle(
+                      color: clr,
+                      fontWeight: FontWeight.w300,
+                      fontFamily: 'poppins',
+                      letterSpacing: 0.75,
+                      fontSize: 15.0),),
+                ],
+              ),
             )),
+      ],
+    ),
+  );
+  return svgIcon;
+}
+
+Widget LogoPanen(BuildContext context,Color clr ) {
+  ScreenUtil.instance = ScreenUtil()..init(context);
+  SizeConfig().init(context);
+
+  String assetName = "";
+  if(clr == Colors.white){
+    assetName = "assets/svg/logo_primary.svg";
+  }else{
+    assetName = "assets/svg/img_logo_panen.svg";
+  }
+  final Widget svgIcon = Container(
+    child: Column(
+      children: [
+        SvgPicture.asset(
+          assetName,
+          width: ScreenUtil().setWidth(300),
+        ),
       ],
     ),
   );
@@ -94,6 +132,7 @@ InputDecoration EditTextDecorationNumber(BuildContext context, String label) {
     fillColor: editTextBgColor,
     hintStyle: TextStyle(
       color: greyIconColor,
+        fontSize: ScreenUtil(allowFontScaling: false).setSp(40)
     ),
     border: new OutlineInputBorder(
       borderRadius: new BorderRadius.circular(25.0),
@@ -114,6 +153,7 @@ InputDecoration EditTextDecorationText(BuildContext context, String label,
     fillColor: editTextBgColor,
     hintStyle: TextStyle(
       color: greyIconColor,
+        fontSize: ScreenUtil(allowFontScaling: false).setSp(40)
     ),
     border: new OutlineInputBorder(
       borderRadius: new BorderRadius.circular(25.0),

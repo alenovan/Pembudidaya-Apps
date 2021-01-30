@@ -1,28 +1,23 @@
+import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_boxicons/flutter_boxicons.dart';
+import 'package:flutter_session/flutter_session.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
-import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
-import 'package:lelenesia_pembudidaya/src/LelenesiaText.dart';
-import 'package:lelenesia_pembudidaya/src/Models/ChartKematianModel.dart';
-import 'package:lelenesia_pembudidaya/src/bloc/KolamBloc.dart';
 import 'package:lelenesia_pembudidaya/src/typography.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/checkout/CheckoutView.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardView.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/kolam/DetailKolam.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/kolam/riwayat/RiwayatKolam.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/home/LaporanHomeWidget.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginWidget.dart';
+import 'package:lelenesia_pembudidaya/src/ui/tools/ScreenUtil.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
-import 'package:lelenesia_pembudidaya/src/ui/widget/AcceptanceDialog.dart';
-import 'package:lelenesia_pembudidaya/src/ui/widget/CustomElevation.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanWidget.dart';
-import 'package:intl/intl.dart' show DateFormat, NumberFormat;
-import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:page_transition/page_transition.dart';
-import 'package:lelenesia_pembudidaya/src/bloc/CheckoutBloc.dart' as checkout;
-import 'package:lelenesia_pembudidaya/src/bloc/LaporanBloc.dart' as laporan;
-import 'package:date_range_picker/date_range_picker.dart' as DateRangePicker;
 import 'package:intl/date_symbol_data_local.dart';
-
+import 'package:page_transition/page_transition.dart';
+import 'package:lelenesia_pembudidaya/src/bloc/KolamBloc.dart' as kolam;
+import 'package:lelenesia_pembudidaya/src/bloc/CheckoutBloc.dart' as checkout;
+import 'package:lelenesia_pembudidaya/src/ui/tools/extensions.dart' as AppExt;
+import 'package:lelenesia_pembudidaya/src/bloc/LoginBloc.dart' as login;
 class HomeLaporan extends StatefulWidget {
   final String idKolam;
 
@@ -33,920 +28,573 @@ class HomeLaporan extends StatefulWidget {
 }
 
 class _HomeLaporanState extends State<HomeLaporan> {
-  var loop = 0;
-  var _stock_pakan = 0;
-  var _tanggal_panen = "";
-  var _tanggal_tebar = "";
-  var _target_jual = 0;
-  DateTime time = DateTime.now();
-  bool _disposed = false;
-  var _jumlah_ikan = "";
-  var _berat_ikan = 0;
-  var _informasi_modal = "0";
-  var _perkiraan_omset = "";
-  var _laba = "";
-  var _jumlah_ikan_first = 0;
-  var _berat_ikan_current = 0;
-  var _nama_kolam = "";
-  var _omset;
-  var id_order = "";
-  var _berat_ikan_cart_total = 0;
-  var current_sr_percent = 0.0;
+  ScrollController _controller_scroll;
+  bool silverCollapsed = false;
   var status_checkout = false;
-  var text_status_checkout = "Loading";
-  final formatter = new NumberFormat("#,###");
-
-  //for kematian
-  List<DateTime> tingkatKematianDateRange = [];
-  var itemsKematian = List<ChartKematianModel>();
-
-  //for berat
-  List<DateTime> tingkatBeratDateRange = [];
-  var itemsBerat = List<ChartKematianModel>();
-
-  //for pakan
-  List<DateTime> tingkatPakanDateRange = [];
-  var itemsPakan = List<ChartKematianModel>();
-
-  void update() async {
-    var detail = await bloc.getKolamDetail(widget.idKolam);
-    var data = detail['data'];
-    setState(() {
-      _nama_kolam = data['name'].toString();
-      _stock_pakan = data['harvest']['current_stocked_feed'];
-      _tanggal_panen = data['harvest']['harvest_date_estimation'].toString();
-      _target_jual = data['harvest']['target_price'];
-      _jumlah_ikan = data['harvest']['current_amount'].toString();
-      _berat_ikan_current = (data['harvest']['current_weight'] *
-          data['harvest']['current_amount']);
-      _jumlah_ikan_first = data['harvest']['seed_amount'];
-      _berat_ikan = data['harvest']['harvest_weight_estimation'];
-      current_sr_percent =
-          double.parse(data['harvest']['current_sr'].toString());
-      _laba =
-          formatter.format(data['harvest']['profit_estimation']).toString() +
-              ",-";
-      _omset = formatter.format(data['harvest']['revenue']).toString();
-      _informasi_modal = formatter.format(data['harvest']['budget']).toString();
-      id_order = data['harvest']['last_order_id'].toString();
-      _tanggal_tebar = DateFormat('dd/MM/yyyy').format(DateTime.parse(data['harvest']['sow_date']));
-      _berat_ikan_cart_total = 0;
-    });
-    // print("id_order  $id_order");
-    detailOrder();
-  }
-
-  void detailOrder() async {
-    var detail = await checkout.bloc.getCheckOrderId(id_order.toString());
-    await WidgetsBinding.instance.addPostFrameCallback((_) {
-      setState(() {
-        status_checkout = detail;
-        if (status_checkout) {
-          text_status_checkout = "Checkout";
-        } else {
-          text_status_checkout = "Request";
-        }
-      });
-    });
-
-    Navigator.pop(context);
-  }
-
-  void dateRangeKematian(data) {
-    setState(() {
-      tingkatKematianDateRange = data;
-    });
-    chartKematian();
-  }
-
-  void dateRangeBerat(data) {
-    setState(() {
-      tingkatBeratDateRange = data;
-    });
-    chartBerat();
-  }
-
-  void dateRangePakan(data) {
-    setState(() {
-      tingkatPakanDateRange = data;
-    });
-    chartPakan();
-  }
-
-  void chartKematian() {
-    itemsKematian.clear();
-    laporan.bloc
-        .analyticsKematian(
-            widget.idKolam,
-            tingkatKematianDateRange[0].toIso8601String(),
-            tingkatKematianDateRange[1].toIso8601String())
-        .then((value) {
-      List<ChartKematianModel> dataKolam = new List();
-      setState(() {
-        dataKolam = value;
-
-        itemsKematian.addAll(dataKolam);
-      });
-    });
-  }
-
-  void chartBerat() {
-    itemsBerat.clear();
-    laporan.bloc
-        .analyticsBerat(
-            widget.idKolam,
-            tingkatBeratDateRange[0].toIso8601String(),
-            tingkatBeratDateRange[1].toIso8601String())
-        .then((value) {
-      List<ChartKematianModel> dataKolam = new List();
-      setState(() {
-        dataKolam = value;
-        print("test" + dataKolam[0].y.toString());
-        itemsBerat.addAll(dataKolam);
-      });
-    });
-  }
-
-  void chartPakan() {
-    itemsPakan.clear();
-    laporan.bloc
-        .analyticsPakan(
-            widget.idKolam,
-            tingkatPakanDateRange[0].toIso8601String(),
-            tingkatPakanDateRange[1].toIso8601String())
-        .then((value) {
-      List<ChartKematianModel> dataKolam = new List();
-      setState(() {
-        dataKolam = value;
-        itemsPakan.addAll(dataKolam);
-      });
-    });
-  }
+  String myTitle = "";
+  Color silverColor = Colors.transparent;
+  Color tmblColor = Colors.black;
+  int _status_kolam = 0;
+  String _sow_date,
+      _est_panen,
+      _fish_type,
+      _seed_mount_current,
+      _weight_fish_current,
+      _target_price,
+      _budget,
+      _budget_seed,
+      _omset,
+      _laba,
+      _est_weight_fish,
+      _nama_kolam,
+      _stock_pakan = "";
+  String _sr,
+      _fcr,
+      _target_fish_count,
+      _seed_price,
+      _seed_amount,
+      _feed_requirement_estimation,
+      _est_feed_budget,
+      text_status_checkout,
+      id_order = "";
+  final formatter = new NumberFormat('#,##0', 'ID');
 
   @override
   void initState() {
+    update();
+    marketLogin();
     super.initState();
     initializeDateFormatting(); //very important
-    tingkatKematianDateRange.add(new DateTime.now());
-    tingkatKematianDateRange
-        .add((new DateTime.now()).add(new Duration(days: 7)));
+    _controller_scroll = ScrollController();
+    _controller_scroll.addListener(() {
+      if (_controller_scroll.offset > 20 &&
+          !_controller_scroll.position.outOfRange) {
+        if (!silverCollapsed) {
+          myTitle = "Detail Kolam";
+          silverCollapsed = true;
 
-    tingkatBeratDateRange.add(new DateTime.now());
-    tingkatBeratDateRange.add((new DateTime.now()).add(new Duration(days: 7)));
-
-    tingkatPakanDateRange.add(new DateTime.now());
-    tingkatPakanDateRange.add((new DateTime.now()).add(new Duration(days: 7)));
-
-    _nama_kolam = "...";
-    _stock_pakan = 0;
-    _tanggal_panen = "Loading";
-    _tanggal_tebar = "Loading";
-    _target_jual = 0;
-    _jumlah_ikan = "0";
-    _berat_ikan = 0;
-    _jumlah_ikan_first = 0;
-    _berat_ikan_current = 0;
-    _informasi_modal = "Loading";
-    _perkiraan_omset = "Loading";
-    _laba = "Loading";
-    _omset = 0;
-    Future.delayed(Duration.zero, () {
-      if (!_disposed)
-        setState(() {
-          showLoaderDialog(context);
-        });
-      update();
-      chartKematian();
+          setState(() {
+            silverColor = colorPrimary;
+            tmblColor = Colors.white;
+          });
+        }
+      }
+      if (_controller_scroll.offset <= 20 &&
+          !_controller_scroll.position.outOfRange) {
+        if (silverCollapsed) {
+          myTitle = "";
+          silverCollapsed = false;
+          silverColor = Colors.transparent;
+          setState(() {
+            silverColor = Colors.transparent;
+            tmblColor = Colors.black;
+          });
+        }
+      }
     });
+
+  }
+
+  void marketLogin() async{
+
+    var status = await login.bloc.login_market();
+    if(status){
+      dynamic token_market = await FlutterSession().get("token_market");
+      print("toko masuk ${token_market}");
+    }
+  }
+
+  void detailOrder(String id_orders) async {
+    try {
+      var detail = await checkout.bloc.getCheckOrderId(id_orders.toString());
+      await WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {
+          status_checkout = detail;
+          print(status_checkout);
+          if (status_checkout) {
+            text_status_checkout = "Checkout";
+          } else {
+            text_status_checkout = "Beli";
+          }
+        });
+      });
+    } catch (error) {
+      text_status_checkout = "Beli";
+    }
   }
 
   @override
   void dispose() {
-    _disposed = true;
     super.dispose();
+  }
+
+  void update() async {
+    var detail = await kolam.bloc.getKolamDetail(widget.idKolam);
+    var data = detail['data'];
+    setState(() {
+      try {
+        id_order = data['harvest']['last_order_id'].toString();
+        detailOrder(id_order);
+      } catch (error) {
+        text_status_checkout = "Beli";
+      }
+      _sr = "${data['harvest']['current_sr']} %";
+      _seed_amount = data['harvest']['seed_amount'].toString() + " Ekor";
+      _feed_requirement_estimation =data['harvest']['feed_requirement_estimation'].toStringAsFixed(0) +" Kg";
+      var fish_type = data['harvest']['fish_type_id'].toString();
+      if(fish_type == "1"){
+        _fish_type = "Ikan Lele";
+      }else if(fish_type == "2"){
+        _fish_type = "Ikan Nila";
+      }else{
+        _fish_type = "Ikan Emas";
+      }
+      _fcr = data['harvest']['feed_conversion_ratio'].toString();
+      _target_fish_count = data['harvest']['target_fish_count'].toString();
+      _seed_price = "Rp." + formatter.format(data['harvest']['seed_price']);
+      _stock_pakan ="${data['harvest']['current_stocked_feed']} Kg";
+      _sow_date = DateFormat('dd/MM/yyyy')
+          .format(DateTime.parse(data['harvest']['sow_date']));
+      _est_panen = data['harvest']['harvest_date_estimation'].toString();
+      _nama_kolam = data['name'].toString();
+      _status_kolam = data['status'];
+      _seed_mount_current =
+          data['harvest']['current_amount'].toString() + " Ekor";
+      // _weight_fish_current = (data['harvest']['current_weight'] * data['harvest']['current_amount']).toString();
+      _weight_fish_current = (data['harvest']['current_weight']).toString();
+      _target_price =
+          "Rp." + formatter.format(data['harvest']['target_price']).toString();
+      _budget_seed = "Rp." + formatter.format(data['harvest']['seed_price'] * data['harvest']['seed_amount']).toString();
+      _budget = "Rp." + formatter.format(data['harvest']['budget']);
+      _omset = "Rp." + formatter.format(data['harvest']['revenue']).toString();
+      _laba = "Rp." +
+          formatter.format(int.parse(
+              data['harvest']['profit_estimation'].toStringAsFixed(0)));
+      // _est_weight_fish = (int.parse(data['harvest']['harvest_weight_estimation'].toStringAsFixed(0))/1000).toStringAsFixed(0).toString();
+      _est_weight_fish = data['harvest']['harvest_weight_estimation'].toStringAsFixed(0)+" Kg";
+      var feed = (data['harvest']['feed_requirement_estimation']);
+      _est_feed_budget = "Rp." +
+          formatter.format(int.parse(
+              (feed * data['harvest']['feed_price']).toStringAsFixed(0)));
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.instance = ScreenUtil()..init(context);
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         statusBarIconBrightness: Brightness.dark,
       ),
       child: Scaffold(
-          resizeToAvoidBottomPadding: false,
-          backgroundColor: Colors.white,
-          appBar: AppBar(
-            elevation: 0,
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back, color: Colors.black),
-              onPressed: () => {
-                Navigator.push(
-                    context,
-                    PageTransition(
-                        type: PageTransitionType.rightToLeft,
-                        child: DashboardView()))
-              },
+        resizeToAvoidBottomPadding: false,
+        backgroundColor: Colors.white,
+        body: Stack(
+          children: [
+            Container(
+              width: double.infinity,
+              child: Image.asset(
+                "assets/png/header_laporan.png",
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: ScreenUtil().setHeight(500),
+              ),
             ),
-            actions: <Widget>[
-              PopupMenuButton<int>(
-                itemBuilder: (context) => [
-                  // PopupMenuItem(
-                  //   value: 1,
-                  //   child: Row(
-                  //     children: [
-                  //       Icon(Icons.store, color: colorPrimary),
-                  //       Text("  Status Pesanan Pakan", style: body2)
-                  //     ],
-                  //   ),
-                  // ),
-                  PopupMenuItem(
-                    value: 1,
-                    child: Row(
+            CustomScrollView(
+              controller: _controller_scroll,
+              slivers: <Widget>[
+                SliverAppBar(
+                  backgroundColor: silverColor,
+                  title: Text(myTitle),
+                  leading: GestureDetector(
+                    onTap: ()=>{
+                      Navigator.push(
+                          context,
+                          PageTransition(
+                              type: PageTransitionType.fade,
+                              child: DetailKolam(
+                                idKolam: widget.idKolam,
+                              )))
+                    },
+                    child: Icon(Icons.arrow_back,
+                        color: tmblColor,
+                        size: ScreenUtil(allowFontScaling: false).setSp(80)),
+                  ),
+                  floating: true,
+                  snap: true,
+                  actions: <Widget>[
+                    PopupMenuButton<int>(
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                          value: 1,
+                          child: Row(
+                            children: [
+                              Icon(Icons.history, color: tmblColor),
+                              Text(
+                                "  Riwayat Kolam",
+                                style: body2,
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                      onSelected: (value) {
+                        if (value == 1) {
+                          Navigator.push(
+                              context,
+                              PageTransition(
+                                  type: PageTransitionType.fade,
+                                  child: RiwayatKolam(
+                                    idKolam: widget.idKolam,
+                                  )));
+                        }
+                      },
+                      icon: Icon(
+                        Icons.more_vert,
+                        color: tmblColor,
+                        size: ScreenUtil(allowFontScaling: false).setSp(80),
+                      ),
+                    )
+                  ],
+                  // pinned: true,
+                  flexibleSpace: FlexibleSpaceBar(),
+                ),
+                SliverList(
+                  delegate: SliverChildListDelegate([
+                    Stack(
                       children: [
-                        Icon(Icons.history, color: colorPrimary),
-                        Text(
-                          "  Riwayat Kolam",
-                          style: body2,
+                        Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.only(
+                                left: ScreenUtil().setWidth(50),
+                                right: ScreenUtil().setWidth(20),
+                                top: ScreenUtil().setHeight(10)),
+                            child: Text("")),
+                        Container(
+                          padding: EdgeInsets.only(
+                              top: ScreenUtil().setHeight(20),
+                              left: ScreenUtil().setWidth(50),
+                              right: ScreenUtil().setWidth(50)),
+                          child: CardKolamDetail(
+                              context,
+                              "${_nama_kolam}",
+                              "${_fish_type}",
+                              "${_status_kolam}",
+                              "${_stock_pakan}",
+                              "${text_status_checkout}"),
                         )
                       ],
                     ),
-                  ),
-                ],
-                onSelected: (value) {
-                  if (value == 1) {
-                    Navigator.push(
-                        context,
-                        PageTransition(
-                            type: PageTransitionType.fade,
-                            child: RiwayatKolam(
-                              idKolam: widget.idKolam,
-                            )));
-                  }
-                },
-                icon: Icon(Icons.more_vert, color: Colors.black),
-              )
-            ],
-            backgroundColor: Colors.white,
-            brightness: Brightness.light,
-            title: Text(
-              "Detail Kolam",
-              style: h3,
-            ),
-          ),
-          body: Column(
-            children: [
-              // AppBarContainer(context, "Detail Kolam", DashboardView(),Colors.white),
-              Expanded(
-                  child: Container(
+                    Container(
                       padding: EdgeInsets.only(
-                          left: SizeConfig.blockVertical * 3,
-                          right: SizeConfig.blockVertical * 3),
-                      color: backgroundGreyColor,
-                      child: homeData()))
-            ],
-          )),
-    );
-  }
-
-  Widget nullHomeData() {
-    final Widget nullData = Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Align(alignment: Alignment.center, child: DetailNull(context)),
-        Text(
-          laporanhometextnull,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-              color: blackTextColor,
-              fontFamily: 'poppins',
-              letterSpacing: 0.25,
-              fontSize: 16.0),
-        ),
-        Container(
-          height: 45.0,
-          width: MediaQuery.of(context).size.width,
-          margin: EdgeInsets.only(
-              left: SizeConfig.blockVertical * 3,
-              right: SizeConfig.blockVertical * 3,
-              top: SizeConfig.blockVertical * 3),
-          child: CustomElevation(
-              height: 30.0,
-              child: RaisedButton(
-                highlightColor: colorPrimary,
-                //Replace with actual colors
-                color: colorPrimary,
-                onPressed: () => {},
-                child: Text(
-                  "isi",
-                  style: TextStyle(
-                      color: backgroundColor,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: 'poppins',
-                      letterSpacing: 1.25,
-                      fontSize: subTitleLogin),
-                ),
-                shape: new RoundedRectangleBorder(
-                  borderRadius: new BorderRadius.circular(30.0),
-                ),
-              )),
-        )
-      ],
-    );
-    return nullData;
-  }
-
-  Widget AlertQuestionPakan(BuildContext context) {
-    final Widget data = Container(
-      child: Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        elevation: 0.0,
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                "Berapa pakan yang anda butuhkan ? (Gram)",
-                style: TextStyle(
-                    color: blackTextColor,
-                    fontFamily: 'poppins',
-                    letterSpacing: 0.25,
-                    fontSize: 15.0),
-                textAlign: TextAlign.start,
-              ),
-              Container(
-                margin: EdgeInsets.only(top: 10.0),
-                child: TextFormField(
-                  decoration:
-                      EditTextDecorationText(context, "", 20.0, 0, 0, 0),
-                  keyboardType: TextInputType.number,
-                  style: TextStyle(
-                      color: blackTextColor,
-                      fontFamily: 'lato',
-                      letterSpacing: 0.4,
-                      fontSize: subTitleLogin),
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                      height: 35.0,
-                      margin: EdgeInsets.only(
-                          left: SizeConfig.blockVertical * 1,
-                          right: SizeConfig.blockVertical * 1,
-                          top: SizeConfig.blockVertical * 3),
-                      child: CustomElevation(
-                          height: 35.0,
-                          child: RaisedButton(
-                            highlightColor: colorPrimary,
-                            //Replace with actual colors
-                            color: colorPrimary,
-                            onPressed: () => {
-                              Navigator.push(
-                                  context,
-                                  PageTransition(
-                                      type: PageTransitionType.fade,
-                                      child: CheckoutView(
-                                        idKolam: widget.idKolam,
-                                      )))
+                          top: ScreenUtil().setHeight(20),
+                          left: ScreenUtil().setWidth(50),
+                          right: ScreenUtil().setWidth(50)),
+                      child: Card(
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(ScreenUtil().setWidth(50)),
+                        ),
+                        child: ExpandablePanel(
+                          header: Builder(
+                            builder: (context) {
+                              var controller = ExpandableController.of(context);
+                              return FlatButton(
+                                height: ScreenUtil().setHeight(200),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Container(
+                                            alignment: Alignment.centerLeft,
+                                            child: Icon(
+                                              controller.expanded
+                                                  ? Boxicons.bxs_chevron_down_circle
+                                                  : Boxicons.bxs_chevron_right_circle,
+                                              color: purpleTextColor,
+                                              size: ScreenUtil(
+                                                      allowFontScaling: false)
+                                                  .setSp(60),
+                                            )),
+                                        Container(
+                                            margin: EdgeInsets.only(
+                                                top: ScreenUtil().setHeight(2),
+                                                left:
+                                                    ScreenUtil().setWidth(50)),
+                                            child: Text(
+                                              "Informasi Kolam",
+                                              style: subtitle1.copyWith(
+                                                  color: Colors.black,
+                                                  fontSize: ScreenUtil(
+                                                          allowFontScaling:
+                                                          false)
+                                                      .setSp(50),
+                                                  fontWeight: FontWeight.bold),
+                                            ))
+                                      ],
+                                    )
+                                  ],
+                                ),
+                                onPressed: () {
+                                  controller.toggle();
+                                },
+                              );
                             },
-                            child: Text(
-                              "Iya",
-                              style: TextStyle(
-                                  color: backgroundColor,
-                                  fontWeight: FontWeight.w500,
-                                  fontFamily: 'poppins',
-                                  letterSpacing: 1.25,
-                                  fontSize: subTitleLogin),
-                            ),
-                            shape: new RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(30.0),
-                            ),
-                          ))),
-                  Container(
-                    height: 35.0,
-                    margin: EdgeInsets.only(
-                        left: SizeConfig.blockVertical * 1,
-                        right: SizeConfig.blockVertical * 1,
-                        top: SizeConfig.blockVertical * 3),
-                    child: CustomElevation(
-                        height: 35.0,
-                        child: RaisedButton(
-                          highlightColor: colorPrimary,
-                          //Replace with actual colors
-                          color: redTextColor,
-                          onPressed: () => {Navigator.pop(context, true)},
-                          child: Text(
-                            "Tidak",
-                            style: TextStyle(
-                                color: backgroundColor,
-                                fontWeight: FontWeight.w500,
-                                fontFamily: 'poppins',
-                                letterSpacing: 1.25,
-                                fontSize: subTitleLogin),
                           ),
-                          shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(30.0),
+                          expanded: Container(
+                            transform:
+                                Matrix4.translationValues(0.0, -2.0, 0.0),
+                            padding: EdgeInsets.only(
+                                left: SizeConfig.blockVertical * 7,
+                                right: SizeConfig.blockVertical * 4),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CollapseDetailText(
+                                    context,
+                                    "Jumlah Ikan awal : ",
+                                    "${_seed_amount}",
+                                    textPrimary),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                CollapseDetailText(
+                                    context,
+                                    "Asumsi SR :  ",
+                                    "${_sr}",
+                                    textPrimary),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                CollapseDetailText(
+                                    context,
+                                    "Asumsi FCR  : ",
+                                    "${_fcr}",
+                                    textPrimary),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                CollapseDetailText(
+                                    context,
+                                    "Target Jumlah panen ekor per kg : ",
+                                    "${_target_fish_count} ekor",
+                                    textPrimary),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                CollapseDetailText(context, "Harga Bibit : ",
+                                    "${_seed_price}", textPrimary),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                CollapseDetailText(context, "Modal Benih : ",
+                                    "${_budget_seed}", textPrimary),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                              ],
+                            ),
                           ),
-                        )),
-                  ),
-                ],
-              )
-            ],
-          ),
+                          tapHeaderToExpand: true,
+                          hasIcon: false,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(
+                          top: ScreenUtil().setHeight(20),
+                          left: ScreenUtil().setWidth(50),
+                          right: ScreenUtil().setWidth(50)),
+                      child: Card(
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(ScreenUtil().setWidth(50)),
+                        ),
+                        child: ExpandablePanel(
+                          header: Builder(
+                            builder: (context) {
+                              var controller = ExpandableController.of(context);
+                              return FlatButton(
+                                height: SizeConfig.blockVertical * 10,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Container(
+                                            alignment: Alignment.centerLeft,
+                                            child: Icon(
+                                              controller.expanded
+                                                  ? Boxicons.bxs_chevron_down_circle
+                                                  : Boxicons.bxs_chevron_right_circle,
+                                              color: purpleTextColor,
+                                              size: ScreenUtil(
+                                                  allowFontScaling: false)
+                                                  .setSp(60),
+                                            )),
+                                        Container(
+                                            margin: EdgeInsets.only(
+                                                top: ScreenUtil().setHeight(2),
+                                                left:
+                                                    ScreenUtil().setWidth(50)),
+                                            child: Text(
+                                              "Informasi Pakan",
+                                              style: subtitle1.copyWith(
+                                                  color: Colors.black,
+                                                  fontSize: ScreenUtil(
+                                                          allowFontScaling:
+                                                          false)
+                                                      .setSp(50),
+                                                  fontWeight: FontWeight.bold),
+                                            ))
+                                      ],
+                                    )
+                                  ],
+                                ),
+                                onPressed: () {
+                                  controller.toggle();
+                                },
+                              );
+                            },
+                          ),
+                          expanded: Container(
+                            transform:
+                                Matrix4.translationValues(0.0, -2.0, 0.0),
+                            padding: EdgeInsets.only(
+                                left: SizeConfig.blockVertical * 7,
+                                right: SizeConfig.blockVertical * 4),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CollapseDetailText(
+                                    context,
+                                    "Prediksi Pengeluaran Pakan : ",
+                                    "${_feed_requirement_estimation}",
+                                    textPrimary),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                CollapseDetailText(
+                                    context,
+                                    "Prediksi Modal Pakan :  ",
+                                    "${_est_feed_budget}",
+                                    colorPrimary),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                              ],
+                            ),
+                          ),
+                          tapHeaderToExpand: true,
+                          hasIcon: false,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(
+                          top: ScreenUtil().setHeight(20),
+                          left: ScreenUtil().setWidth(50),
+                          right: ScreenUtil().setWidth(50)),
+                      child: Text(
+                        "Prediksi Panen",
+                        style: body2.copyWith(
+                            color: textPrimary,
+                            fontWeight: FontWeight.bold,
+                            fontSize: ScreenUtil(allowFontScaling: false).setSp(55)),
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(
+                          top: ScreenUtil().setHeight(20),
+                          left: ScreenUtil().setWidth(50),
+                          right: ScreenUtil().setWidth(50)),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: DetailCard(
+                                context, "Tebar Benih", "${_sow_date}", textPrimary),
+                          ),
+                          Expanded(
+                            child: DetailCard(context, "Panen", "${_est_panen}",
+                                colorPrimary),
+                          )
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(
+                          top: ScreenUtil().setHeight(20),
+                          left: ScreenUtil().setWidth(50),
+                          right: ScreenUtil().setWidth(50)),
+                      child: DetailCard(context, "Jumlah ikan Saat ini",
+                          "${_seed_mount_current}", textPrimary),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(
+                          top: ScreenUtil().setHeight(20),
+                          left: ScreenUtil().setWidth(50),
+                          right: ScreenUtil().setWidth(50)),
+                      child: DetailCard(
+                          context,
+                          "Berat Ikan Saat ini (Target berat per Ekor)",
+                          "${_weight_fish_current} gram ( ${_est_weight_fish} )",
+                          textPrimary),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(
+                          top: ScreenUtil().setHeight(20),
+                          left: ScreenUtil().setWidth(50),
+                          right: ScreenUtil().setWidth(50)),
+                      child: DetailCard(
+                          context,
+                          "Target Harga Jual Per Kilogram",
+                          "${_target_price}",
+                          textPrimary),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(
+                          top: ScreenUtil().setHeight(20),
+                          left: ScreenUtil().setWidth(50),
+                          right: ScreenUtil().setWidth(40)),
+                      child: DetailCard(context, "Informasi Modal Keseluruhan (Termasuk 5% Ops cost)",
+                          "${_budget}", textPrimary),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(
+                          top: ScreenUtil().setHeight(20),
+                          left: ScreenUtil().setWidth(50),
+                          right: ScreenUtil().setWidth(40)),
+                      child: DetailCard(context, "Prediksi Informasi Omset",
+                          "${_omset}", colorPrimary),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(
+                          top: ScreenUtil().setHeight(20),
+                          left: ScreenUtil().setWidth(50),
+                          right: ScreenUtil().setWidth(40)),
+                      child: DetailCard(
+                          context,
+                          "Prediksi Informasi Keuntungan",
+                          "${_laba}",
+                          colorPrimary),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                  ]),
+                )
+              ],
+            )
+          ],
         ),
       ),
     );
-    return data;
   }
 
-  Widget homeData() {
-    final Widget datax = SingleChildScrollView(
-      physics: new BouncingScrollPhysics(),
-      child: Container(
-          child: Column(children: [
-        Container(
-          margin: EdgeInsets.only(
-            top: SizeConfig.blockVertical * 3,
-          ),
-          child: Container(
-            height: 100,
-            child: Card(
-                elevation: 2,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15.0),
-                ),
-                child: Container(
-                    padding: EdgeInsets.only(
-                        left: SizeConfig.blockVertical * 3, right: 15.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                                child: Text(
-                              "Stock Pakan",
-                              style: subtitle2.copyWith(color: colorPrimary),
-                            )),
-                            Container(
-                                child: Text(
-                              (_stock_pakan / 1000).toString() + " Kg",
-                              style: h3.copyWith(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 1.15),
-                            )),
-                          ],
-                        ),
-                        Container(
-                            margin: EdgeInsets.only(top: 10.0),
-                            alignment: Alignment.centerRight,
-                            child: CustomElevation(
-                                height: 40.0,
-                                child: RaisedButton(
-                                  highlightColor: colorPrimary,
-                                  //Replace with actual colors
-                                  color: colorPrimary,
-                                  onPressed: () => {
-                                    if (status_checkout)
-                                      {
-                                        Navigator.push(
-                                            context,
-                                            PageTransition(
-                                                type: PageTransitionType.fade,
-                                                child: CheckoutView(
-                                                  idKolam: widget.idKolam,
-                                                )))
-                                      }
-                                    else
-                                      {
-                                        showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) =>
-                                              AlertQuestionPakan(context),
-                                        )
-                                      }
-                                  },
-                                  child: Text(
-                                    status_checkout
-                                        ? "Checkout"
-                                        : text_status_checkout,
-                                    style:
-                                        overline.copyWith(color: Colors.white),
-                                  ),
-                                  shape: new RoundedRectangleBorder(
-                                    borderRadius:
-                                        new BorderRadius.circular(30.0),
-                                  ),
-                                ))),
-                      ],
-                    ))),
-          ),
-        ),
-        Container(
-          child: CardColumn(context, "Tanggal Tebar Benih", _tanggal_tebar,
-              Alignment.centerLeft, SizeConfig.blockVertical * 3),
-        ),
-
-        Container(
-          child: CardColumn(context, "Tanggal Panen", _tanggal_panen,
-              Alignment.centerLeft, SizeConfig.blockVertical * 3),
-        ),
-
-        Container(
-          child: CardColumn(
-              context,
-              "Jumlah ikan (Terkini/Awal)",
-              "${_jumlah_ikan.toString()} / ${_jumlah_ikan_first.toString()} Ekor",
-              Alignment.centerLeft,
-              SizeConfig.blockVertical * 3),
-        ),
-        Container(
-          child: CardColumn(
-              context,
-              "Berat Ikan (Terkini/Perkiraan)",
-              "${(_berat_ikan_current / 1000).toStringAsFixed(1)} / ${_berat_ikan / 1000} Kg",
-              Alignment.centerLeft,
-              SizeConfig.blockVertical * 3),
-        ),
-
-        // Row(
-        //   children: <Widget>[
-        //     Expanded(
-        //         child: Container(
-        //           child: CardColumn(
-        //               context, "Jml Ikan Terkini", _jumlah_ikan.toString(), Alignment.center, 0),
-        //         )),
-        //     Expanded(
-        //       child: Container(
-        //         child: CardColumn(
-        //             context, "Berat Ikan Terkini", _berat_ikan_current.toString(), Alignment.center, 0),
-        //       ),
-        //     ),
-        //   ],
-        // ),
-        Card(
-          elevation: 4,
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        padding: EdgeInsets.only(
-                            left: SizeConfig.blockVertical * 2,
-                            top: SizeConfig.blockHorizotal * 3),
-                        child: Text(
-                          "Tingkat Kematian",
-                          style: subtitle2,
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.only(
-                                left: SizeConfig.blockVertical * 2),
-                            child: Text(
-                              current_sr_percent.floor().toString() + "%",
-                              style: body2,
-                            ),
-                          ),
-                          Container(
-                            padding: EdgeInsets.only(
-                                left: SizeConfig.blockVertical * 1),
-                            child: Row(children: <Widget>[
-                              Icon(
-                                Icons.trending_down,
-                                color: Colors.red,
-                                size: 12.0,
-                              ),
-                              Text(
-                                " " +
-                                    (current_sr_percent - 100)
-                                        .floor()
-                                        .abs()
-                                        .toString() +
-                                    "%",
-                                style: overline.copyWith(color: Colors.red),
-                              )
-                            ]),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                  Container(
-                      margin: EdgeInsets.only(top: 20.0, right: 10.0),
-                      alignment: Alignment.centerRight,
-                      child: Theme(
-                        data: Theme.of(context).copyWith(
-                          accentColor: colorPrimaryLight,
-                          primaryColor: colorPrimary,
-                        ),
-                        child: Builder(
-                          builder: (context) => CustomElevation(
-                              height: 30.0,
-                              child: RaisedButton(
-                                highlightColor: colorPrimary,
-                                //Replace with actual colors
-                                color: colorPrimary,
-                                onPressed: () async {
-                                  final List<DateTime> picked =
-                                      await DateRangePicker.showDatePicker(
-                                          context: context,
-                                          initialFirstDate:
-                                              tingkatKematianDateRange[0],
-                                          initialLastDate:
-                                              tingkatKematianDateRange[1],
-                                          firstDate: new DateTime(2015),
-                                          lastDate: new DateTime(2021));
-                                  if (picked != null && picked.length == 2) {
-                                    dateRangeKematian(picked);
-                                  }
-                                },
-                                child: Text(
-                                  "Filter",
-                                  style: overline.copyWith(color: Colors.white),
-                                ),
-                                shape: new RoundedRectangleBorder(
-                                  borderRadius: new BorderRadius.circular(30.0),
-                                ),
-                              )),
-                        ),
-                      )),
-                ],
-              ),
-              buildCardChart(
-                  status: 1,
-                  statusCount: "4",
-                  context: context,
-                  date:
-                      " ${DateFormat('d MMMM').format(tingkatKematianDateRange[0])} - ${DateFormat('d MMMM').format(tingkatKematianDateRange[1])}",
-                  chartData: _createKematianData())
-            ],
-          ),
-        ),
-        Card(
-          elevation: 4,
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        padding: EdgeInsets.only(
-                            left: SizeConfig.blockVertical * 2,
-                            top: SizeConfig.blockHorizotal * 3),
-                        child: Text(
-                          "Jumlah Pakan Keluar",
-                          style: subtitle2,
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.only(
-                                left: SizeConfig.blockVertical * 2),
-                            child: Text(
-                              "0 " + "Gram",
-                              style: body2,
-                            ),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                  Container(
-                      margin: EdgeInsets.only(top: 20.0, right: 10.0),
-                      alignment: Alignment.centerRight,
-                      child: Theme(
-                        data: Theme.of(context).copyWith(
-                          accentColor: colorPrimaryLight,
-                          primaryColor: colorPrimary,
-                        ),
-                        child: Builder(
-                          builder: (context) => CustomElevation(
-                              height: 30.0,
-                              child: RaisedButton(
-                                highlightColor: colorPrimary,
-                                //Replace with actual colors
-                                color: colorPrimary,
-                                onPressed: () async {
-                                  final List<DateTime> picked =
-                                      await DateRangePicker.showDatePicker(
-                                          context: context,
-                                          initialFirstDate:
-                                              tingkatPakanDateRange[0],
-                                          initialLastDate:
-                                              tingkatPakanDateRange[1],
-                                          firstDate: new DateTime(2015),
-                                          lastDate: new DateTime(2021));
-                                  if (picked != null && picked.length == 2) {
-                                    dateRangePakan(picked);
-                                  }
-                                },
-                                child: Text(
-                                  "Filter",
-                                  style: overline.copyWith(color: Colors.white),
-                                ),
-                                shape: new RoundedRectangleBorder(
-                                  borderRadius: new BorderRadius.circular(30.0),
-                                ),
-                              )),
-                        ),
-                      )),
-                ],
-              ),
-              buildCardChart(
-                  status: 1,
-                  statusCount: "4",
-                  context: context,
-                  date:
-                      "${DateFormat('d MMMM').format(tingkatPakanDateRange[0])} - ${DateFormat('d MMMM').format(tingkatPakanDateRange[1])}",
-                  chartData: _createPakanData())
-            ],
-          ),
-        ),
-        Card(
-          elevation: 4,
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        padding: EdgeInsets.only(
-                            left: SizeConfig.blockVertical * 2,
-                            top: SizeConfig.blockHorizotal * 3),
-                        child: Text(
-                          "Pertumbuhan",
-                          style: subtitle2,
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.only(
-                                left: SizeConfig.blockVertical * 2),
-                            child: Text(
-                              "${_berat_ikan_cart_total}" + " Gr",
-                              style: body2,
-                            ),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                  Container(
-                      margin: EdgeInsets.only(top: 20.0, right: 10.0),
-                      alignment: Alignment.centerRight,
-                      child: Theme(
-                        data: Theme.of(context).copyWith(
-                          accentColor: colorPrimaryLight,
-                          primaryColor: colorPrimary,
-                        ),
-                        child: Builder(
-                          builder: (context) => CustomElevation(
-                              height: 30.0,
-                              child: RaisedButton(
-                                highlightColor: colorPrimary,
-                                //Replace with actual colors
-                                color: colorPrimary,
-                                onPressed: () async {
-                                  final List<DateTime> picked =
-                                      await DateRangePicker.showDatePicker(
-                                          context: context,
-                                          initialFirstDate:
-                                              tingkatBeratDateRange[0],
-                                          initialLastDate:
-                                              tingkatBeratDateRange[1],
-                                          firstDate: new DateTime(2015),
-                                          lastDate: new DateTime(2021));
-                                  if (picked != null && picked.length == 2) {
-                                    dateRangeBerat(picked);
-                                  }
-                                },
-                                child: Text(
-                                  "Filter",
-                                  style: overline.copyWith(color: Colors.white),
-                                ),
-                                shape: new RoundedRectangleBorder(
-                                  borderRadius: new BorderRadius.circular(30.0),
-                                ),
-                              )),
-                        ),
-                      )),
-                ],
-              ),
-              buildCardChart(
-                  status: 1,
-                  statusCount: "4",
-                  context: context,
-                  date:
-                      "${DateFormat('d MMMM').format(tingkatBeratDateRange[0])} - ${DateFormat('d MMMM').format(tingkatBeratDateRange[1])}",
-                  chartData: _createBeratData())
-            ],
-          ),
-        ),
-        Container(
-          child: CardColumn(
-              context,
-              "Informasi Modal",
-              "Rp.${_informasi_modal},-",
-              Alignment.centerLeft,
-              SizeConfig.blockVertical * 3),
-        ),
-        Container(
-          child: CardColumn(context, "Perkiraan Omset", "Rp.${_omset},-",
-              Alignment.centerLeft, SizeConfig.blockVertical * 3),
-        ),
-        Container(
-          child: CardColumn(context, "Laba / Keuntungan", "Rp.$_laba",
-              Alignment.centerLeft, SizeConfig.blockVertical * 3),
-        ),
-        Container(
-          child: CardColumn(
-              context,
-              "Target Harga Jual",
-              "Rp.${formatter.format(_target_jual).toString()}/ Kg",
-              Alignment.centerLeft,
-              SizeConfig.blockVertical * 3),
-        ),
-        Container(
-            margin: EdgeInsets.only(top: SizeConfig.blockVertical * 2),
-            width: double.infinity,
-            child: CustomElevation(
-                height: 40.0,
-                child: RaisedButton(
-                  highlightColor: redTextColor,
-                  //Replace with actual colors
-                  color: redTextColor,
-                  onPressed: () => {},
-                  child: Text(
-                    "Panen",
-                    style: h3.copyWith(color: Colors.white),
-                  ),
-                  shape: new RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(30.0),
-                  ),
-                ))),
-        SizedBox(
-          height: 20.0,
-        )
-      ])),
-    );
-    return datax;
-  }
-
-  List<charts.Series<ChartKematianModel, DateTime>> _createKematianData() {
-    return [
-      new charts.Series<ChartKematianModel, DateTime>(
-        id: 'Tingkat Kematian',
-        colorFn: (_, __) => charts.ColorUtil.fromDartColor(colorPrimary),
-        domainFn: (ChartKematianModel income, _) => income.x,
-        measureFn: (ChartKematianModel income, _) => income.y,
-        data: itemsKematian,
-      )
-    ];
-  }
-
-  List<charts.Series<ChartKematianModel, DateTime>> _createBeratData() {
-    return [
-      new charts.Series<ChartKematianModel, DateTime>(
-        id: 'Tingkat Berat',
-        colorFn: (_, __) => charts.ColorUtil.fromDartColor(colorPrimary),
-        domainFn: (ChartKematianModel income, _) => income.x,
-        measureFn: (ChartKematianModel income, _) => income.y,
-        data: itemsBerat,
-      )
-    ];
-  }
-
-  List<charts.Series<ChartKematianModel, DateTime>> _createPakanData() {
-    return [
-      new charts.Series<ChartKematianModel, DateTime>(
-        id: 'Tingkat Berat',
-        colorFn: (_, __) => charts.ColorUtil.fromDartColor(colorPrimary),
-        domainFn: (ChartKematianModel income, _) => income.x,
-        measureFn: (ChartKematianModel income, _) => income.y,
-        data: itemsPakan,
-      )
-    ];
-  }
+//
 }

@@ -84,6 +84,7 @@ const TextStyle body2 = TextStyle(
   color: textPrimary,
 );
 
+
 TextStyle body2Inv = body2.copyWith(color: textPrimaryInverted);
 TextStyle body2Accent = body2.copyWith(color: textSecondary);
 

@@ -1,32 +1,32 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:lelenesia_pembudidaya/src/Models/ListKolamModels.dart';
 import 'package:lelenesia_pembudidaya/src/Models/ListKolamModelsNew.dart';
 import 'package:lelenesia_pembudidaya/src/Models/SqliteDataPenentuanPanen.dart';
 import 'package:lelenesia_pembudidaya/src/bloc/KolamBloc.dart';
 import 'package:lelenesia_pembudidaya/src/helper/DbHelper.dart';
 import 'package:lelenesia_pembudidaya/src/typography.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/checkout/CheckoutView.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/kolam/KolamWidget.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/checkout/Alamat/ListAlamatPengiriman.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/checkout/Alamat/TambahAlamatView.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/kolam/DetailKolam.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/kolam/PenentuanPakanView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/kolam/PenentuanPanenView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/kolam/TambahKolam.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/kolam/riwayat/RiwayatKolam.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/kolam/menu/menu_screen.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanMain.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/notification/NotificationView.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/profile/aktivasi/BiodataMapsScreen.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/profile/aktivasi/BiodataScreen.dart';
+import 'package:lelenesia_pembudidaya/src/ui/tools/ScreenUtil.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardWidget.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
 import 'package:flutter/services.dart';
-import 'package:lelenesia_pembudidaya/src/ui/widget/AcceptanceDialog.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/CustomElevation.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:toast/toast.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:lelenesia_pembudidaya/src/bloc/ProfilBloc.dart' as profile;
 
 class DashboardView extends StatefulWidget {
@@ -42,14 +42,16 @@ class _DashboardViewState extends State<DashboardView> {
   var statusAktivasi = false;
   List<ListKolamModelsNew> dataKolam = new List();
   var items = List<ListKolamModelsNew>();
+  var itemsDetail = List<ListKolamModelsNew>();
   TextEditingController _searchBoxController = TextEditingController();
+  var refreshKey = GlobalKey<RefreshIndicatorState>();
 
   void fetchData() {
+    var cek = 0;
     bloc.fetchAllKolam().then((value) {
       setState(() {
         dataKolam = value;
         items.addAll(dataKolam);
-        // dataPakan.addAll(value);
       });
     });
   }
@@ -67,7 +69,6 @@ class _DashboardViewState extends State<DashboardView> {
     dummySearchList.addAll(dataKolam);
     if (query.isNotEmpty) {
       List<ListKolamModelsNew> dummyListData = List<ListKolamModelsNew>();
-
       dummySearchList.forEach((item) {
         if (item.name.toLowerCase().contains(query.toLowerCase())) {
           print(item.name);
@@ -96,11 +97,22 @@ class _DashboardViewState extends State<DashboardView> {
     cek_profil();
   }
 
+  Future<Null> refreshList() async {
+    refreshKey.currentState?.show(atTop: false);
+    await Future.delayed(Duration(seconds: 1));
+    setState(() {
+      items.clear();
+    });
+    fetchData();
+
+    return null;
+  }
+
   void check_database(int id) async {
     var db = await _dbHelper.select_count(id);
     print(db);
     if (db == 0) {
-      var data = SqliteDataPenentuanPanen(id, "", 0, 0, 0, 0, 0, 0, 0, 0, 0);
+      var data = SqliteDataPenentuanPanen(id, 0,"", 0, 0, 0, 0, 0, 0, 0, 0, 0);
       _dbHelper.insert(data);
     }
   }
@@ -109,11 +121,11 @@ class _DashboardViewState extends State<DashboardView> {
   void dispose() {
     super.dispose();
     bloc.dispose();
-
   }
 
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.instance = ScreenUtil()..init(context);
     SizeConfig().init(context);
     GestureDetector gs = GestureDetector(
         onTap: () {
@@ -122,6 +134,7 @@ class _DashboardViewState extends State<DashboardView> {
         child: Icon(
           Icons.search,
           color: colorPrimary,
+          size: ScreenUtil(allowFontScaling: true).setSp(65),
         ));
 
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -133,95 +146,210 @@ class _DashboardViewState extends State<DashboardView> {
             key: _scaffoldKey,
             backgroundColor: Colors.white,
             drawer: Drawers(context),
-            appBar: AppBar(
-              elevation: 0,
-              leading: Container(
-                margin: EdgeInsets.only(left: SizeConfig.blockVertical * 3),
-                child: IconButton(
-                  icon: Icon(FontAwesomeIcons.bars,
-                      color: colorPrimary, size: 30.0),
-                  onPressed: () => {_scaffoldKey.currentState.openDrawer()},
-                ),
-              ),
-              actions: <Widget>[
-                Container(
-                  margin: EdgeInsets.only(right: SizeConfig.blockVertical * 5),
-                  child: Align(
-                      alignment: Alignment.centerRight,
-                      child: Container(
-                          child: IconButton(
-                              onPressed: () => {
-                                    Navigator.push(
-                                        context,
-                                        PageTransition(
-                                            type: PageTransitionType.fade,
-                                            // duration: Duration(microseconds: 1000),
-                                            child: NotificationView()))
-                                  },
-                              tooltip: "Notifikasi",
-                              icon: Icon(
-                                FontAwesomeIcons.solidBell,
-                                color: colorPrimary,
-                                size: 30.0,
-                              )))),
-                )
-              ],
-              backgroundColor: Colors.white,
-              brightness: Brightness.light,
-            ),
             body: Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween, // add this
+              child: Stack(
                 children: [
                   Container(
-                    margin: EdgeInsets.only(
-                        top: SizeConfig.blockVertical * 2,
-                        left: SizeConfig.blockVertical * 4,
-                        right: SizeConfig.blockVertical * 4),
-                    child: Column(
-                      children: [
-                        new Theme(
-                          data: new ThemeData(
-                            primaryColor: colorPrimary,
-                            primaryColorDark: colorPrimary,
-                          ),
-                          child: TextFormField(
-                            controller: _searchBoxController,
-                            onChanged: onItemChanged,
-                            decoration: EditTextSearch(
-                                context, "Cari Kolam", 20.0, 0, 0, 0, gs),
-                            keyboardType: TextInputType.text,
-                            style: TextStyle(
-                                color: blackTextColor,
-                                fontFamily: 'lato',
-                                letterSpacing: 0.4,
-                                fontSize: subTitleLogin),
-                          ),
-                        ),
-                      ],
+                    width: double.infinity,
+                    child: Image.asset(
+                      "assets/png/background.png",
+                      fit: BoxFit.cover,
+                      width: double.infinity,
                     ),
                   ),
-                  Expanded(
-                      child: Container(
-                    // transform: Matrix4.translationValues(0.0, -20.0, 0.0),
-                    margin: EdgeInsets.only(
-                      top: SizeConfig.blockVertical * 3,
-                      left: SizeConfig.blockVertical * 4,
-                      right: SizeConfig.blockVertical * 4,
-                    ),
-                    height: MediaQuery.of(context).size.height,
-                    child: FutureBuilder(
-                      future: bloc.fetchAllKolam(),
-                      builder: (context, AsyncSnapshot<dynamic> snapshot) {
-                        if (snapshot.hasData) {
-                          return buildList(snapshot);
-                        } else if (snapshot.hasError) {
-                          return Text(snapshot.error.toString());
-                        }
-                        return Center(child: CircularProgressIndicator());
-                      },
-                    ),
-                  )),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    // add this
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(
+                            left: ScreenUtil().setWidth(50),
+                            top: ScreenUtil().setHeight(60)),
+                        child: IconButton(
+                          icon: Icon(FontAwesomeIcons.bars,
+                              color: Colors.black,
+                              size:
+                                  ScreenUtil(allowFontScaling: true).setSp(80)),
+                          onPressed: () =>
+                              {_scaffoldKey.currentState.openDrawer()},
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(
+                            top: ScreenUtil().setHeight(20),
+                            left: ScreenUtil().setWidth(80),
+                            right: ScreenUtil().setWidth(80)),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Hallo, Pembudidaya ",
+                              style: h3.copyWith(
+                                  color: Colors.black,
+                                  fontSize: ScreenUtil(allowFontScaling: false)
+                                      .setSp(65)),
+                              textAlign: TextAlign.start,
+                            ),
+                            Text(
+                              "Selamat datang di eksosistem panen ikan !",
+                              style: caption.copyWith(
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: ScreenUtil(allowFontScaling: false)
+                                      .setSp(40)),
+                              textAlign: TextAlign.start,
+                            ),
+                            SizedBox(
+                              height: ScreenUtil().setHeight(60),
+                            ),
+                            new Theme(
+                              data: new ThemeData(
+                                primaryColor: colorPrimary,
+                                primaryColorDark: colorPrimary,
+                              ),
+                              child: TextFormField(
+                                controller: _searchBoxController,
+                                onChanged: onItemChanged,
+                                decoration: EditTextSearch(
+                                    context,
+                                    "Cari Kolam",
+                                    20.0,
+                                    0,
+                                    0,
+                                    ScreenUtil().setHeight(80),
+                                    gs),
+                                keyboardType: TextInputType.text,
+                                style: TextStyle(
+                                    color: blackTextColor,
+                                    fontFamily: 'lato',
+                                    letterSpacing: 0.4,
+                                    fontSize: subTitleLogin),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                          child: Container(
+                        // transform: Matrix4.translationValues(0.0, -20.0, 0.0),
+                        margin: EdgeInsets.only(
+                          top: SizeConfig.blockVertical * 1,
+                          left: ScreenUtil().setWidth(80),
+                          right: ScreenUtil().setWidth(80),
+                        ),
+                        height: MediaQuery.of(context).size.height,
+                        child: FutureBuilder(
+                          future: bloc.fetchAllKolam(),
+                          builder: (context, AsyncSnapshot<dynamic> snapshot) {
+                            if (snapshot.hasData) {
+                              return RefreshIndicator(
+                                key: refreshKey,
+                                child: buildList(snapshot),
+                                onRefresh: refreshList,
+                              );
+                            } else if (snapshot.hasError) {
+                              return Text(snapshot.error.toString());
+                            }
+                            return ListView.builder(
+                                itemCount: 5,
+                                // Important code
+                                itemBuilder: (context, index) => Container(
+                                    height: ScreenUtil().setHeight(320),
+                                    child: Card(
+                                      elevation: 4,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(15.0),
+                                      ),
+                                      child: Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Shimmer.fromColors(
+                                              period:
+                                                  Duration(milliseconds: 1000),
+                                              baseColor: Colors.grey[300],
+                                              highlightColor: Colors.white,
+                                              child: Container(
+                                                margin: EdgeInsets.only(
+                                                    left: 10.0, right: 10.0),
+                                                width:
+                                                    ScreenUtil().setWidth(180),
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                16.0))),
+                                                child: SizedBox(
+                                                  height: ScreenUtil()
+                                                      .setHeight(80),
+                                                ),
+                                              ),
+                                            ),
+                                            Shimmer.fromColors(
+                                              period:
+                                                  Duration(milliseconds: 1000),
+                                              baseColor: Colors.grey[300],
+                                              highlightColor: Colors.white,
+                                              child: Container(
+                                                margin: EdgeInsets.only(
+                                                    left: 10.0,
+                                                    right: 10.0,
+                                                    top: 2.0),
+                                                width: double.infinity,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                16.0))),
+                                                child: SizedBox(
+                                                  height: ScreenUtil()
+                                                      .setHeight(80),
+                                                ),
+                                              ),
+                                            ),
+                                            Shimmer.fromColors(
+                                              period:
+                                                  Duration(milliseconds: 1000),
+                                              baseColor: Colors.grey[300],
+                                              highlightColor: Colors.white,
+                                              child: Container(
+                                                margin: EdgeInsets.only(
+                                                    left: 10.0,
+                                                    right: 10.0,
+                                                    top: 2.0),
+                                                width: double.infinity,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                16.0))),
+                                                child: SizedBox(
+                                                  height: ScreenUtil()
+                                                      .setHeight(80),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    )));
+                          },
+                        ),
+                      )),
+                      SizedBox(
+                        height: ScreenUtil().setHeight(40),
+                      )
+                    ],
+                  )
                 ],
               ),
             )));
@@ -247,7 +375,8 @@ class _DashboardViewState extends State<DashboardView> {
                           color: blackTextColor,
                           fontFamily: 'poppins',
                           letterSpacing: 0.25,
-                          fontSize: 15.0),
+                          fontSize:
+                              ScreenUtil(allowFontScaling: false).setSp(45)),
                       textAlign: TextAlign.center,
                     ),
                     Row(
@@ -255,16 +384,15 @@ class _DashboardViewState extends State<DashboardView> {
                       children: [
                         Container(
                             height: 35.0,
-                            margin: EdgeInsets.only(top: SizeConfig.blockVertical * 3),
+                            margin: EdgeInsets.only(
+                                top: SizeConfig.blockVertical * 3),
                             child: CustomElevation(
                                 height: 35.0,
                                 child: RaisedButton(
                                   highlightColor: colorPrimary,
                                   //Replace with actual colors
                                   color: colorPrimary,
-                                  onPressed: () => {
-                                    SystemNavigator.pop()
-                                  },
+                                  onPressed: () => {SystemNavigator.pop()},
                                   child: Text(
                                     "Ya",
                                     style: TextStyle(
@@ -272,22 +400,27 @@ class _DashboardViewState extends State<DashboardView> {
                                         fontWeight: FontWeight.w500,
                                         fontFamily: 'poppins',
                                         letterSpacing: 1.25,
-                                        fontSize: subTitleLogin),
+                                        fontSize:
+                                            ScreenUtil(allowFontScaling: false)
+                                                .setSp(40)),
                                   ),
                                   shape: new RoundedRectangleBorder(
-                                    borderRadius: new BorderRadius.circular(30.0),
+                                    borderRadius:
+                                        new BorderRadius.circular(30.0),
                                   ),
                                 ))),
                         Container(
                           height: 35.0,
-                          margin: EdgeInsets.only(top: SizeConfig.blockVertical * 3),
+                          margin: EdgeInsets.only(
+                              top: SizeConfig.blockVertical * 3),
                           child: CustomElevation(
                               height: 35.0,
                               child: RaisedButton(
                                 highlightColor: colorPrimary,
                                 //Replace with actual colors
                                 color: redTextColor,
-                                onPressed: () => {Navigator.pop(context, false)},
+                                onPressed: () =>
+                                    {Navigator.pop(context, false)},
                                 child: Text(
                                   "Tidak",
                                   style: TextStyle(
@@ -295,7 +428,9 @@ class _DashboardViewState extends State<DashboardView> {
                                       fontWeight: FontWeight.w500,
                                       fontFamily: 'poppins',
                                       letterSpacing: 1.25,
-                                      fontSize: subTitleLogin),
+                                      fontSize:
+                                          ScreenUtil(allowFontScaling: false)
+                                              .setSp(40)),
                                 ),
                                 shape: new RoundedRectangleBorder(
                                   borderRadius: new BorderRadius.circular(30.0),
@@ -314,62 +449,88 @@ class _DashboardViewState extends State<DashboardView> {
   }
 
   Widget buildList(AsyncSnapshot<dynamic> snapshot) {
-    return ListView.builder(
-      physics: new BouncingScrollPhysics(),
-      scrollDirection: Axis.vertical,
-      itemCount: items.length,
-      itemBuilder: (BuildContext context, int index) {
-        return InkWell(
-            onTap: () {
-              check_database(items[index].id);
-              if (items[index].status.toString() == "0") {
-                if (!statusAktivasi) {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) =>
-                        AlertquestionAktivasi(context),
-                  );
+    if (!snapshot.hasData) {
+      return ListView.builder(
+          itemCount: 10,
+          // Important code
+          itemBuilder: (context, index) => Shimmer.fromColors(
+              baseColor: Colors.grey[400],
+              highlightColor: Colors.white,
+              child: Container(
+                height: ScreenUtil().setHeight(320),
+                child: Card(
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                    )),
+              )));
+    } else {
+      return ListView.builder(
+        physics: new BouncingScrollPhysics(),
+        scrollDirection: Axis.vertical,
+        itemCount: items.length,
+        itemBuilder: (BuildContext context, int index) {
+          return InkWell(
+              onTap: () {
+                check_database(items[index].id);
+                if (items[index].status.toString() == "0") {
+                  if (!statusAktivasi) {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) =>
+                          AlertquestionAktivasi(context),
+                    );
+                  } else {
+                    Navigator.push(
+                        context,
+                        PageTransition(
+                            type: PageTransitionType.fade,
+                            child: TambahKolam(
+                              idKolam: items[index].id.toString(),
+                            )));
+                  }
+                } else if (items[index].status.toString() == "1") {
+                  Navigator.push(
+                      context,
+                      PageTransition(
+                          type: PageTransitionType.fade,
+                          child: MenuScreen(
+                            idKolam: items[index].id.toString(),
+                          )));
                 } else {
                   Navigator.push(
                       context,
                       PageTransition(
                           type: PageTransitionType.fade,
-                          child: TambahKolam(
+                          child: DetailKolam(
+                            // page: 0,
+                            idIkan: items[index].harvest.fishTypeId.toString(),
                             idKolam: items[index].id.toString(),
                           )));
                 }
-              } else if (items[index].status.toString() == "1") {
-                Navigator.push(
-                    context,
-                    PageTransition(
-                        type: PageTransitionType.fade,
-                        child: PenentuanPanenView(
-                          idKolam: items[index].id.toString(),
-                        )));
-              } else {
-                Navigator.push(
-                    context,
-                    PageTransition(
-                        type: PageTransitionType.fade,
-                        child: LaporanMain(
-                          page: 0,
-                          laporan_page: "home",
-                          idKolam: items[index].id.toString(),
-                        )));
-                //   Navigator.push(
-                //       context,
-                //       PageTransition(
-                //           type: PageTransitionType.fade,
-                //           child: CheckoutView(
-                //             idKolam: items[index].id.toString(),)));
-              }
-            },
-            child: Container(
-              child: CardKolam(context, items[index].name,
-                  "Pilih untuk lihat detail",  !statusAktivasi ? "-1" : items[index].status.toString()),
-            ));
-      },
-    );
+              },
+              child: Container(
+                child: items[index].harvest == null
+                    ? CardKolam(
+                        context,
+                        items[index].name,
+                        "Kolam Belum di tentukan",
+                        !statusAktivasi ? "-1" : items[index].status.toString(),
+                        0,
+                        0,
+                        0)
+                    : CardKolam(
+                        context,
+                        items[index].name,
+                        "Ikan Lele",
+                        !statusAktivasi ? "-1" : items[index].status.toString(),
+                        items[index].harvest.currentSr.toInt(),
+                        items[index].harvest.feedConversionRatio.toInt(),
+                        items[index].harvest.currentAmount.toInt()),
+              ));
+        },
+      );
+    }
   }
 }
 
@@ -407,6 +568,14 @@ Widget AlertquestionAktivasi(BuildContext context) {
                           //Replace with actual colors
                           color: colorPrimary,
                           onPressed: () => {
+                            // Navigator.push(
+                            //     context,
+                            //     PageTransition(
+                            //         type: PageTransitionType.fade,
+                            //         child: BiodataScreen(
+                            //           from: "dashboard",
+                            //         )))
+
                             Navigator.push(
                                 context,
                                 PageTransition(
@@ -414,6 +583,8 @@ Widget AlertquestionAktivasi(BuildContext context) {
                                     child: BiodataScreen(
                                       from: "dashboard",
                                     )))
+
+
                           },
                           child: Text(
                             "Ya",
@@ -422,7 +593,8 @@ Widget AlertquestionAktivasi(BuildContext context) {
                                 fontWeight: FontWeight.w500,
                                 fontFamily: 'poppins',
                                 letterSpacing: 1.25,
-                                fontSize: subTitleLogin),
+                                fontSize: ScreenUtil(allowFontScaling: false)
+                                    .setSp(45)),
                           ),
                           shape: new RoundedRectangleBorder(
                             borderRadius: new BorderRadius.circular(30.0),
@@ -445,7 +617,8 @@ Widget AlertquestionAktivasi(BuildContext context) {
                               fontWeight: FontWeight.w500,
                               fontFamily: 'poppins',
                               letterSpacing: 1.25,
-                              fontSize: subTitleLogin),
+                              fontSize: ScreenUtil(allowFontScaling: false)
+                                  .setSp(45)),
                         ),
                         shape: new RoundedRectangleBorder(
                           borderRadius: new BorderRadius.circular(30.0),

@@ -3,17 +3,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_session/flutter_session.dart';
 import 'package:lelenesia_pembudidaya/src/resource/ErorManagement.dart';
 import 'package:lelenesia_pembudidaya/src/resource/Repository.dart';
-import 'package:rxdart/rxdart.dart';
-
 class LoginBloc {
   final _repository = Repository();
   final _errManage = ErrorManagement();
   Future weightMonitor(_pondid, _weight,_created_at) async {
+    var status;
     var hasil;
-    print("update weirgh monitor");
+
     var val = await _repository.monitorWeight(_pondid, _weight,_created_at);
-    hasil   = await _errManage.addWeightMonitor(val);
-    return hasil;
+
+    if (val.statusCode == 200) {
+      status = true;
+    } else {
+      status = false;
+    }
+    return status;
   }
 
   Future<bool> feedMonitor(_pondid, _feed,_created_at) async {
@@ -58,7 +62,6 @@ class LoginBloc {
       String pond_id, String date) async {
     var pakan = await _repository.analyticsMonitorByDate(pond_id, date);
     var enc = json.decode(pakan.body)['data'];
-
     return enc;
   }
 

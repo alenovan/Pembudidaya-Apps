@@ -2,17 +2,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/forgot/ForgotPasswordView.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/forgot/ForgotResetView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/forgot/ForgotVerifView.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginView.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/register/RegisterView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/splash/SplashScreen.dart';
-import 'package:lelenesia_pembudidaya/src/ui/tools/AuthLoadingScreen.dart';
-
 void main() async {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
-
   runApp(new MaterialApp(
     theme: ThemeData(
       accentColor: colorPrimary,

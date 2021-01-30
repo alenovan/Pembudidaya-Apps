@@ -4,30 +4,25 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lelenesia_pembudidaya/src/bloc/ProfilBloc.dart';
 import 'package:lelenesia_pembudidaya/src/typography.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardView.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/forgot/ForgotResetView.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/forgot/ForgotVerifView.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/kolam/PenentuanPanenView.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginWidget.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/profile/ProfileScreen.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/profile/ProfileWidget.dart';
+import 'package:lelenesia_pembudidaya/src/ui/tools/ScreenUtil.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
-import 'package:lelenesia_pembudidaya/src/ui/widget/AcceptanceDialog.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/BottomSheetFeedback.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/CustomElevation.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
-import 'package:lelenesia_pembudidaya/src/LelenesiaText.dart';
 import 'package:flutter/services.dart';
+import 'package:lelenesia_pembudidaya/src/ui/widget/LoadingDialog.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:dotted_border/dotted_border.dart';
-
+import 'package:lelenesia_pembudidaya/src/ui/tools/extensions.dart' as AppExt;
 class KtpScreen extends StatefulWidget {
   final String from;
 
@@ -46,21 +41,13 @@ class _KtpScreenState extends State<KtpScreen> {
 
   void _toggleButtonForgot() async {
     if (base64ImageKtp != null || base64ImageSelfie != null) {
-      Navigator.of(context).push(new MaterialPageRoute<Null>(
-          builder: (BuildContext context) {
-            return LoadingShow(context);
-          },
-          fullscreenDialog: true));
+      LoadingDialog.show(context);
       var status = await bloc.funUpdateProfileKtp(
           noKtpController.text.toString(), base64ImageKtp, base64ImageSelfie);
-      Navigator.of(context).pop();
+      AppExt.popScreen(context);
       if (status) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) =>
-              AlertSuccess(context, ProfileScreen()),
-        );
         if (widget.from == "dashboard") {
+          BottomSheetFeedback.show_success(context, title: "Selamat", description: "Aktivasi anda berhasil");
           Timer(const Duration(seconds: 1), () {
             Navigator.push(
                 context,
@@ -68,6 +55,7 @@ class _KtpScreenState extends State<KtpScreen> {
                     type: PageTransitionType.fade, child: DashboardView()));
           });
         } else {
+          BottomSheetFeedback.show_success(context, title: "Selamat", description: "Aktivasi anda berhasil");
           Timer(const Duration(seconds: 1), () {
             Navigator.push(
                 context,
@@ -140,6 +128,7 @@ class _KtpScreenState extends State<KtpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.instance = ScreenUtil();
     return AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle(
           statusBarIconBrightness: Brightness.dark,
@@ -329,7 +318,7 @@ class _KtpScreenState extends State<KtpScreen> {
         builder: (BuildContext bc) {
           return SafeArea(
             child: Container(
-              height: 130,
+              height: ScreenUtil().setHeight(350),
               padding: const EdgeInsets.all(30),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -400,7 +389,7 @@ class _KtpScreenState extends State<KtpScreen> {
         builder: (BuildContext bc) {
           return SafeArea(
             child: Container(
-              height: 130,
+              height: ScreenUtil().setHeight(350),
               padding: const EdgeInsets.all(30),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -465,7 +454,7 @@ class _KtpScreenState extends State<KtpScreen> {
   }
 }
 
-Widget roundedRectBorderWidget(BuildContext context, File _image) {
+Widget froundedRectBorderWidget(BuildContext context, File _image) {
   return DottedBorder(
     color: greyLineColor,
     dashPattern: [8, 4],

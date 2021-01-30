@@ -10,10 +10,18 @@
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.hardware.camera.autofocus"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <application
+        android:usesCleartextTraffic="true"
+        android:largeHeap="true"
+        android:hardwareAccelerated="true"
         android:name="io.flutter.app.FlutterApplication"
         android:label="lelenesia_pembudidaya"
         android:icon="@mipmap/ic_launcher">
+
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAbgQt2Jz4fkYf_1e268laTnUhtaN97NsQ"/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

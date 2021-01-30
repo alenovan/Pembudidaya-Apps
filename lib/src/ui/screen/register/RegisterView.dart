@@ -2,14 +2,11 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:lelenesia_pembudidaya/src/Models/RegisterModels.dart';
 import 'package:lelenesia_pembudidaya/src/bloc/RegisterBloc.dart';
-import 'package:lelenesia_pembudidaya/src/resource/Repository.dart';
 import 'package:lelenesia_pembudidaya/src/typography.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginView.dart';
+import 'package:lelenesia_pembudidaya/src/ui/tools/ScreenUtil.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
-import 'package:lelenesia_pembudidaya/src/ui/widget/AcceptanceDialog.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/BottomSheetFeedback.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/CustomElevation.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginWidget.dart';
@@ -17,9 +14,10 @@ import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaText.dart';
 import 'package:flutter/services.dart';
+import 'package:lelenesia_pembudidaya/src/ui/widget/LoadingDialog.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-
+import 'package:lelenesia_pembudidaya/src/ui/tools/extensions.dart' as AppExt;
 class RegisterView extends StatefulWidget {
   RegisterView({Key key}) : super(key: key);
 
@@ -38,11 +36,8 @@ class _RegisterViewState extends State<RegisterView> {
 
 
   void _toggleButtonRegister() async {
-    var  dialogContext = Navigator.of(context).push(new MaterialPageRoute<Null>(
-        builder: (BuildContext context) {
-          return LoadingShow(context);
-        },
-        fullscreenDialog: true));
+    LoadingDialog.show(context);
+
     var data = await bloc.funRegister(
         namaController.text.toString(), nohpController.text.toString());
     var status = data['status'];
@@ -54,26 +49,27 @@ class _RegisterViewState extends State<RegisterView> {
     });
     print(status);
     if (status == 1) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) => AlertSuccess(context, LoginView()),
-      );
+      AppExt.popScreen(context);
+      BottomSheetFeedback.show_success(context, title: "Selamat", description: "Selamat Pendaftaran anda berhasil");
       Timer(const Duration(seconds: 2), () {
-        Navigator.push(context,
-            PageTransition(type: PageTransitionType.fade, child: LoginView()));
+        Navigator.push(
+            context,
+            PageTransition(
+                type: PageTransitionType.fade, child: LoginView()));
       });
     } else if (status == 2) {
+      AppExt.popScreen(context);
       var message  = data['data']['message'].toString();
-      Navigator.of(context).pop();
       BottomSheetFeedback.show(context, title: "Mohon Maaf", description: message);
     }else{
-      Navigator.of(context).pop();
+      AppExt.popScreen(context);
     }
 
   }
 
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.instance = ScreenUtil()..init(context);
     SizeConfig().init(context);
     pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
     pr.style(
@@ -105,49 +101,63 @@ class _RegisterViewState extends State<RegisterView> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                          // color: Colors.red,
-                          height: SizeConfig.blockHorizotal * 40,
+                          margin: EdgeInsets.only(
+                            top: ScreenUtil().setHeight(120),),
                           width: double.infinity,
-                          child: Stack(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Container(
-                                  child: Align(
-                                alignment: Alignment.topRight,
-                                child: RightLiquid(context),
-                              )),
-                              Container(
                                   margin: EdgeInsets.only(
-                                      left: SizeConfig.blockVertical * 3),
+                                      left: ScreenUtil().setWidth(60),top: ScreenUtil().setHeight(50)),
                                   child: Align(
                                     alignment: Alignment.centerLeft,
-                                    child: Logo(context),
+                                    child: Logo(context,colorPrimary),
                                   )),
+                              Container(
+                                  margin: EdgeInsets.only(
+                                      right: ScreenUtil().setWidth(60)),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: LogoPanen(context,Colors.white),
+                                  ))
                             ],
                           ),
                         ),
                         Container(
+                          padding: EdgeInsets.only(
+                              top: ScreenUtil().setHeight(100),),
                           margin: EdgeInsets.only(
-                              left: SizeConfig.blockVertical * 3,
-                              right: SizeConfig.blockVertical * 3),
+                              left: ScreenUtil().setWidth(60),
+                              right: ScreenUtil().setWidth(60)),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 titleDaftarText,
-                                style: h1,
+                                style: h1.copyWith(
+                                    fontSize: ScreenUtil(
+                                        allowFontScaling: false)
+                                        .setSp(80)),
                               ),
-                              Text(
-                                subTitleDaftarText,
-                                style: caption,
-                              )
+                              Container(
+                                child: Text(
+                                  subTitleDaftarText,
+                                  style: caption.copyWith(
+                                      fontSize: ScreenUtil(
+                                          allowFontScaling: true)
+                                          .setSp(40),
+                                      color: greyTextColor),
+                                ),
+                              ),
                             ],
                           ),
                         ),
                         Container(
                           margin: EdgeInsets.only(
-                              left: SizeConfig.blockVertical * 3,
-                              top: SizeConfig.blockVertical * 3,
-                              right: SizeConfig.blockVertical * 3),
+                              top: ScreenUtil().setHeight(50),
+                              left: ScreenUtil().setWidth(50),
+                              right: ScreenUtil().setWidth(50)),
                           child: TextFormField(
                             controller: namaController,
                             decoration: EditTextDecorationText(
@@ -157,31 +167,17 @@ class _RegisterViewState extends State<RegisterView> {
                                 color: blackTextColor,
                                 fontFamily: 'lato',
                                 letterSpacing: 0.4,
-                                fontSize: subTitleLogin),
+                                fontSize: ScreenUtil(
+                                    allowFontScaling:
+                                    false)
+                                    .setSp(40)),
                           ),
                         ),
-                        // Visibility(
-                        //   visible: nama != "-" ? true : false,
-                        //   child: Container(
-                        //     margin: EdgeInsets.only(
-                        //         left: SizeConfig.blockVertical * 5,
-                        //         top: SizeConfig.blockVertical * 1,
-                        //         right: SizeConfig.blockVertical * 3),
-                        //     child: Text(
-                        //       nama,
-                        //       style: TextStyle(
-                        //           color: Colors.red,
-                        //           fontFamily: 'lato',
-                        //           letterSpacing: 0.4,
-                        //           fontSize: 12.0),
-                        //     ),
-                        //   ),
-                        // ),
                         Container(
                           margin: EdgeInsets.only(
-                              left: SizeConfig.blockVertical * 3,
-                              top: SizeConfig.blockVertical * 2,
-                              right: SizeConfig.blockVertical * 3),
+                              top: ScreenUtil().setHeight(50),
+                              left: ScreenUtil().setWidth(50),
+                              right: ScreenUtil().setWidth(50)),
                           child: TextFormField(
                             controller: nohpController,
                             decoration: EditTextDecorationNumber(
@@ -191,32 +187,38 @@ class _RegisterViewState extends State<RegisterView> {
                                 color: blackTextColor,
                                 fontFamily: 'lato',
                                 letterSpacing: 0.4,
-                                fontSize: subTitleLogin),
+                                fontSize: ScreenUtil(
+                                    allowFontScaling:
+                                    false)
+                                    .setSp(40)),
                           ),
                         ),
                         Visibility(
                           visible: phone!="-" ? true : false,
                           child: Container(
                             margin: EdgeInsets.only(
-                                left: SizeConfig.blockVertical * 5,
-                                top: SizeConfig.blockVertical * 1,
-                                right: SizeConfig.blockVertical * 3),
+                                left:  ScreenUtil().setWidth(50),
+                                top: ScreenUtil().setHeight(50),
+                                right:  ScreenUtil().setWidth(50)),
                             child: Text(
                               phone,
                               style: TextStyle(
                                   color: Colors.red,
                                   fontFamily: 'lato',
                                   letterSpacing: 0.4,
-                                  fontSize: 12.0),
+                                  fontSize: ScreenUtil(
+                                      allowFontScaling:
+                                      false)
+                                      .setSp(40)),
                             ),
                           ),
                         ),
                         Container(
+                          transform: Matrix4.translationValues(
+                              0.0, -ScreenUtil().setHeight(40), 0.0),
                           margin: EdgeInsets.only(
-                            left: SizeConfig.blockVertical * 3,
-                            top: SizeConfig.blockHorizotal * 3,
-                            right: SizeConfig.blockVertical * 3,
-                          ),
+                              left:  ScreenUtil().setWidth(60),
+                              right:  ScreenUtil().setWidth(60)),
                           child: RichText(
                             text: TextSpan(
                               children: <TextSpan>[
@@ -226,7 +228,10 @@ class _RegisterViewState extends State<RegisterView> {
                                       color: greyTextColor,
                                       fontFamily: 'lato',
                                       letterSpacing: 0.4,
-                                      fontSize: textSyaratTitleDaftar),
+                                      fontSize: ScreenUtil(
+                                          allowFontScaling:
+                                          false)
+                                          .setSp(30)),
                                 ),
                                 TextSpan(
                                   text: twoDaftarText,
@@ -234,7 +239,10 @@ class _RegisterViewState extends State<RegisterView> {
                                       color: purpleTextColor,
                                       fontFamily: 'lato',
                                       letterSpacing: 0.4,
-                                      fontSize: textSyaratTitleDaftar),
+                                      fontSize: ScreenUtil(
+                                          allowFontScaling:
+                                          false)
+                                          .setSp(30)),
                                 ),
                                 TextSpan(
                                   text: danDaftarText,
@@ -242,7 +250,10 @@ class _RegisterViewState extends State<RegisterView> {
                                       color: greyTextColor,
                                       fontFamily: 'lato',
                                       letterSpacing: 0.4,
-                                      fontSize: textSyaratTitleDaftar),
+                                      fontSize: ScreenUtil(
+                                          allowFontScaling:
+                                          false)
+                                          .setSp(30)),
                                 ),
                                 TextSpan(
                                   text: threeDaftarText,
@@ -250,22 +261,26 @@ class _RegisterViewState extends State<RegisterView> {
                                       color: purpleTextColor,
                                       fontFamily: 'lato',
                                       letterSpacing: 0.4,
-                                      fontSize: textSyaratTitleDaftar),
+                                      fontSize: ScreenUtil(
+                                          allowFontScaling:
+                                          false)
+                                          .setSp(30)),
                                 ),
                               ],
                             ),
                           ),
                         ),
                         Container(
-                          height: 45.0,
+                          transform: Matrix4.translationValues(
+                              0.0, -ScreenUtil().setHeight(50), 0.0),
+                          height: ScreenUtil().setHeight(110),
                           width: MediaQuery.of(context).size.width,
                           margin: EdgeInsets.only(
-                            left: SizeConfig.blockVertical * 3,
-                            right: SizeConfig.blockVertical * 3,
-                            top: SizeConfig.blockVertical * 2,
-                          ),
+                              left: ScreenUtil().setWidth(60),
+                              top: ScreenUtil().setHeight(50),
+                              right:ScreenUtil().setWidth(60)),
                           child: CustomElevation(
-                              height: 30.0,
+                              height: ScreenUtil().setHeight(110),
                               child: RaisedButton(
                                 highlightColor: colorPrimary,
                                 //Replace with actual colors
@@ -282,32 +297,32 @@ class _RegisterViewState extends State<RegisterView> {
                                       fontWeight: FontWeight.w500,
                                       fontFamily: 'poppins',
                                       letterSpacing: 1.25,
-                                      fontSize: subTitleLogin),
+                                      fontSize: ScreenUtil(
+                                          allowFontScaling:
+                                          true)
+                                          .setSp(45)),
                                 ),
                                 shape: new RoundedRectangleBorder(
                                   borderRadius: new BorderRadius.circular(30.0),
                                 ),
                               )),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-                new Positioned(
-                  child: Container(
-                      margin: EdgeInsets.only(bottom: 20.0),
-                      child: new Align(
-                          alignment: FractionalOffset.bottomCenter,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+
+                        Container(
+                          margin: EdgeInsets.only(
+                            left: ScreenUtil().setWidth(60),
+                            right: ScreenUtil().setWidth(60)
+                          ),
+                          child:  Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Text(
                                 bottomOneText,
-                                style: TextStyle(
-                                    color: greyTextColor,
-                                    fontFamily: 'lato',
-                                    letterSpacing: 0.4,
-                                    fontSize: subTitleLogin),
+                                style: body2.copyWith(
+                                    fontSize: ScreenUtil(
+                                        allowFontScaling:
+                                        true)
+                                        .setSp(44)),
                               ),
                               InkWell(
                                   onTap: () {
@@ -319,16 +334,63 @@ class _RegisterViewState extends State<RegisterView> {
                                   },
                                   child: Text(
                                     bottomTwoText,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        color: colorPrimary,
-                                        fontFamily: 'lato',
-                                        letterSpacing: 0.25,
-                                        fontSize: subTitleLogin),
+                                    style: body2.copyWith(
+                                        fontSize: ScreenUtil(
+                                            allowFontScaling:
+                                            true)
+                                            .setSp(44),color: colorPrimary),
                                   ))
                             ],
-                          ))),
-                )
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(
+                            top: ScreenUtil().setHeight(20),),
+                          margin: EdgeInsets.only(
+                              left: ScreenUtil().setWidth(60),
+                              right: ScreenUtil().setWidth(60)
+                          ),
+                          child:  Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Hubungi admin ? ",
+                                style: body2.copyWith(
+                                    fontSize: ScreenUtil(
+                                        allowFontScaling:
+                                        true)
+                                        .setSp(44)),
+                              ),
+                              InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        PageTransition(
+                                            type: PageTransitionType.fade,
+                                            child: LoginView()));
+                                  },
+                                  child: Text(
+                                    "Klik Di Sini",
+                                    style: body2.copyWith(
+                                        fontSize: ScreenUtil(
+                                            allowFontScaling:
+                                            true)
+                                            .setSp(44),color: colorPrimary),
+                                  ))
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                // new Positioned(
+                //   child: Container(
+                //       margin: EdgeInsets.only(bottom: 20.0),
+                //       child: new Align(
+                //           alignment: FractionalOffset.bottomCenter,
+                //           child:)),
+                // )
               ],
             )));
   }

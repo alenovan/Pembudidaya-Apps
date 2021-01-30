@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final listKolamModels = listKolamModelsFromJson(jsonString);
-
 import 'dart:convert';
 
 List<ListKolamModels> listKolamModelsFromJson(String str) => List<ListKolamModels>.from(json.decode(str).map((x) => ListKolamModels.fromJson(x)));

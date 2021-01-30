@@ -2,24 +2,19 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'package:flutter_calendar_carousel/classes/event.dart';
+import 'package:flutter_boxicons/flutter_boxicons.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_session/flutter_session.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lelenesia_pembudidaya/src/typography.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/riwayat/RiwayatPakan.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/kolam/TambahKolamView.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanDetail.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/profile/ProfileScreen.dart';
+import 'package:lelenesia_pembudidaya/src/ui/tools/ScreenUtil.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
-import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
-import 'package:lelenesia_pembudidaya/src/LelenesiaText.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart'
-    show CalendarCarousel, EventList;
 
 class DashboardWidget extends StatelessWidget {
   const DashboardWidget({Key key}) : super(key: key);
@@ -30,19 +25,21 @@ class DashboardWidget extends StatelessWidget {
   }
 }
 
-Widget CardKolam(
-    BuildContext context, String title, String sub, String status) {
+Widget CardKolam(BuildContext context, String title, String sub, String status,
+    int sr, int fcr, int current_amount) {
+  ScreenUtil.instance = ScreenUtil()
+    ..init(context);
   var text;
   var color;
   if (status == "0") {
-    text = "Kolam Belum Aktif";
-    color = Colors.red;
+    text = "Belum Teraktivasi";
+    color = Colors.grey;
   } else if (status == "1") {
     text = "Kosong";
     color = Colors.redAccent;
   } else if (status == "2") {
-    text = "Sedang Panen";
-    color = Colors.lightBlueAccent;
+    text = "Sedang Budidaya";
+    color = blueAqua;
   } else if (status == "3") {
     text = "Siap Panen";
     color = Colors.green;
@@ -54,14 +51,15 @@ Widget CardKolam(
     color = Colors.redAccent;
   }
   final Widget svgIcon = Container(
-    height: 120,
+    height: ScreenUtil().setHeight(310),
     child: Card(
         elevation: 4,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15.0),
+          borderRadius: BorderRadius.circular(ScreenUtil().setWidth(50)),
         ),
         child: Container(
-            padding: EdgeInsets.only(left: 15.0, right: 15.0),
+            padding: EdgeInsets.only(left: ScreenUtil().setWidth(50),
+                right: ScreenUtil().setWidth(50)),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -77,65 +75,77 @@ Widget CardKolam(
                           size: 15.0,
                         ),
                         Container(
-                            margin: EdgeInsets.only(left: 5.0),
+                            margin: EdgeInsets.only(left: ScreenUtil().setWidth(20)),
                             child: Text(
                               text,
-                              style: caption.copyWith(color: color),
+                              style: caption.copyWith(color: color,
+                                  fontSize: SizeConfig.blockVertical * 1.5),
                             ))
                       ],
                     ),
                     Container(
-                        margin: EdgeInsets.only(top: 5.0, left: 20),
+                        margin: EdgeInsets.only(top: ScreenUtil().setWidth(20), left: ScreenUtil().setWidth(60)),
                         child: Text(
-                          title,
-                          style: subtitle1,
+                          "Kolam " + title,
+                          style: subtitle1.copyWith(
+                              fontSize: ScreenUtil(allowFontScaling: false)
+                                  .setSp(50)),
                         )),
                     Container(
-                        margin: EdgeInsets.only(top: 5.0, left: 20),
+                        margin: EdgeInsets.only(top: ScreenUtil().setWidth(20), left: ScreenUtil().setWidth(60)),
                         child: Text(
                           sub,
-                          style: overline,
+                          style: overline.copyWith(
+                              fontSize: ScreenUtil(allowFontScaling: false)
+                                  .setSp(40)),
                         )),
                   ],
                 ),
-                Container(
+                sr != 0 ? Container(
                     alignment: Alignment.centerRight,
-                    child: Icon(
-                      FontAwesomeIcons.chevronCircleRight,
-                      color: purpleTextColor,
-                      size: SizeConfig.blockHorizotal * 8,
-                    )),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          "SR : ${sr}",
+                          style: overline.copyWith(color: blueAqua,
+                              fontSize: ScreenUtil(allowFontScaling: false)
+                                  .setSp(40)),
+                        ),
+                        Text(
+                          "FCR : ${fcr}",
+                          style: overline.copyWith(color: blueAqua,
+                              fontSize: ScreenUtil(allowFontScaling: false)
+                                  .setSp(40)),
+                        ),
+                        Text(
+                          "Jumlah Ikan : ${current_amount}",
+                          style: overline.copyWith(color: blueAqua,
+                              fontSize: ScreenUtil(allowFontScaling: false)
+                                  .setSp(40)),
+                        )
+                      ],
+                    )):Text(""),
               ],
             ))),
   );
   return svgIcon;
 }
 
-// ignore: non_constant_identifier_names
-Widget DetailNull(BuildContext context) {
-  SizeConfig().init(context);
-  final String assetName = "assets/png/nullfishing.png";
-  final Widget svgIcon = Container(
-    child: Image.asset(
-      assetName,
-      width: SizeConfig.blockHorizotal * 50,
-    ),
-  );
-  return svgIcon;
-}
 
 // ignore: non_constant_identifier_names
 Widget Drawers(BuildContext context) {
   SizeConfig().init(context);
-  final Widget drawer = Drawer(
+  final Widget drawer = Container(
+    width: SizeConfig.blockHorizotal * 65,
     child: Drawer(
       child: Container(
-          color: Colors.white,
+          color: colorPrimaryLightSlider,
           child: Stack(
             children: [
               Positioned(
-                child: ListView(
-                  padding: EdgeInsets.zero,
+                child: Column(
                   children: <Widget>[
                     Align(
                       alignment: Alignment.centerLeft,
@@ -144,26 +154,29 @@ Widget Drawers(BuildContext context) {
                               top: SizeConfig.blockVertical * 5,
                               left: SizeConfig.blockHorizotal * 3,
                               bottom: SizeConfig.blockVertical * 5),
-                          child: Icon(
-                            MaterialIcons.close,
-                            size: 30.0,
+                          child: IconButton(
+                            icon: Icon(
+                              MaterialIcons.close,
+                              size: 30.0,
+                              color: Colors.white,
+                            ),
+                            onPressed: () => { Navigator.of(context).pop()},
                           )),
                     ),
+                    Divider(
+                      color: greyLineColor,
+                    ),
                     Container(
-                      decoration: BoxDecoration(
-                          //                    <-- BoxDecoration
-                          border: Border(
-                              bottom: BorderSide(color: Colors.grey[300]),
-                              top: BorderSide(color: Colors.grey[300]))),
                       child: ListTile(
                         title: Row(
                           children: [
-                            Icon(FontAwesome.user_circle, color: colorPrimary),
+                            Icon(FontAwesome.user_circle, color: Colors.white),
                             Container(
                                 margin: EdgeInsets.only(left: 20.0),
                                 child: Text(
                                   "  Akun",
-                                  style: subtitle1,
+                                  style: subtitle1.copyWith(
+                                      color: Colors.white, fontSize: 17.0),
                                 ))
                           ],
                         ),
@@ -176,17 +189,21 @@ Widget Drawers(BuildContext context) {
                         },
                       ),
                     ),
+                    Divider(
+                      color: greyLineColor,
+                    ),
                     Container(
                       child: ListTile(
                         title: Row(
                           children: [
-                            Icon(Icons.assignment_outlined,
-                                color: colorPrimary),
+                            Icon(Icons.assignment,
+                                color: Colors.white),
                             Container(
                                 margin: EdgeInsets.only(left: 20.0),
                                 child: Text(
                                   "  Tambah Kolam",
-                                  style: subtitle1,
+                                  style: subtitle1.copyWith(
+                                      color: Colors.white, fontSize: 17.0),
                                 ))
                           ],
                         ),
@@ -199,22 +216,21 @@ Widget Drawers(BuildContext context) {
                         },
                       ),
                     ),
+                    Divider(
+                      color: greyLineColor,
+                    ),
                     Container(
-                        decoration: BoxDecoration(
-                            //                    <-- BoxDecoration
-                            border: Border(
-                                bottom: BorderSide(color: Colors.grey[300]),
-                                top: BorderSide(color: Colors.grey[300]))),
                         child: ListTile(
                           title: Row(
                             children: [
-                              Icon(FontAwesome.shopping_cart,
-                                  color: colorPrimary),
+                              Icon(Boxicons.bx_cart,
+                                  color: Colors.white),
                               Container(
                                 margin: EdgeInsets.only(left: 20.0),
                                 child: Text(
                                   "  Pesanan",
-                                  style: subtitle1,
+                                  style: subtitle1.copyWith(
+                                      color: Colors.white, fontSize: 17.0),
                                 ),
                               )
                             ],
@@ -227,39 +243,40 @@ Widget Drawers(BuildContext context) {
                                     child: RiwayatPakan()));
                           },
                         )),
+                    Divider(
+                      color: greyLineColor,
+                    ),
+                    Container(
+                        child: ListTile(
+                          title: Row(
+                            children: [
+                              Icon(Boxicons.bx_log_out,
+                                  color: Colors.white),
+                              Container(
+                                margin: EdgeInsets.only(left: 20.0),
+                                child: Text(
+                                  "  Keluar",
+                                  style: subtitle1.copyWith(
+                                      color: Colors.white, fontSize: 17.0),
+                                ),
+                              )
+                            ],
+                          ),
+                          onTap: () {
+                            FlutterSession().set("token", " ");
+                            Navigator.push(
+                                context,
+                                PageTransition(
+                                    type: PageTransitionType.fade,
+                                    child: LoginView()));
+                          },
+                        )),
+                    Divider(
+                      color: greyLineColor,
+                    ),
                   ],
                 ),
               ),
-              Positioned(
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                      margin: EdgeInsets.only(bottom: 50.0),
-                      width: 250,
-                      height: 50,
-                      child: OutlineButton(
-                        onPressed: () {
-                          FlutterSession().set("token", " ");
-                          Navigator.push(
-                              context,
-                              PageTransition(
-                                  type: PageTransitionType.fade,
-                                  child: LoginView()));
-                        },
-                        child: Text(
-                          "Keluar",
-                          style: TextStyle(
-                            fontFamily: "popins",
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.red,
-                          ),
-                        ),
-                        borderSide: BorderSide(color: Colors.red),
-                        shape: StadiumBorder(),
-                      )),
-                ),
-              )
               // Container(
               //   child: Text("aaa"),
               // )
@@ -274,9 +291,11 @@ InputDecoration EditTextSearch(BuildContext context, String label, double leftx,
     double rightx, double topx, double bottomx, GestureDetector gs) {
   SizeConfig().init(context);
   final InputDecoration decoration = InputDecoration(
-    contentPadding: EdgeInsets.only(left: leftx, right: rightx),
+    contentPadding: EdgeInsets.fromLTRB(leftx, rightx, topx, bottomx),
+    // control your hints text size
     hintText: label,
     filled: true,
+    isDense: true,
     fillColor: Colors.white,
     hintStyle: TextStyle(
       color: greyTextColor,

@@ -35,7 +35,6 @@ class KolamBloc {
     var status;
     var todo = await _repository.fetchAllKolam();
     final jsondata=json.decode(todo)['data'];
-    // print(jsondata);
     if(jsonEncode(jsondata).length > 2){
       status = false;
     }else{
@@ -53,8 +52,19 @@ class KolamBloc {
 
   Future<bool> funAktivasiKolam(String idkolam,String path) async {
     var status;
-    print("Update Aktivasi  Kolam");
     var val = await _repository.activasiKolam(idkolam,path);
+    if(val.statusCode == 200){
+      status = true;
+    }else {
+      status = false;
+    }
+    return status;
+  }
+
+  Future<bool> setResetKolam(String pond_id) async {
+    var status;
+    var val = await _repository.setResetKolam(pond_id);
+    print(val.body);
     if(val.statusCode == 200){
       status = true;
     }else {

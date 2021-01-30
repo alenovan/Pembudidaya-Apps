@@ -2,29 +2,29 @@ import 'dart:ffi';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_boxicons/flutter_boxicons.dart';
 import 'package:intl/intl.dart';
+import 'package:lelenesia_pembudidaya/src/bloc/CheckoutBloc.dart' as pakan;
 import 'package:lelenesia_pembudidaya/src/Models/SqliteDataPenentuanPanen.dart';
 import 'package:lelenesia_pembudidaya/src/bloc/PakanBloc.dart';
 import 'package:lelenesia_pembudidaya/src/helper/DbHelper.dart';
+import 'package:lelenesia_pembudidaya/src/models/ListPakanModels.dart';
 import 'package:lelenesia_pembudidaya/src/typography.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/checkout/CheckoutView.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardView.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/forgot/ForgotResetView.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/kolam/DetailKolam.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/kolam/PenentuanPakanView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanMain.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginView.dart';
+import 'package:lelenesia_pembudidaya/src/ui/tools/ScreenUtil.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/AcceptanceDialog.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/BottomSheetFeedback.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/CustomElevation.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/forgot/ForgotWidget.dart';
-import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginWidget.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaText.dart';
 import 'package:flutter/services.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:shimmer/shimmer.dart';
 
 class DetailPenentuanPakan extends StatefulWidget {
   final String name;
@@ -35,6 +35,11 @@ class DetailPenentuanPakan extends StatefulWidget {
   final String desc;
   final String image_url;
   final String idKolam;
+  final String idIkan;
+  final String nameManufacture;
+  final String addressManufacture;
+  final String pabrikManufacture;
+  final String photoManufacture;
   final int id_pakan;
 
   DetailPenentuanPakan(
@@ -47,7 +52,11 @@ class DetailPenentuanPakan extends StatefulWidget {
       this.idKolam,
       this.id_pakan,
       this.size,
-      this.type})
+      this.type,
+      this.nameManufacture,
+      this.addressManufacture,
+      this.pabrikManufacture,
+      this.photoManufacture, this.idIkan})
       : super(key: key);
 
   @override
@@ -68,6 +77,9 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
   var targetJumlahController = 0;
   var targetHargaController = 0;
   var dataCheck;
+  var idIkan;
+  var items = List<ListPakanModels>();
+  List<ListPakanModels> dataPakan = new List();
 
   void _toggleButtonSave(int statusx) async {
     getData();
@@ -77,39 +89,39 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
           return LoadingShow(context);
         },
         fullscreenDialog: true));
-    var data = await bloc.funInsertPenentuanPakan(
-        widget.idKolam.toString(),
+    var data = SqliteDataPenentuanPanen(
+        int.parse(widget.idKolam),
+        int.parse(idIkan),
         tglTebarController.toString(),
-        jumlahBibitController.toString(),
-        gramPerEkorController.toString(),
-        hargaBibitController.toString(),
-        survivalRateController.toString(),
-        feedConvController.toString(),
-        widget.id_pakan.toString(),
-        targetJumlahController.toString(),
-        targetHargaController.toString());
-    var status = data['status'];
-    if (status == 1) {
-      updateSqlite();
+        int.parse(jumlahBibitController.toString()),
+        double.parse(gramPerEkorController.toString()),
+        int.parse(hargaBibitController.toString()),
+        int.parse(survivalRateController.toString()),
+        int.parse(feedConvController.toString()),
+        widget.id_pakan,
+        int.parse(targetJumlahController.toString()),
+        int.parse(targetHargaController.toString()),
+        0);
+    var update = await _dbHelper.update(data);
+    if (update == 1) {
       if (statusx == 1) {
+        Navigator.of(context).pop();
+
         Navigator.push(
             context,
             PageTransition(
                 type: PageTransitionType.fade,
                 child: CheckoutView(
                   idKolam: widget.idKolam,
-                  name_pakan: widget.name,
-                  price: widget.price,
-                  url_pakan: widget.image_url,
                 )));
       } else {
+        Navigator.of(context).pop();
+
         Navigator.push(
             context,
             PageTransition(
                 type: PageTransitionType.fade,
-                child: LaporanMain(
-                  page: 0,
-                  laporan_page: "home",
+                child: DetailKolam(
                   idKolam: widget.idKolam,
                 )));
       }
@@ -120,26 +132,10 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
     }
   }
 
-  void updateSqlite() async {
-    var data = SqliteDataPenentuanPanen(
-        int.parse(widget.idKolam),
-        tglTebarController.toString(),
-        int.parse(jumlahBibitController.toString()),
-        int.parse(gramPerEkorController.toString()),
-        int.parse(hargaBibitController.toString()),
-        int.parse(survivalRateController.toString()),
-        int.parse(feedConvController.toString()),
-        widget.id_pakan,
-        int.parse(targetJumlahController.toString()),
-        int.parse(targetHargaController.toString()),
-        0);
-    var update = await _dbHelper.update(data);
-  }
-
   void getData() async {
     dataPenentuan = await _dbHelper.select(int.parse(widget.idKolam));
-    print(dataPenentuan);
     setState(() {
+      idIkan = dataPenentuan["fish_type_id"].toString();
       dataCheck = dataPenentuan["seed_amount"].toString();
       tglTebarController = dataPenentuan["sow_date"].toString();
       hargaBibitController = dataPenentuan["seed_price"];
@@ -150,6 +146,18 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
       targetJumlahController = dataPenentuan["target_fish_count"];
       targetHargaController = dataPenentuan["target_price"];
     });
+    getDataPanen();
+  }
+
+  void getDataPanen() async {
+    // dataPenentuan = await _dbHelper.select(int.parse(widget.idKolam));
+    //
+    //  pakan.bloc.getFeedDetail(widget.id_pakan.toString()).then((value) {
+    //   setState(() {
+    //     dataPakan = value;
+    //     items.addAll(dataPakan);
+    //   });
+    // });
   }
 
   @override
@@ -161,8 +169,10 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
 
   @override
   Widget build(BuildContext context) {
-    if(dataCheck == "0"){
-      getData();
+    ScreenUtil.instance = ScreenUtil()..init(context);
+    final double _screenWidth = MediaQuery.of(context).size.width;
+    if (dataCheck == "0") {
+      // getData();
     }
     return AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle(
@@ -171,48 +181,327 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
         child: Scaffold(
             backgroundColor: Colors.grey[100],
             resizeToAvoidBottomPadding: false,
-            body: Column(
+            appBar: AppBar(
+              elevation: 0,
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back, color: Colors.black),
+                onPressed: () => {
+                  Navigator.push(
+                      context,
+                      PageTransition(
+                          type: PageTransitionType.rightToLeft,
+                          child: PenentuanPakanView(
+                            idKolam: widget.idKolam,
+                          )))
+                },
+              ),
+              backgroundColor: Colors.white,
+              brightness: Brightness.light,
+              title: Text(
+                "Detail Produk",
+                style: h3.copyWith(color: Colors.black),
+              ),
+            ),
+            body: ListView(
               children: [
+
+                SizedBox(
+                  height: 20,
+                ),
+
                 Container(
+                  height: 200,
                   child: Container(
-                    padding: EdgeInsets.only(
-                      top: SizeConfig.blockVertical * 8,
-                      bottom: SizeConfig.blockVertical * 4,
-                    ),
-                    color: Colors.white,
-                    child: Row(
-                      children: [
-                        Container(
-                            padding: EdgeInsets.only(
-                                left: SizeConfig.blockHorizotal * 5),
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    PageTransition(
-                                        type: PageTransitionType.fade,
-                                        // duration: Duration(microseconds: 1000),
-                                        child: PenentuanPakanView()));
-                              },
-                              child: IconTheme(
-                                data: IconThemeData(color: appBarTextColor),
-                                child: Icon(Icons.arrow_back),
-                              ),
-                            )),
-                        Container(
-                          padding: EdgeInsets.only(
-                              left: SizeConfig.blockHorizotal * 2),
-                          child: Text(
-                            "Penentuan Pakan",
-                            style: h3,
-                          ),
-                        )
-                      ],
+                    padding: EdgeInsets.only(top:10.0,bottom:10.0),
+                    child: Center(
+                      child: Image.network(
+                        widget.image_url,
+                        fit: BoxFit.fitWidth,
+                        errorBuilder: (BuildContext context, Object exception,
+                            StackTrace stackTrace) {
+                          return Image.network("https://via.placeholder.com/300");
+                        },
+                      ),
                     ),
                   ),
                 ),
+                SizedBox(
+                  height: 20,
+                ),
                 Container(
-                    margin: EdgeInsets.only(top: SizeConfig.blockVertical * 3),
+                    color: Colors.white,
+                    width: MediaQuery.of(context).size.width,
+                    child: Wrap(
+                      children: [
+                        Container(
+                            margin: EdgeInsets.only(
+                                left: SizeConfig.blockVertical * 3,
+                                right: SizeConfig.blockVertical * 3,
+                                top: SizeConfig.blockVertical * 2),
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          "Rp.${formatter.format(widget.price)}",
+                                          style: subtitle2.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              letterSpacing: 1.25),
+                                        )),
+                                    Container(
+                                        margin: EdgeInsets.only(
+                                          left: SizeConfig.blockVertical * 2,
+                                          bottom: 3.0,
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                                margin:
+                                                    EdgeInsets.only(left: 2.0),
+                                                child: Icon(
+                                                  Boxicons.bx_dollar_circle,
+                                                  color: colorPrimary,
+                                                  size: 20,
+                                                )),
+                                            Container(
+                                              margin:
+                                                  EdgeInsets.only(left: 3.0),
+                                              child: Text(
+                                                " Pay Later",
+                                                style: caption.copyWith(
+                                                    color: colorPrimary,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            )
+                                          ],
+                                        ))
+                                  ],
+                                ),
+                                Container(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      "${widget.name}",
+                                      style: subtitle2.copyWith(
+                                          fontSize: ScreenUtil(
+                                                  allowFontScaling: false)
+                                              .setSp(40)),
+                                    )),
+                                Container(
+                                    padding: EdgeInsets.only(top: 5.0),
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      "Kota Distribusi : ",
+                                      style: subtitle2.copyWith(
+                                          color: greyTextColor,
+                                          fontSize: ScreenUtil(
+                                                  allowFontScaling: false)
+                                              .setSp(40)),
+                                    )),
+                                Container(
+                                    transform: Matrix4.translationValues(
+                                        -8.0, 00.0, 0.0),
+                                    margin: EdgeInsets.only(top: 2.0),
+                                    alignment: Alignment.centerLeft,
+                                    child: FutureBuilder(
+                                      future: pakan.bloc.getFeedDetail(
+                                          widget.id_pakan.toString()),
+                                      builder: (context,
+                                          AsyncSnapshot<dynamic> snapshot) {
+                                        if (snapshot.hasData) {
+                                          // print(snapshot.data["data"]["manufacturer"]["coverages"].length);
+                                          // return Text("${snapshot.data["data"]["manufacturer"]["coverages"].length}");
+                                          return snapshot.data["data"]["manufacturer"]["coverages"].isEmpty ? Center(child: Text('')) : Wrap(
+                                              spacing: 2.0,
+                                              runSpacing: -ScreenUtil().setHeight(20),
+                                              children: List<Widget>.generate(snapshot.data["data"]["manufacturer"]["coverages"].length < 1 ?0:snapshot.data["data"]["manufacturer"]["coverages"].length, (int index) {
+                                                return Container(
+                                                  padding: EdgeInsets.only(
+                                                      left: 8.0),
+                                                  child: Chip(
+                                                    label: Text(
+                                                      '${snapshot.data["data"]["manufacturer"]["coverages"][index]["city_name"]}',
+                                                      style: TextStyle(
+                                                          color: colorPrimary,
+                                                          fontSize: ScreenUtil(
+                                                              allowFontScaling:
+                                                              false)
+                                                              .setSp(35)),
+                                                    ),
+                                                    elevation: 1.0,
+                                                    shadowColor:
+                                                    Colors.grey[60],
+                                                    backgroundColor:
+                                                    Colors.transparent,
+                                                  ),
+                                                );
+                                              }));
+                                        } else if (snapshot.hasError) {
+                                          return Text(
+                                              snapshot.error.toString());
+                                        }
+                                        return Wrap(
+                                            spacing: 2.0,
+                                            runSpacing: -ScreenUtil().setHeight(20),
+                                            children: List<Widget>.generate(2, (int index) {
+                                              return Container(
+                                                  padding: EdgeInsets.only(
+                                                  left: 8.0),
+                                              child: Shimmer.fromColors(
+                                                  period: Duration(milliseconds: 1000),
+                                                  baseColor: Colors.grey[300],
+                                                  highlightColor: Colors.white,
+                                                  child: Chip(
+                                                    label: Text(
+                                                      '--------------------------------------',
+                                                      style: TextStyle(
+                                                          color: colorPrimary,
+                                                          fontSize: ScreenUtil(
+                                                              allowFontScaling:
+                                                              false)
+                                                              .setSp(35)),
+                                                    ),
+                                                    elevation: 1.0,
+                                                    shadowColor:
+                                                    Colors.grey[60],
+                                                    backgroundColor:
+                                                    Colors.transparent,
+                                                  )));
+                                            }));
+                                      },
+                                    )),
+                                SizedBox(
+                                  height: 20,
+                                )
+                              ],
+                            ))
+                      ],
+                    )),
+                Container(
+                    margin: EdgeInsets.only(top: SizeConfig.blockVertical * 2),
+                    color: Colors.white,
+                    width: MediaQuery.of(context).size.width,
+                    child: Wrap(
+                      children: [
+                        Container(
+                          height: 90,
+                          child: Container(
+                              padding: EdgeInsets.only(left: 10.0, right: 15.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    width: ScreenUtil().setWidth(250),
+                                    child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                        child: Image.network(
+                                          widget.photoManufacture,
+                                          fit: BoxFit.cover,
+                                          height:
+                                              SizeConfig.blockHorizotal * 17,
+                                          errorBuilder: (BuildContext context,
+                                              Object exception,
+                                              StackTrace stackTrace) {
+                                            return Image.network(
+                                              widget.photoManufacture,
+                                              height:
+                                                  SizeConfig.blockHorizotal *
+                                                      17,
+                                              fit: BoxFit.cover,
+                                              frameBuilder: (context,
+                                                  child,
+                                                  frame,
+                                                  wasSynchronouslyLoaded) {
+                                                if (wasSynchronouslyLoaded) {
+                                                  return child;
+                                                } else {
+                                                  return AnimatedSwitcher(
+                                                    duration: const Duration(
+                                                        milliseconds: 500),
+                                                    child: frame != null
+                                                        ? child
+                                                        : Shimmer.fromColors(
+                                                            baseColor: Colors
+                                                                .grey[300],
+                                                            highlightColor:
+                                                                Colors
+                                                                    .grey[200],
+                                                            period: Duration(
+                                                                milliseconds:
+                                                                    1000),
+                                                            child: Container(
+                                                              width:
+                                                                  _screenWidth *
+                                                                      (20 /
+                                                                          100),
+                                                              height:
+                                                                  _screenWidth *
+                                                                      (15 /
+                                                                          100),
+                                                              decoration: BoxDecoration(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              10),
+                                                                  color: Colors
+                                                                      .white),
+                                                            ),
+                                                          ),
+                                                  );
+                                                }
+                                              },
+                                            );
+                                          },
+                                        )),
+                                  ),
+                                  Expanded(
+                                    child: Container(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            padding: EdgeInsets.only(left: 10),
+                                            child: Text(
+                                              widget.nameManufacture,
+                                              style: subtitle2.copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                  letterSpacing: 1.25,
+                                                  fontSize: ScreenUtil(
+                                                          allowFontScaling:
+                                                              false)
+                                                      .setSp(40)),
+                                            ),
+                                          ),
+                                          Container(
+                                            padding: EdgeInsets.only(left: 10),
+                                            child: Text(
+                                              widget.addressManufacture,
+                                              style: caption.copyWith(
+                                                  color: greyTextColor,
+                                                  fontSize: ScreenUtil(
+                                                          allowFontScaling:
+                                                              false)
+                                                      .setSp(35)),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )),
+                        )
+                      ],
+                    )),
+                Container(
+                    margin: EdgeInsets.only(top: SizeConfig.blockVertical * 2),
                     color: Colors.white,
                     width: MediaQuery.of(context).size.width,
                     child: Wrap(
@@ -228,42 +517,17 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
                                     alignment: Alignment.centerLeft,
                                     child: Text(
                                       "Info produk",
-                                      style: TextStyle(
-                                          fontFamily: 'poppins',
-                                          letterSpacing: 0.4,
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: subTitleLogin),
+                                      style: subtitle2.copyWith(
+                                          fontWeight: FontWeight.bold),
                                     )),
                                 Container(
                                   child: Row(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Container(
+                                      Flexible(
+                                          child: Container(
                                         margin: EdgeInsets.only(
-                                            top: SizeConfig.blockVertical * 2),
-                                        width: SizeConfig.blockHorizotal * 30,
-                                        child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
-                                            child: Image.network(
-                                              image_link + widget.image_url,
-                                              fit: BoxFit.cover,
-                                              height:
-                                                  SizeConfig.blockHorizotal *
-                                                      35,
-                                              errorBuilder:
-                                                  (BuildContext context,
-                                                      Object exception,
-                                                      StackTrace stackTrace) {
-                                                return Image.network(
-                                                    "https://via.placeholder.com/300");
-                                              },
-                                            )),
-                                      ),
-                                      Container(
-                                        margin: EdgeInsets.only(
-                                          left: SizeConfig.blockVertical * 3,
                                           top: SizeConfig.blockVertical * 2,
                                           right: SizeConfig.blockVertical * 2,
                                         ),
@@ -271,54 +535,15 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Text(
-                                              widget.name,
-                                              style: TextStyle(
-                                                  fontFamily: 'poppins',
-                                                  letterSpacing: 0.4,
-                                                  fontWeight: FontWeight.w700,
-                                                  fontSize: 18.0),
-                                            ),
-                                            RichText(
-                                                textAlign: TextAlign.left,
-                                                text: TextSpan(
-                                                    children: <TextSpan>[
-                                                      TextSpan(
-                                                        text: "Rp." +
-                                                            formatter.format(
-                                                                widget.price),
-                                                        style: TextStyle(
-                                                            color:
-                                                                purpleTextColor,
-                                                            fontFamily: 'lato',
-                                                            letterSpacing: 0.25,
-                                                            fontSize: 14.0),
-                                                      ),
-                                                      TextSpan(
-                                                        text: " / Kg",
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontFamily: 'lato',
-                                                            letterSpacing: 0.25,
-                                                            fontSize: 14.0),
-                                                      ),
-                                                    ])),
                                             Container(
-                                                margin: EdgeInsets.only(
-                                                    top: SizeConfig
-                                                            .blockVertical *
-                                                        4),
                                                 child: RichText(
                                                     textAlign: TextAlign.left,
                                                     text: TextSpan(children: <
                                                         TextSpan>[
                                                       TextSpan(
-                                                        text: "Stok : ",
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontFamily: 'lato',
-                                                            letterSpacing: 0.25,
-                                                            fontSize: 13.0),
+                                                        text:
+                                                            "Jumlah dalam kg : ",
+                                                        style: caption,
                                                       ),
                                                       TextSpan(
                                                         text:
@@ -351,11 +576,7 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
                                                         TextSpan>[
                                                       TextSpan(
                                                         text: "Ukuran : ",
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontFamily: 'lato',
-                                                            letterSpacing: 0.25,
-                                                            fontSize: 13.0),
+                                                        style: caption,
                                                       ),
                                                       TextSpan(
                                                         text:
@@ -380,11 +601,7 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
                                                         TextSpan>[
                                                       TextSpan(
                                                         text: "Jenis produk : ",
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontFamily: 'lato',
-                                                            letterSpacing: 0.25,
-                                                            fontSize: 13.0),
+                                                        style: caption,
                                                       ),
                                                       TextSpan(
                                                         text: "${widget.type}",
@@ -397,78 +614,87 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
                                                             fontSize: 13.0),
                                                       ),
                                                     ]))),
+                                            SizedBox(
+                                              height: 20,
+                                            )
                                           ],
                                         ),
-                                      )
+                                      ))
                                     ],
                                   ),
                                 ),
-                                Container(
-                                    margin: EdgeInsets.only(
-                                        top: SizeConfig.blockVertical * 4),
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      "Deskripsi produk",
-                                      style: TextStyle(
-                                          fontFamily: 'poppins',
-                                          letterSpacing: 0.4,
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: subTitleLogin),
-                                    )),
-                                Container(
-                                    margin: EdgeInsets.only(
-                                        top: SizeConfig.blockVertical * 2),
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      widget.desc,
-                                      style: TextStyle(
-                                          fontFamily: 'lato',
-                                          color: greyTextColor,
-                                          letterSpacing: 0.4,
-                                          fontSize: 15.0),
-                                    )),
-                                Container(
-                                  height: 45.0,
-                                  width: MediaQuery.of(context).size.width,
-                                  margin: EdgeInsets.only(
-                                      left: SizeConfig.blockVertical * 3,
-                                      right: SizeConfig.blockVertical * 3,
-                                      top: SizeConfig.blockVertical * 3),
-                                  child: CustomElevation(
-                                      height: 30.0,
-                                      child: RaisedButton(
-                                        highlightColor: colorPrimary,
-                                        //Replace with actual colors
-                                        color: colorPrimary,
-                                        onPressed: () => {
-                                          showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) =>
-                                                AlertMessage(context),
-                                          )
-                                        },
-                                        child: Text(
-                                          "Pakai Pakan ini",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w500,
-                                              fontFamily: 'poppins',
-                                              letterSpacing: 1.25,
-                                              fontSize: subTitleLogin),
-                                        ),
-                                        shape: new RoundedRectangleBorder(
-                                          borderRadius:
-                                              new BorderRadius.circular(30.0),
-                                        ),
-                                      )),
-                                ),
-                                SizedBox(
-                                  height: 20,
-                                )
                               ],
                             ))
                       ],
-                    ))
+                    )),
+                Container(
+                  color: Colors.white,
+                  margin: EdgeInsets.only(top: SizeConfig.blockVertical * 1),
+                  child: Column(
+                    children: [
+                      Container(
+                          margin: EdgeInsets.only(
+                              left: SizeConfig.blockVertical * 3,
+                              right: SizeConfig.blockVertical * 3,
+                              top: SizeConfig.blockVertical * 2),
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Deskripsi produk",
+                            style:
+                                subtitle2.copyWith(fontWeight: FontWeight.bold),
+                          )),
+                      Container(
+                          margin: EdgeInsets.only(
+                              left: SizeConfig.blockVertical * 3,
+                              right: SizeConfig.blockVertical * 3,
+                              top: SizeConfig.blockVertical * 2),
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            widget.desc,
+                            style: body2.copyWith(
+                                fontSize: ScreenUtil(allowFontScaling: false)
+                                    .setSp(45)),
+                          )),
+                      Container(
+                        height: 45.0,
+                        width: MediaQuery.of(context).size.width,
+                        margin: EdgeInsets.only(
+                            left: SizeConfig.blockVertical * 3,
+                            right: SizeConfig.blockVertical * 3,
+                            top: SizeConfig.blockVertical * 3),
+                        child: CustomElevation(
+                            height: 30.0,
+                            child: RaisedButton(
+                              highlightColor: colorPrimary,
+                              //Replace with actual colors
+                              color: colorPrimary,
+                              onPressed: () => {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      AlertMessage(context),
+                                )
+                              },
+                              child: Text(
+                                "Pakai Pakan ini",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                    fontFamily: 'poppins',
+                                    letterSpacing: 1.25,
+                                    fontSize: subTitleLogin),
+                              ),
+                              shape: new RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(30.0),
+                              ),
+                            )),
+                      ),
+                      SizedBox(
+                        height: 80,
+                      )
+                    ],
+                  ),
+                )
               ],
             )));
   }
@@ -486,7 +712,7 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                "apakah anda ingin melakukan pembayaran sekarang ?",
+                "apakah anda ingin melakukan pembayaran  ?",
                 style: TextStyle(
                     color: blackTextColor,
                     fontFamily: 'poppins',
@@ -499,8 +725,8 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
                 children: [
                   Container(
                       height: 35.0,
-                      margin: EdgeInsets.only(
-                          top: SizeConfig.blockVertical * 3),
+                      margin:
+                          EdgeInsets.only(top: SizeConfig.blockVertical * 3),
                       child: CustomElevation(
                           height: 35.0,
                           child: RaisedButton(
@@ -523,15 +749,14 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
                           ))),
                   Container(
                     height: 35.0,
-                    margin: EdgeInsets.only(
-                        top: SizeConfig.blockVertical * 3),
+                    margin: EdgeInsets.only(top: SizeConfig.blockVertical * 3),
                     child: CustomElevation(
                         height: 35.0,
                         child: RaisedButton(
                           highlightColor: colorPrimary,
                           //Replace with actual colors
                           color: redTextColor,
-                          onPressed: () => {_toggleButtonSave(2)},
+                          onPressed: () => {Navigator.pop(context, true)},
                           child: Text(
                             "Tidak",
                             style: TextStyle(
