@@ -10,7 +10,7 @@ class LoginBloc {
     Map<String, dynamic> responseJson = json.decode(val.body);
     if(val.statusCode == 200){
       await FlutterSession().set("token", responseJson['token']);
-      await FlutterSession().set("phoneNumber", _nohp);
+      await FlutterSession().set("phoneNumber", responseJson['phone_number']);
         status = true;
     }else {
         status = false;
@@ -24,7 +24,7 @@ class LoginBloc {
     var status;
     var val = await _repository.login_market(phoneNumber.toString());
     Map<String, dynamic> responseJson = json.decode(val.body);
-
+    print(val.body);
     if(val.statusCode == 200){;
       await FlutterSession().set("token_market", responseJson['token']);
 

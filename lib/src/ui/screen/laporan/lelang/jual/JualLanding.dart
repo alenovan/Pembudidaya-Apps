@@ -135,11 +135,12 @@ class _JualLandingViewState extends State<JualLanding> {
                               Navigator.push(
                                   context,
                                   PageTransition(
-                                      type: PageTransitionType.fade,
+                                      type: PageTransitionType
+                                          .fade,
                                       child: LaporanMain(
-                                        idKolam: widget.idKolam.toString(),
-                                        page: 1,
-                                        laporan_page: "jual",
+                                        page: 2,
+                                        laporan_page: "home",
+                                        idKolam: widget.idKolam,
                                       )))
                             },
                           ),
@@ -184,7 +185,7 @@ class _JualLandingViewState extends State<JualLanding> {
                                               left: ScreenUtil().setWidth(80),
                                               right: ScreenUtil().setWidth(80),
                                               bottom:
-                                                  ScreenUtil().setHeight(40)),
+                                                  ScreenUtil().setHeight(80)),
                                           child: Text(
                                             "ingin kamu jual kemana hasil panenmu ? Marketplace  Panen-panen atau Platform Bisnis Digital dari ADMA ?",
                                             style: caption.copyWith(
@@ -200,7 +201,7 @@ class _JualLandingViewState extends State<JualLanding> {
                                               left: ScreenUtil().setWidth(50),
                                               right: ScreenUtil().setWidth(50),
                                               bottom:
-                                                  ScreenUtil().setHeight(40)),
+                                                  ScreenUtil().setHeight(70)),
                                           child:GestureDetector(
                                             onTap: (){
                                               Navigator.push(
@@ -222,30 +223,13 @@ class _JualLandingViewState extends State<JualLanding> {
                                                 ScreenUtil().setHeight(250),
                                                 padding: EdgeInsets.all(
                                                     ScreenUtil().setHeight(50)),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                                  children: [
-                                                    Text(
-                                                      "MarketPlace",
-                                                      style: h3.copyWith(
-                                                          color: green,
-                                                          fontWeight:
-                                                          FontWeight.bold,
-                                                          fontSize: ScreenUtil(
-                                                              allowFontScaling:
-                                                              false)
-                                                              .setSp(60)),
-                                                      textAlign: TextAlign.start,
-                                                    ),
-                                                    Image.asset(
-                                                      "assets/png/panen_market.png",
-                                                      fit: BoxFit.cover,
-                                                      height: ScreenUtil()
-                                                          .setHeight(50),
-                                                    ),
-                                                  ],
+                                                child: Center(
+                                                  child: Image.asset(
+                                                    "assets/png/panen_market.png",
+                                                    fit: BoxFit.cover,
+                                                    height: ScreenUtil()
+                                                        .setHeight(80),
+                                                  ),
                                                 ),
                                               ),
                                             ),
@@ -278,78 +262,18 @@ class _JualLandingViewState extends State<JualLanding> {
                                                   ScreenUtil().setHeight(250),
                                               padding: EdgeInsets.all(
                                                   ScreenUtil().setHeight(50)),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text(
-                                                    "PBD ADMA",
-                                                    style: h3.copyWith(
-                                                        color: blue,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: ScreenUtil(
-                                                                allowFontScaling:
-                                                                    false)
-                                                            .setSp(60)),
-                                                    textAlign: TextAlign.start,
-                                                  ),
-                                                  Image.asset(
-                                                    "assets/png/adma.png",
-                                                    fit: BoxFit.cover,
-                                                    height: ScreenUtil()
-                                                        .setHeight(150),
-                                                  ),
-                                                ],
+                                              child: Center(
+                                                child: Image.asset(
+                                                  "assets/png/adma.png",
+                                                  fit: BoxFit.cover,
+                                                  height: ScreenUtil()
+                                                      .setHeight(250),
+                                                ),
                                               ),
                                             ),
                                           )),
 
                                         ),
-                                        Container(
-                                          padding: EdgeInsets.only(
-                                              left: ScreenUtil().setWidth(50),
-                                              right: ScreenUtil().setWidth(50),
-                                              bottom:
-                                                  ScreenUtil().setHeight(40)),
-                                          child: Card(
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(15.0),
-                                            ),
-                                            elevation: 14.0,
-                                            child: Container(
-                                              height:
-                                                  ScreenUtil().setHeight(250),
-                                              padding: EdgeInsets.all(
-                                                  ScreenUtil().setHeight(50)),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text(
-                                                    "Semuanya",
-                                                    style: h3.copyWith(
-                                                        color: colorPrimary,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: ScreenUtil(
-                                                                allowFontScaling:
-                                                                    false)
-                                                            .setSp(60)),
-                                                    textAlign: TextAlign.start,
-                                                  ),
-                                                  Image.asset(
-                                                    "assets/png/adma_panen.png",
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        )
                                       ],
                                     ),
                                   ),

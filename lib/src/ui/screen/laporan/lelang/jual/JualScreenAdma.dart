@@ -45,11 +45,11 @@ class _JualScreenAdmaState extends State<JualScreenAdma> {
   TextEditingController descProdukController = TextEditingController();
   TextEditingController stockProdukController = TextEditingController();
   TextEditingController feeProdukController = TextEditingController();
+  TextEditingController keteranganProdukController = TextEditingController();
 
 
   void _toggleButton() async {
     if (base64ImageProduk != null) {
-      LoadingDialog.show(context);
       var status = await lelang.bloc.addJualMarketAdma(
         namaProdukController.text.toString(),
         base64ImageProduk,
@@ -57,8 +57,9 @@ class _JualScreenAdmaState extends State<JualScreenAdma> {
         hargaProdukController.text.toString(),
         feeProdukController.text.toString(),
         beratProdukController.text.toString(),
+        stockProdukController.text.toString(),
+        keteranganProdukController.text.toString(),
       );
-      AppExt.popScreen(context);
       if (status) {
         BottomSheetFeedback.show_success(
             context, title: "Selamat", description: "Penjualan anda berhasil");
@@ -72,18 +73,18 @@ class _JualScreenAdmaState extends State<JualScreenAdma> {
                     idKolam: widget
                         .idKolam
                         .toString(),
-                    page: 1,
+                    page: 2,
                     laporan_page:
                     "jual",
                   )));
         });
       } else {
-        AppExt.popScreen(context);
+        // AppExt.popScreen(context);
         BottomSheetFeedback.show(context,
             title: "Mohon Maaf", description: "Pastikan data terisi semua");
       }
     } else {
-      AppExt.popScreen(context);
+      // AppExt.popScreen(context);
       BottomSheetFeedback.show(context,
           title: "Mohon Maaf", description: "Pastikan data terisi semua");
     }
@@ -205,7 +206,7 @@ class _JualScreenAdmaState extends State<JualScreenAdma> {
                                     child: TextFormField(
                                       controller: namaProdukController,
                                       decoration: EditTextDecorationText(
-                                          context, "Nama Produk", 20.0, 0, 0,
+                                          context, "", 20.0, 0, 0,
                                           0),
                                       keyboardType: TextInputType.text,
                                       style: TextStyle(
@@ -215,37 +216,41 @@ class _JualScreenAdmaState extends State<JualScreenAdma> {
                                           fontSize: subTitleLogin),
                                     ),
                                   ),
-                                  // Container(
-                                  //   margin: EdgeInsets.only(
-                                  //       left: ScreenUtil().setWidth(100),
-                                  //       top: SizeConfig.blockVertical * 2,
-                                  //       right: ScreenUtil().setWidth(100)),
-                                  //   child: Text(
-                                  //     "Kategori",
-                                  //     style: TextStyle(
-                                  //         color: appBarTextColor,
-                                  //         fontFamily: 'lato',
-                                  //         letterSpacing: 0.4,
-                                  //         fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
-                                  //   ),
-                                  // ),
-                                  // Container(
-                                  //   margin: EdgeInsets.only(
-                                  //       left: ScreenUtil().setWidth(100),
-                                  //       top: SizeConfig.blockVertical * 1,
-                                  //       right: ScreenUtil().setWidth(100)),
-                                  //   child: TextFormField(
-                                  //     controller: feedConvController,
-                                  //     decoration: EditTextDecorationText(
-                                  //         context, "1", 20.0, 0, 0, 0),
-                                  //     keyboardType: TextInputType.number,
-                                  //     style: TextStyle(
-                                  //         color: blackTextColor,
-                                  //         fontFamily: 'lato',
-                                  //         letterSpacing: 0.4,
-                                  //         fontSize: subTitleLogin),
-                                  //   ),
-                                  // ),
+
+                                  Container(
+                                    margin: EdgeInsets.only(
+                                        left: ScreenUtil().setWidth(100),
+                                        top: SizeConfig.blockVertical * 2,
+                                        right: ScreenUtil().setWidth(100)),
+                                    child: Text(
+                                      "Stock",
+                                      style: TextStyle(
+                                          color: appBarTextColor,
+                                          fontFamily: 'lato',
+                                          letterSpacing: 0.4,
+                                          fontSize: ScreenUtil(
+                                              allowFontScaling: false).setSp(
+                                              40)),
+                                    ),
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.only(
+                                        left: ScreenUtil().setWidth(100),
+                                        top: SizeConfig.blockVertical * 1,
+                                        right: ScreenUtil().setWidth(100)),
+                                    child: TextFormField(
+                                      controller:stockProdukController,
+                                      decoration: EditTextDecorationText(
+                                          context, "", 20.0, 0, 0, 0),
+                                      keyboardType: TextInputType.number,
+                                      style: TextStyle(
+                                          color: blackTextColor,
+                                          fontFamily: 'lato',
+                                          letterSpacing: 0.4,
+                                          fontSize: subTitleLogin),
+                                    ),
+                                  ),
+
                                   Container(
                                     margin: EdgeInsets.only(
                                         left: ScreenUtil().setWidth(100),
@@ -279,13 +284,14 @@ class _JualScreenAdmaState extends State<JualScreenAdma> {
                                           fontSize: subTitleLogin),
                                     ),
                                   ),
+
                                   // Container(
                                   //   margin: EdgeInsets.only(
                                   //       left: ScreenUtil().setWidth(100),
                                   //       top: SizeConfig.blockVertical * 2,
                                   //       right: ScreenUtil().setWidth(100)),
                                   //   child: Text(
-                                  //     "Stock",
+                                  //     "Keterangan",
                                   //     style: TextStyle(
                                   //         color: appBarTextColor,
                                   //         fontFamily: 'lato',
@@ -301,10 +307,10 @@ class _JualScreenAdmaState extends State<JualScreenAdma> {
                                   //       top: SizeConfig.blockVertical * 1,
                                   //       right: ScreenUtil().setWidth(100)),
                                   //   child: TextFormField(
-                                  //     controller:stockProdukController,
+                                  //     controller: keteranganProdukController,
                                   //     decoration: EditTextDecorationText(
                                   //         context, "", 20.0, 0, 0, 0),
-                                  //     keyboardType: TextInputType.number,
+                                  //     keyboardType: TextInputType.text,
                                   //     style: TextStyle(
                                   //         color: blackTextColor,
                                   //         fontFamily: 'lato',
@@ -312,6 +318,39 @@ class _JualScreenAdmaState extends State<JualScreenAdma> {
                                   //         fontSize: subTitleLogin),
                                   //   ),
                                   // ),
+
+                                  Container(
+                                    margin: EdgeInsets.only(
+                                        left: ScreenUtil().setWidth(100),
+                                        top: SizeConfig.blockVertical * 2,
+                                        right: ScreenUtil().setWidth(100)),
+                                    child: Text(
+                                      "Detail produk (contoh : 1 kg isi 8 ekor )",
+                                      style: TextStyle(
+                                          color: appBarTextColor,
+                                          fontFamily: 'lato',
+                                          letterSpacing: 0.4,
+                                          fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
+                                    ),
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.only(
+                                        left: ScreenUtil().setWidth(100),
+                                        top: SizeConfig.blockVertical * 1,
+                                        right: ScreenUtil().setWidth(100)),
+                                    child: TextFormField(
+                                      controller: keteranganProdukController,
+                                      decoration: EditTextDecorationText(
+                                          context, "", 20.0, 0, 0, 0),
+                                      keyboardType: TextInputType.text,
+                                      style: TextStyle(
+                                          color: blackTextColor,
+                                          fontFamily: 'lato',
+                                          letterSpacing: 0.4,
+                                          fontSize: subTitleLogin),
+                                    ),
+                                  ),
+
                                   Container(
                                     margin: EdgeInsets.only(
                                         left: ScreenUtil().setWidth(100),
@@ -435,45 +474,45 @@ class _JualScreenAdmaState extends State<JualScreenAdma> {
                                       ],
                                     ),
                                   ),
+                                  // Container(
+                                  //   margin: EdgeInsets.only(
+                                  //       left: ScreenUtil().setWidth(100),
+                                  //       top: ScreenUtil().setHeight(10),
+                                  //       right: ScreenUtil().setWidth(100)),
+                                  //   child: Row(
+                                  //     children: [
+                                  //       Transform.scale( scale: 1.5,
+                                  //         child: Switch(
+                                  //           value: isSwitched,
+                                  //           onChanged: (value) {
+                                  //             setState(() {
+                                  //               isSwitched = value;
+                                  //               print(isSwitched);
+                                  //             });
+                                  //           },
+                                  //           activeTrackColor: colorPrimary,
+                                  //           activeColor: Colors.white,
+                                  //         ),
+                                  //       ),
+                                  //       Container(
+                                  //         margin: EdgeInsets.only(
+                                  //             left: ScreenUtil().setWidth(30),),
+                                  //         child: Text(
+                                  //           "Channel distribusi",
+                                  //           style: caption.copyWith(
+                                  //               color: Colors.grey,
+                                  //               fontWeight: FontWeight.w700),
+                                  //           textAlign: TextAlign.start,
+                                  //         ),
+                                  //       ),
+                                  //
+                                  //     ],
+                                  //   ),
+                                  // ),
                                   Container(
                                     margin: EdgeInsets.only(
                                         left: ScreenUtil().setWidth(100),
-                                        top: ScreenUtil().setHeight(10),
-                                        right: ScreenUtil().setWidth(100)),
-                                    child: Row(
-                                      children: [
-                                        Transform.scale( scale: 1.5,
-                                          child: Switch(
-                                            value: isSwitched,
-                                            onChanged: (value) {
-                                              setState(() {
-                                                isSwitched = value;
-                                                print(isSwitched);
-                                              });
-                                            },
-                                            activeTrackColor: colorPrimary,
-                                            activeColor: Colors.white,
-                                          ),
-                                        ),
-                                        Container(
-                                          margin: EdgeInsets.only(
-                                              left: ScreenUtil().setWidth(30),),
-                                          child: Text(
-                                            "Channel distribusi",
-                                            style: caption.copyWith(
-                                                color: Colors.grey,
-                                                fontWeight: FontWeight.w700),
-                                            textAlign: TextAlign.start,
-                                          ),
-                                        ),
-
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(
-                                        left: ScreenUtil().setWidth(100),
-                                        top: ScreenUtil().setHeight(20),
+                                        top: ScreenUtil().setHeight(30),
                                         right: ScreenUtil().setWidth(100)),
                                     child: Text(
                                       "Fee / Kg",
@@ -490,10 +529,9 @@ class _JualScreenAdmaState extends State<JualScreenAdma> {
                                         top: SizeConfig.blockVertical * 1,
                                         right: ScreenUtil().setWidth(100)),
                                     child: TextFormField(
-                                      enabled: isSwitched,
                                       controller: feeProdukController,
                                       decoration: EditTextDecorationText(
-                                          context, "Fee Produk", 20.0, 0, 0, 0),
+                                          context, "", 20.0, 0, 0, 0),
                                       keyboardType: TextInputType.number,
                                       style: TextStyle(
                                           color: blackTextColor,

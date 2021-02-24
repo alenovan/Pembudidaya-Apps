@@ -36,11 +36,11 @@ class _DetailKolamViewState extends State<DetailKolam> {
   var ikanName = "";
   var ikanAssets = "";
   double ikanTop = 0.0;
+  double ikanLeft = 0.0;
   @override
   void initState() {
-    setData();
     super.initState();
-
+    setData();
   }
 
   dispose() {
@@ -71,7 +71,23 @@ class _DetailKolamViewState extends State<DetailKolam> {
       var outputFormats = DateFormat('d MMMM yyyy');
       var outputDates = outputFormats.format(inputDates);
       sow_date = outputDates;
+      var fish_type = data['harvest']['fish_type_id'].toString();
+      if(fish_type == "1"){
+        ikanName = "Ikan Lele";
+        ikanAssets = "assets/png/ikan_lele.png";
+        ikanLeft = ScreenUtil().setWidth(100);
+      }else if(fish_type == "2"){
+        ikanName = "Ikan Nila";
+        ikanAssets = "assets/png/ikan_nila.png";
+        ikanTop = ScreenUtil().setHeight(200);
+        ikanLeft = ScreenUtil().setWidth(20);
+      }else{
+        ikanName = "Ikan Mas";
+        ikanAssets = "assets/png/ikan_mas.png";
+        ikanLeft = ScreenUtil().setWidth(100);
+        ikanTop = ScreenUtil().setHeight(200);
 
+      }
       var dateSelected = DateTime.parse(outputDate);
       var date2 = DateTime.now();
       var difference = date2.difference(dateSelected).inDays;
@@ -80,20 +96,7 @@ class _DetailKolamViewState extends State<DetailKolam> {
       });
     });
 
-    setState(() {
-      if(widget.idIkan == "1"){
-        ikanName = "Ikan Lele";
-        ikanAssets = "assets/png/ikan_lele.png";
-      }else if(widget.idIkan == "2"){
-        ikanName = "Ikan Nila";
-        ikanAssets = "assets/png/ikan_mas.png";
-        ikanTop = ScreenUtil().setHeight(100);
-      }else{
-        ikanName = "Ikan Emas";
-        ikanTop = ScreenUtil().setHeight(100);
-        ikanAssets = "assets/png/ikan_mas.png";
-      }
-    });
+
   }
 
   void setReset() async{
@@ -233,7 +236,7 @@ class _DetailKolamViewState extends State<DetailKolam> {
                                       child: Container(
                                     padding: EdgeInsets.only(
                                       top: ikanTop,
-                                        left: ScreenUtil().setWidth(100)),
+                                        left: ikanLeft),
                                     height: ScreenUtil().setHeight(850),
                                     child: Image.asset(
                                       ikanAssets,

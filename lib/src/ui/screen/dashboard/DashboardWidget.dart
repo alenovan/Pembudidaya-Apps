@@ -26,7 +26,7 @@ class DashboardWidget extends StatelessWidget {
 }
 
 Widget CardKolam(BuildContext context, String title, String sub, String status,
-    int sr, int fcr, int current_amount) {
+    String sr, int fcr, int current_amount) {
   ScreenUtil.instance = ScreenUtil()
     ..init(context);
   var text;
@@ -101,7 +101,7 @@ Widget CardKolam(BuildContext context, String title, String sub, String status,
                         )),
                   ],
                 ),
-                sr != 0 ? Container(
+                sr != "0" ? Container(
                     alignment: Alignment.centerRight,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,

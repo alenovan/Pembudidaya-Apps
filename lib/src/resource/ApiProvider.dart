@@ -15,7 +15,7 @@ import 'package:lelenesia_pembudidaya/src/ui/tools/ApiException.dart';
 class ApiProvider {
   Client client = Client();
   final String _url = "https://pembudidaya.lelenesia.panen-panen.com/v0";
-  final String _url_pabrik = "http://marketplace.lelenesia.panen-panen.com/api";
+  final String _url_market = "http://marketplace.lelenesia.panen-panen.com/api";
 
   Future login(String nohp) async {
     var response;
@@ -33,7 +33,7 @@ class ApiProvider {
     var response;
     try {
       await Future<void>.delayed(Duration(seconds: 1));
-      response = await client.post("$_url_pabrik/login", body: {'phonenumber': nohp});
+      response = await client.post("$_url_market/login", body: {'phonenumber': nohp});
     } on SocketException {
       throw NetworkException('Tidak ada koneksi internet');
     }
@@ -276,6 +276,23 @@ class ApiProvider {
     return response;
   }
 
+
+  Future insertReOrder(
+      String pond_id,
+      String feed_id,
+      String amount) async {
+    dynamic token = await FlutterSession().get("token");
+    final response = await client.post("$_url/orders/new", headers: {
+      'Authorization': 'Bearer $token'
+    }, body: {
+      'pond_id': pond_id.toString(),
+      'feed_id': feed_id,
+      'amount': amount
+    });
+
+    return response;
+  }
+
   Future setResetKolam(
       String pond_id,) async {
     dynamic token = await FlutterSession().get("token");
@@ -498,6 +515,18 @@ class ApiProvider {
     }
   }
 
+  Future fetchByIdJual() async {
+    dynamic token = await FlutterSession().get("token_market");
+    await Future<void>.delayed(Duration(seconds: 1));
+    final response = await client
+        .get("$_url_market/pembudidaya/seller/product", headers: {'Authorization': 'Bearer $token'});
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception('Failed to Load');
+    }
+  }
+
   Future bidderWinner(String bidder_id, String auction_id) async {
     dynamic token = await FlutterSession().get("token");
     final response = await client.post("$_url/bid/lock", headers: {
@@ -579,7 +608,7 @@ class ApiProvider {
       "product_photo": await MultipartFile.fromFile(product_photo, filename: "product_photo"),
     });
     response = await dio.post(
-      "$_url_pabrik/pembudidaya/addProduct",
+      "$_url_market/pembudidaya/addProduct",
       data: formData,
       options: Options(
         headers: {'Authorization': 'Bearer $token'},
@@ -590,30 +619,34 @@ class ApiProvider {
   }
 
   Future addJualMarketAdma(
-      String name, String image, String deskripsi, String harga, String cashback_reseller, String berat) async {
-    dynamic token = await FlutterSession().get("token_market");
+      String name, String image, String deskripsi, String harga, String cashback_reseller, String berat, String stock, String keterangan) async {
+    try {
     var response;
-    Dio dio = new Dio();
-    FormData formData = new FormData.fromMap({
-      "name": name,
-      "image": await MultipartFile.fromFile(image, filename: "image"),
-      "deskripsi": deskripsi,
-      "harga": harga,
-      "cashback_reseller": cashback_reseller,
-      "berat": berat,
-      "keterangan": "test",
+      Dio dio = new Dio();
+      FormData formData = new FormData.fromMap({
+        "nama": name,
+        "image": await MultipartFile.fromFile(image, filename: "image"),
+        "deskripsi": deskripsi,
+        "harga": harga,
+        "cashback_reseller": cashback_reseller,
+        "berat": berat,
+        "keterangan": keterangan,
+        "stok":stock
 
-    });
-    response = await dio.post(
-      "http://pbd.bakti.baktiadma.com/api/product/add",
-      data: formData,
-      options: Options(
+      });
+      response = await dio.post(
+        "http://pbd.bakti.baktiadma.com/api/product/add",
+        data: formData,
+        options: Options(
           contentType: 'multipart/form-data',
-        headers: {'Authorization': 'Bearer 68|vz1hxc6dX9HkQ1ERkJETbwyFft4K5LaZGiIYTPDr'},
-      ),
-    );
-    print(response);
+          headers: {'Authorization': 'Bearer 68|vz1hxc6dX9HkQ1ERkJETbwyFft4K5LaZGiIYTPDr'},
+        ),
+      );
     return response;
+    } catch (e) {
+      print(e);
+      return null;
+    }
   }
 //end jual market
 }

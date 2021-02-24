@@ -5,10 +5,12 @@ import 'package:lelenesia_pembudidaya/src/Models/ListPakanModels.dart';
 import 'package:lelenesia_pembudidaya/src/bloc/PakanBloc.dart';
 import 'package:lelenesia_pembudidaya/src/typography.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/checkout/CheckoutView.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/checkout/ChekoutReorder.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/forgot/ForgotWidget.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/kolam/KolamWidget.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/kolam/PenentuanPanenView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/kolam/pakan/DetailPenentuanPakan.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanMain.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/ScreenUtil.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
@@ -19,8 +21,8 @@ import 'package:shimmer/shimmer.dart';
 class PenentuanPakanView extends StatefulWidget {
   final String idKolam;
   final String idIkan;
-
-  const PenentuanPakanView({Key key, this.idKolam, this.idIkan}) : super(key: key);
+  final String from;
+  const PenentuanPakanView({Key key, this.idKolam, this.idIkan, this.from}) : super(key: key);
 
   @override
   _PenentuanPakanViewState createState() => _PenentuanPakanViewState();
@@ -160,7 +162,11 @@ class _PenentuanPakanViewState extends State<PenentuanPakanView> {
                         AppBarContainer(
                             context,
                             "",
-                            PenentuanPanenView(idKolam: widget.idKolam),
+                            widget.from == "laporan"?LaporanMain(
+                              page: 0,
+                              laporan_page: "home",
+                              idKolam: widget.idKolam,
+                            ):PenentuanPanenView(idKolam: widget.idKolam),
                             Colors.transparent),
                         Container(
                           margin: EdgeInsets.only(
@@ -359,25 +365,38 @@ class _PenentuanPakanViewState extends State<PenentuanPakanView> {
         print(items);
         return GestureDetector(
             onTap: () {
-              Navigator.push(
-                  context,
-                  PageTransition(
-                      type: PageTransitionType.fade,
-                      child: DetailPenentuanPakan(
-                        idKolam: widget.idKolam,
-                        id_pakan: items[index].id,
-                        name: items[index].name,
-                        stok: items[index].stock.toDouble(),
-                        size: items[index].size,
-                        type: items[index].type,
-                        price: items[index].price,
-                        nameManufacture: items[index].manufacturer.name,
-                        photoManufacture: items[index].manufacturer.photo,
-                        addressManufacture: items[index].manufacturer.address,
-                        pabrikManufacture: "",
-                        desc: items[index].description,
-                        image_url: items[index].photo,
-                      )));
+              if(widget.from == "laporan"){
+                Navigator.push(
+                    context,
+                    PageTransition(
+                        type: PageTransitionType.fade,
+                        child: CheckoutReorder(
+                          idKolam: widget.idKolam,
+                          idIkan: widget.idIkan,
+                          feedId: items[index].id.toString(),
+                        )));
+              }else{
+                Navigator.push(
+                    context,
+                    PageTransition(
+                        type: PageTransitionType.fade,
+                        child: DetailPenentuanPakan(
+                          idKolam: widget.idKolam,
+                          id_pakan: items[index].id,
+                          name: items[index].name,
+                          stok: items[index].stock.toDouble(),
+                          size: items[index].size,
+                          type: items[index].type,
+                          price: items[index].price,
+                          nameManufacture: items[index].manufacturer.name,
+                          photoManufacture: items[index].manufacturer.photo,
+                          addressManufacture: items[index].manufacturer.address,
+                          pabrikManufacture: "",
+                          desc: items[index].description,
+                          image_url: items[index].photo,
+                        )));
+              }
+
             },
             child: Container(
               child: CardPenentuanPakan(context, items[index].name, "5.0",

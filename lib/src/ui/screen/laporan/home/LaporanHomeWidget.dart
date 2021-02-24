@@ -4,15 +4,24 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
 import 'package:lelenesia_pembudidaya/src/typography.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/checkout/CheckoutFix.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/checkout/ChekoutReorder.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/kolam/PenentuanPakanView.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/kolam/PenentuanPanenView.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanMain.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/LocalizedTimeFactory.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/ScreenUtil.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
+import 'package:lelenesia_pembudidaya/src/ui/widget/AcceptanceDialog.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/AreaAndLineChart.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/CustomElevation.dart';
+import 'package:lelenesia_pembudidaya/src/ui/widget/LoadingDialog.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:shimmer/shimmer.dart';
-
+import 'package:lelenesia_pembudidaya/src/bloc/KolamBloc.dart' as kolam;
 class LaporanHomeWidget extends StatelessWidget {
   const LaporanHomeWidget({Key key}) : super(key: key);
 
@@ -21,6 +30,8 @@ class LaporanHomeWidget extends StatelessWidget {
     return null;
   }
 }
+
+
 
 Widget CardColumn(BuildContext context, String title, String sub,
     Alignment align, double left) {
@@ -314,7 +325,7 @@ Widget buildCardChartGram(
 }
 
 Widget CardKolamDetail(BuildContext context, String title, String sub,
-    String status, String stock, String checkout) {
+    String status, String stock, String checkout,String idKolam,String idJenis,String feedId) {
   var text;
   var color;
   ScreenUtil.instance = ScreenUtil()..init(context);
@@ -468,7 +479,35 @@ Widget CardKolamDetail(BuildContext context, String title, String sub,
                                       highlightColor: colorPrimary,
                                       //Replace with actual colors
                                       color: colorPrimary,
-                                      onPressed: () => {},
+                                      onPressed: () => {
+
+                                        if(checkout == "Checkout"){
+                                          Navigator.push(
+                                              context,
+                                              PageTransition(
+                                                  type: PageTransitionType.fade,
+                                                  // duration: Duration(microseconds: 1000),
+                                                  child:CheckoutFix(
+                                                    idKolam: idKolam,
+                                                    idIkan:idJenis,
+                                                    feedId: feedId,)))
+                                        }else{
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) =>
+                                                  AlertStok(context, CheckoutReorder(
+                                                    idKolam: idKolam,
+                                                    idIkan:idJenis,
+                                                    feedId: feedId,
+                                                  ),PenentuanPakanView(
+                                                      idKolam: idKolam,idIkan:idJenis,from:"laporan"),
+                                                  ))
+
+                                        }
+
+
+
+                                    },
                                       child: Text(
                                         checkout == "null"?"....":checkout,
                                         style: overline.copyWith(

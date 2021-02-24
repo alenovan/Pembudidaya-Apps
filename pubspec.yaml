@@ -57,10 +57,17 @@ dependencies:
   geolocation: ^1.1.2
   geocoder: ^0.2.1
   flutter_countdown_timer: ^3.0.0
+  flutter_launcher_icons: ^0.7.0
+  flutter_plugin_android_lifecycle: ^1.0.3
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
+flutter_icons:
+    ios: true
+    android: true
+    image_path_ios: "assets/logo/logo.png"
+    image_path_android: "assets/logo/logo.png"
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -88,6 +95,7 @@ flutter:
     - assets/menu/nila.png
     - assets/menu/patin.png
     - assets/png/ikan_mas.png
+    - assets/png/ikan_nila.png
   # To add assetss to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

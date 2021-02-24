@@ -31,7 +31,7 @@ class CheckoutBloc {
     try {
       var todo = await _repository.getOrderId(id_order);
       var statusx = json.decode(todo.body)['data']["status"];
-      if (statusx == 0) {
+      if (statusx == 0 || statusx == 1) {
         status = true;
       } else {
         status = false;

@@ -33,6 +33,20 @@ class KolamBloc {
     return hasil;
   }
 
+  Future funReOrderFeed(
+      String pond_id,
+      String feed_id,
+      String amount,) async {
+    var status;
+    var val = await _repository.insertReOrder(pond_id,feed_id,amount);
+    if(val.statusCode == 200){
+      status = true;
+    }else {
+      status = false;
+    }
+    return status;
+  }
+
   Future<List<ListPakanModels>> fetchAllPakan() async {
     var pakan = await _repository.fetchAllPakan();
     var enc = json.encode(json.decode(pakan)['data']);

@@ -48,39 +48,27 @@ class _MyBottomSheetState extends State<BottomSheetLaporan> {
         var statusSr = await monitor.bloc
             .feedSR(widget.idKolam, srController.text.toString(), dateSelected);
         if (statusSr) {
-          Timer(Duration(seconds: 2), () {
-            Navigator.push(
-                context,
-                PageTransition(
-                    type: PageTransitionType
-                        .fade,
-                    child: LaporanMain(
-                      page: 2,
-                      laporan_page: "home",
-                      idKolam: widget.idKolam,
-                    )));
-          });
-          // var statusWeight = await monitor.bloc.weightMonitor(
-          //     widget.idKolam, weightController.text.toString(), dateSelected);
-          // if (statusWeight) {
-          //   AppExt.popScreen(context);
-          //   BottomSheetFeedback.show_success(context, title: "Selamat", description: "Monitoring Tanggal ${date.day} Berhasil");
-          //   Timer(Duration(seconds: 2), () {
-          //     Navigator.push(
-          //         context,
-          //         PageTransition(
-          //             type: PageTransitionType
-          //                 .fade,
-          //             child: LaporanMain(
-          //               page: 2,
-          //               laporan_page: "home",
-          //               idKolam: widget.idKolam,
-          //             )));
-          //   });
-          // } else {
-          //   AppExt.popScreen(context);
-          //   BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Silahkan ulangi kembali di pada jumlah berat ikan");
-          // }
+          var statusWeight = await monitor.bloc.weightMonitor(
+              widget.idKolam, weightController.text.toString(), dateSelected);
+          if (statusWeight) {
+            AppExt.popScreen(context);
+            BottomSheetFeedback.show_success(context, title: "Selamat", description: "Monitoring Tanggal ${date.day} Berhasil");
+            Timer(Duration(seconds: 2), () {
+              Navigator.push(
+                  context,
+                  PageTransition(
+                      type: PageTransitionType
+                          .fade,
+                      child: LaporanMain(
+                        page: 1,
+                        laporan_page: "home",
+                        idKolam: widget.idKolam,
+                      )));
+            });
+          } else {
+            AppExt.popScreen(context);
+            BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Silahkan ulangi kembali di pada jumlah berat ikan");
+          }
         } else {
           AppExt.popScreen(context);
           BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Silahkan ulangi kembali di pada jumlah kematian ikan");
@@ -105,7 +93,7 @@ class _MyBottomSheetState extends State<BottomSheetLaporan> {
                     type: PageTransitionType
                         .fade,
                     child: LaporanMain(
-                      page: 2,
+                      page: 1,
                       laporan_page: "home",
                       idKolam: widget.idKolam,
                     )));

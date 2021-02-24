@@ -3,7 +3,9 @@ import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
+import 'package:lelenesia_pembudidaya/src/models/ListSellModels.dart';
 import 'package:lelenesia_pembudidaya/src/typography.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/forgot/ForgotWidget.dart';
@@ -18,7 +20,8 @@ import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/CustomElevation.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanWidget.dart';
 import 'package:page_transition/page_transition.dart';
-
+import 'package:lelenesia_pembudidaya/src/bloc/LelangBloc.dart' as lelang;
+import 'package:shimmer/shimmer.dart';
 class LelangView extends StatefulWidget {
   final String idKolam;
   final String halaman;
@@ -36,15 +39,36 @@ class _LelangViewState extends State<LelangView> {
   String myTitle = "";
   Color silverColor = Colors.transparent;
   Color tmblColor = Colors.black;
-  void _toggleDetail() {
+  List<ListSellModels> dataJual = new List();
+  var items = List<ListSellModels>();
+  var refreshKey = GlobalKey<RefreshIndicatorState>();
+  final formatter = new NumberFormat('#,##0', 'ID');
+
+
+  Future<Null> refreshList() async {
+    refreshKey.currentState?.show(atTop: false);
+    await Future.delayed(Duration(seconds: 1));
     setState(() {
-      _showDetail = !_showDetail;
+      items.clear();
+    });
+    fetchData();
+
+    return null;
+  }
+
+  void fetchData() {
+    lelang.bloc.getJualMarket().then((value) {
+      setState(() {
+        dataJual = value;
+        items.addAll(dataJual);
+      });
     });
   }
 
   @override
   void initState() {
     // TODO: implement initState
+    fetchData();
     super.initState();
     initializeDateFormatting(); //very important
     _controller_scroll = ScrollController();
@@ -252,60 +276,83 @@ class _LelangViewState extends State<LelangView> {
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.only(
-                            top: ScreenUtil().setHeight(20),
-                            left: ScreenUtil().setWidth(60),
-                            right: ScreenUtil().setWidth(60)),
-                        child:  LelangLeftRight(context, "Lele catfish blackie ",
-                            "180.000", "09 Juni 2019"),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(
-                            top: ScreenUtil().setHeight(20),
-                            left: ScreenUtil().setWidth(60),
-                            right: ScreenUtil().setWidth(60)),
-                        child:  LelangLeftRight(context, "Lele catfish blackie ",
-                            "180.000", "09 Juni 2019"),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(
-                            top: ScreenUtil().setHeight(20),
-                            left: ScreenUtil().setWidth(60),
-                            right: ScreenUtil().setWidth(60)),
-                        child:  LelangLeftRight(context, "Lele catfish blackie ",
-                            "180.000", "09 Juni 2019"),
-                      ), Container(
-                        margin: EdgeInsets.only(
-                            top: ScreenUtil().setHeight(20),
-                            left: ScreenUtil().setWidth(60),
-                            right: ScreenUtil().setWidth(60)),
-                        child:  LelangLeftRight(context, "Lele catfish blackie ",
-                            "180.000", "09 Juni 2019"),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(
-                            top: ScreenUtil().setHeight(20),
-                            left: ScreenUtil().setWidth(60),
-                            right: ScreenUtil().setWidth(60)),
-                        child:  LelangLeftRight(context, "Lele catfish blackie ",
-                            "180.000", "09 Juni 2019"),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(
-                            top: ScreenUtil().setHeight(20),
-                            left: ScreenUtil().setWidth(60),
-                            right: ScreenUtil().setWidth(60)),
-                        child:  LelangLeftRight(context, "Lele catfish blackie ",
-                            "180.000", "09 Juni 2019"),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(
-                            top: ScreenUtil().setHeight(20),
-                            left: ScreenUtil().setWidth(60),
-                            right: ScreenUtil().setWidth(60)),
-                        child:  LelangLeftRight(context, "Lele catfish blackie ",
-                            "180.000", "09 Juni 2019"),
-                      ),
+                          transform: Matrix4.translationValues(0.0, -ScreenUtil().setHeight(60), 0.0),
+                          margin: EdgeInsets.only(
+                              left: ScreenUtil().setWidth(60),
+                              right: ScreenUtil().setWidth(60)),
+                          child: FutureBuilder(
+                            future: lelang.bloc.getJualMarket(),
+                            builder:
+                                (context, AsyncSnapshot<dynamic> snapshot) {
+                              if (snapshot.hasData) {
+                                return RefreshIndicator(
+                                  key: refreshKey,
+                                  child: buildList(snapshot),
+                                  onRefresh: refreshList,
+                                );
+                              } else if (snapshot.hasError) {
+                                return Text(snapshot.error.toString());
+                              }
+                              return ListView.builder(
+                                  itemCount: 5,
+                                  shrinkWrap: true,
+                                  // Important code
+                                  itemBuilder: (context, index) =>
+                                      Container(
+                                          height:
+                                          ScreenUtil().setHeight(320),
+                                          child: Card(
+                                            elevation: 4,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                              BorderRadius.circular(
+                                                  15.0),
+                                            ),
+                                            child: Row(
+                                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                                              children: [
+                                                Expanded(
+                                                  child: Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    children: [
+                                                      Shimmer.fromColors(
+                                                        period: Duration(milliseconds: 1000),
+                                                        baseColor: Colors.grey[300],
+                                                        highlightColor: Colors.white,
+                                                        child:  Container(
+                                                          margin: EdgeInsets.only(left: 10.0,right: 10.0),
+                                                          width: ScreenUtil().setWidth(200),
+                                                          decoration: BoxDecoration(
+                                                              color: Colors.white,
+                                                              borderRadius: BorderRadius.all(Radius.circular(16.0))
+                                                          ),
+                                                          child: SizedBox(height: ScreenUtil().setHeight(80),),
+                                                        ),),
+                                                      Shimmer.fromColors(
+                                                        period: Duration(milliseconds: 1000),
+                                                        baseColor: Colors.grey[300],
+                                                        highlightColor: Colors.white,
+                                                        child:  Container(
+                                                          margin: EdgeInsets.only(left: 10.0,right: 10.0,top: 2.0),
+                                                          width: double.infinity,
+                                                          decoration: BoxDecoration(
+                                                              color: Colors.white,
+                                                              borderRadius: BorderRadius.all(Radius.circular(16.0))
+                                                          ),
+                                                          child: SizedBox(height: ScreenUtil().setHeight(80),),
+                                                        ),),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          )
+                                      ));
+                            },
+                          )),
+
                       SizedBox(
                         height: 20,
                       ),
@@ -317,6 +364,26 @@ class _LelangViewState extends State<LelangView> {
               )
             ],
           )),
+    );
+  }
+
+
+  Widget buildList(AsyncSnapshot<dynamic> snapshot) {
+    return ListView.builder(
+      primary: false,
+      shrinkWrap: true,
+      itemCount: items.length,
+      itemBuilder: (BuildContext context, int index) {
+        return InkWell(
+          onTap: (){
+
+          },
+          child: Container(
+            child: LelangLeftRight(context, items[index].name,
+                "Rp.${formatter.format(items[index].price)}", DateFormat("dd MMMM yyyy ").format(items[index].createdAt)),
+          ),
+        );
+      },
     );
   }
 }

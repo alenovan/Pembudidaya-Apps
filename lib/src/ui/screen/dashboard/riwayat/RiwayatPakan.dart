@@ -55,7 +55,7 @@ class _RiwayatPakanState extends State<RiwayatPakan> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 5,
+      length: 4,
       child: Scaffold(
         backgroundColor: backgroundGreyColor,
           appBar: AppBar(
@@ -85,13 +85,13 @@ class _RiwayatPakanState extends State<RiwayatPakan> {
                           ),
                         ),
                       ),
-                      Tab(
-                        child: Text(
-                          'Sudah Checkout',
-                          style: caption.copyWith(fontSize: ScreenUtil(allowFontScaling: false)
-                              .setSp(35)),
-                        ),
-                      ),
+                      // Tab(
+                      //   child: Text(
+                      //     'Sudah Checkout',
+                      //     style: caption.copyWith(fontSize: ScreenUtil(allowFontScaling: false)
+                      //         .setSp(35)),
+                      //   ),
+                      // ),
                       Tab(
                         child: Text(
                           'Proses',
@@ -135,7 +135,7 @@ class _RiwayatPakanState extends State<RiwayatPakan> {
                 scrollDirection: Axis.vertical,
                 itemCount: itemsBelumCheckout.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return itemsBelumCheckout[index].status <= 0?InkWell(
+                  return itemsBelumCheckout[index].status == 1?InkWell(
                       onTap: () {},
                       child: Container(
                         child: buildList(context,itemsBelumCheckout[index].pondName.toString(),itemsBelumCheckout[index].feedName.toString(),itemsBelumCheckout[index].feedPrice.toString()
@@ -144,20 +144,20 @@ class _RiwayatPakanState extends State<RiwayatPakan> {
 
                 },
               ),
-              ListView.builder(
-                physics: new BouncingScrollPhysics(),
-                scrollDirection: Axis.vertical,
-                itemCount: itemsSudahCheckout.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return itemsSudahCheckout[index].status == 1?InkWell(
-                      onTap: () {},
-                      child: Container(
-                        child: buildList(context,itemsSudahCheckout[index].pondName.toString(),itemsSudahCheckout[index].feedName.toString(),itemsSudahCheckout[index].feedPrice.toString()
-                            ,itemsSudahCheckout[index].orderAmount.toString(),itemsSudahCheckout[index].totalPayment.toString(),itemsSudahCheckout[index].feedPhoto.toString(),itemsSudahCheckout[index].feedType.toString(),itemsSudahCheckout[index].orderedAt),
-                      )):SizedBox(height: 1,);
-
-                },
-              ),
+              // ListView.builder(
+              //   physics: new BouncingScrollPhysics(),
+              //   scrollDirection: Axis.vertical,
+              //   itemCount: itemsSudahCheckout.length,
+              //   itemBuilder: (BuildContext context, int index) {
+              //     return itemsSudahCheckout[index].status == 2?InkWell(
+              //         onTap: () {},
+              //         child: Container(
+              //           child: buildList(context,itemsSudahCheckout[index].pondName.toString(),itemsSudahCheckout[index].feedName.toString(),itemsSudahCheckout[index].feedPrice.toString()
+              //               ,itemsSudahCheckout[index].orderAmount.toString(),itemsSudahCheckout[index].totalPayment.toString(),itemsSudahCheckout[index].feedPhoto.toString(),itemsSudahCheckout[index].feedType.toString(),itemsSudahCheckout[index].orderedAt),
+              //         )):SizedBox(height: 1,);
+              //
+              //   },
+              // ),
               ListView.builder(
                 physics: new BouncingScrollPhysics(),
                 scrollDirection: Axis.vertical,

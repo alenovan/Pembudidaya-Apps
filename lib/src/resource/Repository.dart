@@ -65,6 +65,12 @@ class Repository {
       String feed_amount) =>
       todoApiProvider.insertPententuanPakan(pond_id,sow_date,fish_type_id,seed_amount,seed_weight,seed_price,survival_rate,feed_conversion_ratio,feed_price,target_fish_count,target_price,feed_amount);
 
+  Future insertReOrder(String pond_id,
+      String feed_id,
+      String amount) =>
+      todoApiProvider.insertReOrder(pond_id,feed_id,amount);
+
+
   getDetailKolam(String idKolam) => todoApiProvider.getDetailKolam(idKolam);
 
   getOrderId(String id_order) => todoApiProvider.getOrderId(id_order);
@@ -124,6 +130,9 @@ class Repository {
   Future fetchBidBy(String idBidder) =>
       todoApiProvider.fetchBidBy(idBidder);
 
+  Future fetchByIdJual() =>
+      todoApiProvider.fetchByIdJual();
+
   Future fetchBidDetailBy(String idBidder) =>
       todoApiProvider.fetchBidDetailBy(idBidder);
 
@@ -137,7 +146,7 @@ class Repository {
   Future addJualMarket(String name, String price, String description, String weight, String category_id, String product_photo, String stock) =>
       todoApiProvider.addJualMarket(name,price,description,weight,category_id,product_photo,stock);
 
-  Future addJualMarketAdma( String name, String image, String deskripsi, String harga, String cashback_reseller, String berat) =>
-      todoApiProvider.addJualMarketAdma(name,image,deskripsi,harga,cashback_reseller,berat);
+  Future addJualMarketAdma( String name, String image, String deskripsi, String harga, String cashback_reseller, String berat, String stock, String keterangan) =>
+      todoApiProvider.addJualMarketAdma(name,image,deskripsi,harga,cashback_reseller,berat,stock,keterangan);
 
 }

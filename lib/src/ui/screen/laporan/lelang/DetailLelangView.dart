@@ -178,13 +178,7 @@ class _DetailLelangViewState extends State<DetailLelangView> {
                             right: ScreenUtil().setWidth(50)),
                         child: GestureDetector(
                           onTap: () => {
-                            Navigator.push(
-                                context,
-                                PageTransition(
-                                    type: PageTransitionType.fade,
-                                    child: LelangHistory(
-                                      idKolam: widget.idKolam,
-                                    )))
+                          Navigator.of(context).pop()
                           },
                           child: Icon(Icons.arrow_back,
                               color: tmblColor,
@@ -263,8 +257,7 @@ class _DetailLelangViewState extends State<DetailLelangView> {
                                 if (snapshot.hasData) {
                                   return RefreshIndicator(
                                     key: refreshKey,
-                                    child: items.length<1?buildList(snapshot):Container(child:CardLeftRightButton(context, "---",
-                                        "---",null) ),
+                                    child: buildList(snapshot),
                                     onRefresh: refreshList,
                                   );
                                 } else if (snapshot.hasError) {
@@ -421,54 +414,54 @@ class _DetailLelangViewState extends State<DetailLelangView> {
                               "${widget.price}", "Rupiah"),
                         ),
 
-                        Container(
-                            margin: EdgeInsets.only(
-                                left: ScreenUtil().setWidth(50),
-                                right: ScreenUtil().setWidth(50)),
-                            child: new Align(
-                                alignment: FractionalOffset.bottomCenter,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Container(
-                                      height: 45.0,
-                                      width: MediaQuery
-                                          .of(context)
-                                          .size
-                                          .width,
-                                      margin: EdgeInsets.only(
-                                          top: 15.0),
-                                      child: CustomElevation(
-                                          height: 30.0,
-                                          child: RaisedButton(
-                                            highlightColor: redTextColor,
-                                            //Replace with actual colors
-                                            color: redTextColor,
-                                            onPressed: () => {
-                                              Navigator.push(
-                                                  context,
-                                                  PageTransition(
-                                                      type: PageTransitionType.fade,
-                                                      // duration: Duration(microseconds: 1000),
-                                                      child: DashboardView())),
-                                            },
-                                            child: Text(
-                                              "Stop Lelang",
-                                              style: TextStyle(
-                                                  color: backgroundColor,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontFamily: 'poppins',
-                                                  letterSpacing: 1.25,
-                                                  fontSize: subTitleLogin),
-                                            ),
-                                            shape: new RoundedRectangleBorder(
-                                              borderRadius:
-                                              new BorderRadius.circular(30.0),
-                                            ),
-                                          )),
-                                    ),
-                                  ],
-                                ))),
+                        // Container(
+                        //     margin: EdgeInsets.only(
+                        //         left: ScreenUtil().setWidth(50),
+                        //         right: ScreenUtil().setWidth(50)),
+                        //     child: new Align(
+                        //         alignment: FractionalOffset.bottomCenter,
+                        //         child: Column(
+                        //           mainAxisAlignment: MainAxisAlignment.end,
+                        //           children: [
+                        //             Container(
+                        //               height: 45.0,
+                        //               width: MediaQuery
+                        //                   .of(context)
+                        //                   .size
+                        //                   .width,
+                        //               margin: EdgeInsets.only(
+                        //                   top: 15.0),
+                        //               child: CustomElevation(
+                        //                   height: 30.0,
+                        //                   child: RaisedButton(
+                        //                     highlightColor: redTextColor,
+                        //                     //Replace with actual colors
+                        //                     color: redTextColor,
+                        //                     onPressed: () => {
+                        //                       Navigator.push(
+                        //                           context,
+                        //                           PageTransition(
+                        //                               type: PageTransitionType.fade,
+                        //                               // duration: Duration(microseconds: 1000),
+                        //                               child: DashboardView())),
+                        //                     },
+                        //                     child: Text(
+                        //                       "Stop Lelang",
+                        //                       style: TextStyle(
+                        //                           color: backgroundColor,
+                        //                           fontWeight: FontWeight.w500,
+                        //                           fontFamily: 'poppins',
+                        //                           letterSpacing: 1.25,
+                        //                           fontSize: subTitleLogin),
+                        //                     ),
+                        //                     shape: new RoundedRectangleBorder(
+                        //                       borderRadius:
+                        //                       new BorderRadius.circular(30.0),
+                        //                     ),
+                        //                   )),
+                        //             ),
+                        //           ],
+                        //         ))),
                         SizedBox(
                           height: 60,
                         ),
@@ -500,15 +493,6 @@ class _DetailLelangViewState extends State<DetailLelangView> {
       itemBuilder: (BuildContext context, int index) {
         return index<=3?InkWell(
           onTap: (){
-
-            Navigator.push(
-                context,
-                PageTransition(
-                    type: PageTransitionType.fade,
-                    child: DetailLelangView(
-                      idKolam: widget.idKolam,
-                      idLelang: items[index].id.toString(),
-                    )));
           },
           child: Container(
             child: CardLeftRightButton(context, "Rp.${formatter.format(items[index].bid)}",

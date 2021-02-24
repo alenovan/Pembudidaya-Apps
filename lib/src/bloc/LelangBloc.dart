@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:lelenesia_pembudidaya/src/models/AuctionModels.dart';
 import 'package:lelenesia_pembudidaya/src/models/BidderModels.dart';
+import 'package:lelenesia_pembudidaya/src/models/ListSellModels.dart';
 import 'package:lelenesia_pembudidaya/src/resource/Repository.dart';
 class LelangBloc {
   final _repository = Repository();
@@ -29,6 +30,13 @@ class LelangBloc {
     var auction = await _repository.fetchBidBy(bidder);
     var enc = json.encode(json.decode(auction)["data"]);
     var data = BidderModelsFromJson(enc);
+    return data;
+  }
+
+  Future<List<ListSellModels>> getJualMarket() async {
+    var datax = await _repository.fetchByIdJual();
+    var enc = json.encode(json.decode(datax)["data"]);
+    var data = listOrdersFeedModelsFromJson(enc);
     return data;
   }
 
@@ -74,9 +82,9 @@ class LelangBloc {
     return status;
   }
 
-  Future<bool> addJualMarketAdma(String name, String image, String deskripsi, String harga, String cashback_reseller, String berat) async {
+  Future<bool> addJualMarketAdma(String name, String image, String deskripsi, String harga, String cashback_reseller, String berat, String stock, String keterangan) async {
     var status;
-    var val = await _repository.addJualMarketAdma(name,image,deskripsi,harga,cashback_reseller,berat);
+    var val = await _repository.addJualMarketAdma(name,image,deskripsi,harga,cashback_reseller,berat,stock,keterangan);
     if (val.statusCode == 200) {
       status = true;
     } else {

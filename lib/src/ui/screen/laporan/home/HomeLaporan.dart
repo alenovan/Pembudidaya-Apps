@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,10 +11,13 @@ import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:lelenesia_pembudidaya/src/typography.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/kolam/DetailKolam.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/kolam/riwayat/RiwayatKolam.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanMain.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/home/LaporanHomeWidget.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/ScreenUtil.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:lelenesia_pembudidaya/src/ui/widget/BottomSheetFeedback.dart';
+import 'package:lelenesia_pembudidaya/src/ui/widget/LoadingDialog.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:lelenesia_pembudidaya/src/bloc/KolamBloc.dart' as kolam;
 import 'package:lelenesia_pembudidaya/src/bloc/CheckoutBloc.dart' as checkout;
@@ -38,6 +43,8 @@ class _HomeLaporanState extends State<HomeLaporan> {
   String _sow_date,
       _est_panen,
       _fish_type,
+      fish_type,
+      feed_id,
       _seed_mount_current,
       _weight_fish_current,
       _target_price,
@@ -45,7 +52,8 @@ class _HomeLaporanState extends State<HomeLaporan> {
       _budget_seed,
       _omset,
       _laba,
-      _est_weight_fish,
+      _profit,
+        _est_weight_fish,
       _nama_kolam,
       _stock_pakan = "";
   String _sr,
@@ -107,22 +115,51 @@ class _HomeLaporanState extends State<HomeLaporan> {
   void detailOrder(String id_orders) async {
     try {
       var detail = await checkout.bloc.getCheckOrderId(id_orders.toString());
-      await WidgetsBinding.instance.addPostFrameCallback((_) {
-        setState(() {
-          status_checkout = detail;
-          print(status_checkout);
-          if (status_checkout) {
-            text_status_checkout = "Checkout";
-          } else {
-            text_status_checkout = "Beli";
-          }
-        });
+      // await WidgetsBinding.instance.addPostFrameCallback((_) {
+      //
+      // });
+      setState(() {
+        status_checkout = detail;
+        print(status_checkout);
+        if (status_checkout) {
+          text_status_checkout = "Checkout";
+        } else {
+          text_status_checkout = "Beli";
+        }
       });
     } catch (error) {
       text_status_checkout = "Beli";
     }
   }
 
+  void _clickCheckOut() async {
+    LoadingDialog.show(context);
+      var detail = await kolam.bloc.getKolamDetail(widget.idKolam);
+      var data = detail['data'];
+      setState(() {
+        id_order = data['harvest']['last_order_id'];
+      });
+      var statusCheckout = await checkout.bloc.checkout(id_order.toString());
+      if(statusCheckout){
+        AppExt.popScreen(context);
+        BottomSheetFeedback.show_success(context, title: "Selamat", description: "Pembelian anda berhasil di checkout");
+        Timer(const Duration(seconds: 2), () {
+          Navigator.push(
+              context,
+              PageTransition(
+                  type: PageTransitionType
+                      .fade,
+                  child: LaporanMain(
+                    page: 0,
+                    laporan_page: "home",
+                    idKolam: widget.idKolam,
+                  )));
+        });
+      }else{
+        AppExt.popScreen(context);
+        BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Silahkan ulangi kembali");
+      }
+  }
   @override
   void dispose() {
     super.dispose();
@@ -138,10 +175,11 @@ class _HomeLaporanState extends State<HomeLaporan> {
       } catch (error) {
         text_status_checkout = "Beli";
       }
-      _sr = "${data['harvest']['current_sr']} %";
+      _sr = "${data['harvest']['survival_rate']} %";
       _seed_amount = data['harvest']['seed_amount'].toString() + " Ekor";
       _feed_requirement_estimation =data['harvest']['feed_requirement_estimation'].toStringAsFixed(0) +" Kg";
-      var fish_type = data['harvest']['fish_type_id'].toString();
+      fish_type = data['harvest']['fish_type_id'].toString();
+      feed_id = data['harvest']['feed_id'].toString();
       if(fish_type == "1"){
         _fish_type = "Ikan Lele";
       }else if(fish_type == "2"){
@@ -160,23 +198,19 @@ class _HomeLaporanState extends State<HomeLaporan> {
       _status_kolam = data['status'];
       _seed_mount_current =
           data['harvest']['current_amount'].toString() + " Ekor";
-      // _weight_fish_current = (data['harvest']['current_weight'] * data['harvest']['current_amount']).toString();
       _weight_fish_current = (data['harvest']['current_weight']).toString();
       _target_price =
           "Rp." + formatter.format(data['harvest']['target_price']).toString();
-      _budget_seed = "Rp." + formatter.format(data['harvest']['seed_price'] * data['harvest']['seed_amount']).toString();
-      _budget = "Rp." + formatter.format(data['harvest']['budget']);
-      _omset = "Rp." + formatter.format(data['harvest']['revenue']).toString();
-      _laba = "Rp." +
-          formatter.format(int.parse(
-              data['harvest']['profit_estimation'].toStringAsFixed(0)));
-      // _est_weight_fish = (int.parse(data['harvest']['harvest_weight_estimation'].toStringAsFixed(0))/1000).toStringAsFixed(0).toString();
-      _est_weight_fish = data['harvest']['harvest_weight_estimation'].toStringAsFixed(0)+" Kg";
       var feed = (data['harvest']['feed_requirement_estimation']);
-      _est_feed_budget = "Rp." +
-          formatter.format(int.parse(
-              (feed * data['harvest']['feed_price']).toStringAsFixed(0)));
+      _budget_seed = "Rp." + formatter.format(data['harvest']['seed_price'] * data['harvest']['seed_amount']).toString();
+      _budget = "Rp." + formatter.format(data['harvest']['budget']).toString();
+      _omset = "Rp." + formatter.format(data['harvest']['revenue']).toString();
+      _profit = "Rp." + formatter.format(data['harvest']['profit']).toString();
+      // _laba = "Rp." + formatter.format(int.parse(data['harvest']['profit_estimation']));
+      _est_weight_fish = data['harvest']['target_weight_per_fish'].toString()+" gram ";
+      _est_feed_budget = "Rp." +formatter.format(int.parse(((feed * data['harvest']['feed_price']/30).toStringAsFixed(0))));
     });
+    print(_est_weight_fish);
   }
 
   @override
@@ -213,6 +247,7 @@ class _HomeLaporanState extends State<HomeLaporan> {
                           PageTransition(
                               type: PageTransitionType.fade,
                               child: DetailKolam(
+                                idIkan: fish_type.toString(),
                                 idKolam: widget.idKolam,
                               )))
                     },
@@ -281,7 +316,8 @@ class _HomeLaporanState extends State<HomeLaporan> {
                               "${_fish_type}",
                               "${_status_kolam}",
                               "${_stock_pakan}",
-                              "${text_status_checkout}"),
+                              "${text_status_checkout}",widget.idKolam,fish_type,feed_id
+                             ),
                         )
                       ],
                     ),
@@ -580,7 +616,7 @@ class _HomeLaporanState extends State<HomeLaporan> {
                       child: DetailCard(
                           context,
                           "Prediksi Informasi Keuntungan",
-                          "${_laba}",
+                          "${_profit}",
                           colorPrimary),
                     ),
                     SizedBox(

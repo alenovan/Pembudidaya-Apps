@@ -454,7 +454,7 @@ class _KtpScreenState extends State<KtpScreen> {
   }
 }
 
-Widget froundedRectBorderWidget(BuildContext context, File _image) {
+Widget roundedRectBorderWidget(BuildContext context, File _image) {
   return DottedBorder(
     color: greyLineColor,
     dashPattern: [8, 4],

@@ -59,8 +59,10 @@ class _DashboardViewState extends State<DashboardView> {
   void cek_profil() async {
     var blox = await profile.bloc.getProfile();
     setState(() {
-      statusAktivasi =
-          blox['data']['ktp_photo'].toString() == "null" ? false : true;
+      statusAktivasi = blox['data']['ktp_photo'].toString() == "null" ||
+              blox['data']['ktp_photo'].toString() == ""
+          ? false
+          : true;
     });
   }
 
@@ -90,11 +92,11 @@ class _DashboardViewState extends State<DashboardView> {
 
   @override
   void initState() {
+    cek_profil();
     super.initState();
     _dbHelper = DbHelper.instance;
     _dbHelper.initDb();
     fetchData();
-    cek_profil();
   }
 
   Future<Null> refreshList() async {
@@ -112,7 +114,7 @@ class _DashboardViewState extends State<DashboardView> {
     var db = await _dbHelper.select_count(id);
     print(db);
     if (db == 0) {
-      var data = SqliteDataPenentuanPanen(id, 0,"", 0, 0, 0, 0, 0, 0, 0, 0, 0);
+      var data = SqliteDataPenentuanPanen(id, 0, "", 0, 0, 0, 0, 0, 0, 0, 0, 0);
       _dbHelper.insert(data);
     }
   }
@@ -470,6 +472,16 @@ class _DashboardViewState extends State<DashboardView> {
         scrollDirection: Axis.vertical,
         itemCount: items.length,
         itemBuilder: (BuildContext context, int index) {
+          var fish_type;
+          if (items[index].status.toString() == "2"  || items[index].status.toString() == "3" ) {
+            if (items[index].harvest.fishTypeId == 1) {
+              fish_type = "Ikan Lele";
+            } else if (items[index].harvest.fishTypeId == 2) {
+              fish_type = "Ikan Nila";
+            } else {
+              fish_type = "Ikan Mas";
+            }
+          }
           return InkWell(
               onTap: () {
                 check_database(items[index].id);
@@ -516,15 +528,16 @@ class _DashboardViewState extends State<DashboardView> {
                         items[index].name,
                         "Kolam Belum di tentukan",
                         !statusAktivasi ? "-1" : items[index].status.toString(),
-                        0,
+                        "0",
                         0,
                         0)
                     : CardKolam(
                         context,
                         items[index].name,
-                        "Ikan Lele",
+                        fish_type,
                         !statusAktivasi ? "-1" : items[index].status.toString(),
-                        items[index].harvest.currentSr.toInt(),
+                        items[index].harvest.currentSr.toInt().toString() +
+                            " %",
                         items[index].harvest.feedConversionRatio.toInt(),
                         items[index].harvest.currentAmount.toInt()),
               ));
@@ -583,8 +596,6 @@ Widget AlertquestionAktivasi(BuildContext context) {
                                     child: BiodataScreen(
                                       from: "dashboard",
                                     )))
-
-
                           },
                           child: Text(
                             "Ya",

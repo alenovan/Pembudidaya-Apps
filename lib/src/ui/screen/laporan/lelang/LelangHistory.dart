@@ -7,6 +7,7 @@ import 'package:lelenesia_pembudidaya/src/bloc/LelangBloc.dart' as lelang;
 import 'package:lelenesia_pembudidaya/src/models/AuctionModels.dart';
 import 'package:lelenesia_pembudidaya/src/typography.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/kolam/DetailKolam.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanMain.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/lelang/DetailLelangView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/lelang/LelangWidget.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/lelang/TambahLelang.dart';
@@ -137,8 +138,11 @@ class _LelangViewState extends State<LelangHistory> {
                           Navigator.push(
                               context,
                               PageTransition(
-                                  type: PageTransitionType.fade,
-                                  child: DetailKolam(
+                                  type: PageTransitionType
+                                      .fade,
+                                  child: LaporanMain(
+                                    page: 2,
+                                    laporan_page: "home",
                                     idKolam: widget.idKolam,
                                   )))
                         },

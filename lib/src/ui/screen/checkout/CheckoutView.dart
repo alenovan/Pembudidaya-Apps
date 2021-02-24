@@ -215,6 +215,7 @@ class _CheckoutViewState extends State<CheckoutView> {
               PageTransition(
                   type: PageTransitionType.fade,
                   child: DetailKolam(
+                    idIkan: id_ikan.toString(),
                     idKolam: widget
                         .idKolam
                         .toString(),
@@ -224,6 +225,44 @@ class _CheckoutViewState extends State<CheckoutView> {
         AppExt.popScreen(context);
         BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Silahkan ulangi kembali");
       }
+    }else{
+      AppExt.popScreen(context);
+      BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Silahkan ulangi kembali");
+    }
+  }
+
+  void _clickOrder() async {
+    AppExt.popScreen(context);
+    LoadingDialog.show(context);
+    var data = await order.bloc.funInsertPenentuanPakan(
+        widget.idKolam.toString(),
+        tglTebarController.toString(),
+        id_ikan.toString(),
+        jumlahBibitController.toString(),
+        gramPerEkorController.toString(),
+        hargaBibitController.toString(),
+        survivalRateController.toString(),
+        feedConvController.toString(),
+        id_pakan.toString(),
+        targetJumlahController.toString(),
+        targetHargaController.toString(),
+        feed_amount.toString());
+    var statusOrder = data['status'];
+    if (statusOrder == 1) {
+        AppExt.popScreen(context);
+        BottomSheetFeedback.show_success(context, title: "Selamat", description: "Pembelian anda berhasil di pesan");
+        Timer(const Duration(seconds: 2), () {
+          Navigator.push(
+              context,
+              PageTransition(
+                  type: PageTransitionType.fade,
+                  child: DetailKolam(
+                    idIkan: id_ikan.toString(),
+                    idKolam: widget
+                        .idKolam
+                        .toString(),
+                  )));
+        });
     }else{
       AppExt.popScreen(context);
       BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Silahkan ulangi kembali");
@@ -1017,9 +1056,9 @@ class _CheckoutViewState extends State<CheckoutView> {
                           highlightColor: colorPrimary,
                           //Replace with actual colors
                           color: redTextColor,
-                          onPressed: () => {Navigator.pop(context, true)},
+                          onPressed: () => {_clickOrder()},
                           child: Text(
-                            "Tidak",
+                            "Pesan saja",
                             style: TextStyle(
                                 color: backgroundColor,
                                 fontWeight: FontWeight.w500,

@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:lelenesia_pembudidaya/src/models/ListAlamatModels.dart';
 import 'package:lelenesia_pembudidaya/src/typography.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/checkout/Alamat/TambahAlamatView.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/checkout/CheckoutFix.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/checkout/CheckoutView.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/checkout/ChekoutReorder.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanMain.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/ScreenUtil.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
@@ -18,9 +20,13 @@ import 'package:shimmer/shimmer.dart';
 
 class ListAlamatPengiriman extends StatefulWidget {
   final String idKolam;
+  final String feedId;
+  final String idIkan;
+  final String from;
+
 
   ListAlamatPengiriman(
-      {Key key, this.idKolam})
+      {Key key, this.idKolam, this.feedId, this.idIkan, this.from})
       : super(key: key);
 
   @override
@@ -115,13 +121,24 @@ class _ListAlamatPengirimanState extends State<ListAlamatPengiriman> {
             leading: IconButton(
               icon: Icon(Icons.arrow_back, color: Colors.black),
               onPressed: () => {
-                Navigator.push(
-                    context,
-                    PageTransition(
-                        type: PageTransitionType.fade,
-                        child: CheckoutView(
-                          idKolam: widget.idKolam,
-                        )))
+                if(widget.from == "reorder"){
+                  Navigator.push(
+                      context,
+                      PageTransition(
+                          type: PageTransitionType.fade,
+                          child: CheckoutReorder(
+                            idKolam: widget.idKolam,
+                          )))
+                }else{
+                  Navigator.push(
+                      context,
+                      PageTransition(
+                          type: PageTransitionType.fade,
+                          child: CheckoutView(
+                            idKolam: widget.idKolam,
+                          )))
+                }
+
               },
             ),
             actions: <Widget>[],

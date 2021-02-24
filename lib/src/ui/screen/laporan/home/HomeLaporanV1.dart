@@ -316,7 +316,7 @@ class _HomeLaporanState extends State<HomeLaporan> {
                         left: SizeConfig.blockVertical * 3,
                         right: SizeConfig.blockVertical * 3),
                     child:  CardKolam(context, "aa",
-                        "Ikan Lele",  "1",1,1,1),
+                        "Ikan Lele",  "1","1",1,1),
                   )
                 ],
               ),

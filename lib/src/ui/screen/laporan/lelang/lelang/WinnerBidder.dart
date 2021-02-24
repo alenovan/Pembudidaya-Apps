@@ -73,6 +73,7 @@ class _ProfileScreenState extends State<WinnerBidder> {
     super.initState();
   }
 
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -99,11 +100,17 @@ class _ProfileScreenState extends State<WinnerBidder> {
                           children: [
                             Container(
                               margin: EdgeInsets.only(
-                                top: SizeConfig.blockHorizotal * 3,
+                                top: SizeConfig.blockHorizotal * 20,
+                                left: SizeConfig.blockHorizotal * 5,
                                 bottom: SizeConfig.blockHorizotal * 3,
                               ),
-                              child: AppBarContainer(
-                                  context, "Lelang", DetailLelangView(), Colors.white),
+                              child: GestureDetector(
+                                  onTap: ()=>{
+                                  Navigator.of(context).pop()
+                                  },
+                                  child: Icon(Icons.arrow_back,
+                                      color: Colors.black,
+                                      size: ScreenUtil(allowFontScaling: false).setSp(80))),
                             ),
                             Expanded(
                                 child: Container(

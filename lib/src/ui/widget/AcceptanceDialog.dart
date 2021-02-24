@@ -114,6 +114,110 @@ Widget Alertquestion(BuildContext context, Widget success) {
 }
 
 
+Widget AlertStok(BuildContext context, Widget success,Widget ganti) {
+  final Widget data = Container(
+    child: Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      elevation: 0.0,
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              "apakah anda tetap menggunakan pakan ini ?",
+              style: TextStyle(
+                  color: blackTextColor,
+                  fontFamily: 'poppins',
+                  letterSpacing: 0.25,
+                  fontSize: 15.0),
+            ),
+            Column(
+              children: [
+                Container(
+                    height: 40.0,
+                    width: double.infinity,
+                    margin: EdgeInsets.only(
+                        left: SizeConfig.blockVertical * 1,
+                        right: SizeConfig.blockVertical * 1,
+                        top: SizeConfig.blockVertical * 3),
+                    child: CustomElevation(
+                        height: 40.0,
+                        child: RaisedButton(
+                          highlightColor: colorPrimary,
+                          //Replace with actual colors
+                          color: colorPrimary,
+                          onPressed: () => {
+                            Navigator.push(
+                                context,
+                                PageTransition(
+                                    type: PageTransitionType.fade,
+                                    // duration: Duration(microseconds: 1000),
+                                    child:success))
+                          },
+                          child: Text(
+                            "Tetap",
+                            style: TextStyle(
+                                color: backgroundColor,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'poppins',
+                                letterSpacing: 1.25,
+                                fontSize: subTitleLogin),
+                          ),
+                          shape: new RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(30.0),
+                          ),
+                        ))),
+                Container(
+                  height: 40.0,
+                  width: double.infinity,
+                  margin: EdgeInsets.only(
+                      left: SizeConfig.blockVertical * 1,
+                      right: SizeConfig.blockVertical * 1,
+                      top: SizeConfig.blockVertical * 1,
+                      bottom: SizeConfig.blockVertical * 2),
+                  child: CustomElevation(
+                      height: 40.0,
+                      child: RaisedButton(
+                        highlightColor: colorPrimary,
+                        //Replace with actual colors
+                        color: redTextColor,
+                        onPressed: () => {
+                          Navigator.push(
+                              context,
+                              PageTransition(
+                                  type: PageTransitionType.fade,
+                                  // duration: Duration(microseconds: 1000),
+                                  child:ganti))
+                        },
+                        child: Text(
+                          "Ganti Pakan",
+                          style: TextStyle(
+                              color: backgroundColor,
+                              fontWeight: FontWeight.w500,
+                              fontFamily: 'poppins',
+                              letterSpacing: 1.25,
+                              fontSize: subTitleLogin),
+                        ),
+                        shape: new RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.circular(30.0),
+                        ),
+                      )),
+                ),
+              ],
+            )
+          ],
+        ),
+      ),
+    ),
+  );
+  return data;
+}
+
+
+
 showLoaderDialog(BuildContext context){
   AlertDialog alert=AlertDialog(
     content: new Row(

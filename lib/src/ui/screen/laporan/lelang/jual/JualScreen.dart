@@ -73,7 +73,7 @@ class _JualScreenState extends State<JualScreen> {
                     idKolam: widget
                         .idKolam
                         .toString(),
-                    page: 1,
+                    page: 2,
                     laporan_page:
                     "jual",
                   )));
@@ -206,7 +206,7 @@ class _JualScreenState extends State<JualScreen> {
                                     child: TextFormField(
                                       controller: namaProdukController,
                                       decoration: EditTextDecorationText(
-                                          context, "Nama Produk", 20.0, 0, 0,
+                                          context, "", 20.0, 0, 0,
                                           0),
                                       keyboardType: TextInputType.text,
                                       style: TextStyle(
@@ -642,7 +642,7 @@ class _JualScreenState extends State<JualScreen> {
               idKolam: widget
                   .idKolam
                   .toString(),
-              page: 1,
+              page: 2,
               laporan_page:
               "jual",
             )));

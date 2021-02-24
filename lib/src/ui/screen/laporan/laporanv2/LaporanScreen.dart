@@ -35,6 +35,7 @@ class _HomeLaporanState extends State<LaporanScreen> {
   var status_checkout = false;
   String _month_active = "";
   String myTitle = "";
+  String idIkan = "";
   Color silverColor = Colors.transparent;
   Color tmblColor = Colors.black;
   DateTime _currentDate2 = DateTime.now();
@@ -60,16 +61,18 @@ class _HomeLaporanState extends State<LaporanScreen> {
     var detail = await kolam.bloc.getKolamDetail(widget.idKolam);
     var data = detail['data'];
     setState(() {
+      idIkan = data['harvest']['fish_type_id'].toString();
       _tanggal_tebar = DateTime.parse(data['harvest']['sow_date']);
       activeYear = _currentDate2.year;
       activeMonth = _currentDate2.month;
     });
     var dataEvent = await monitor.bloc.analyticsCalendar(
         widget.idKolam,
-        "${activeYear}-${activeMonth}-01T00:00:00Z",
+        "${activeYear}-01-01T00:00:00Z",
         "${activeYear}-${activeMonth}-31T00:00:00Z");
     setState(() {
       dateInsert = dataEvent;
+      print(widget.idKolam);
       for (var listIkan in dateInsert) {
         _events[DateFormat("yyyy-MM-dd").parse(listIkan)] = ["aaa"];
       }
@@ -210,6 +213,7 @@ class _HomeLaporanState extends State<LaporanScreen> {
                           PageTransition(
                               type: PageTransitionType.fade,
                               child: DetailKolam(
+                                idIkan: idIkan,
                                 idKolam: widget.idKolam,
                               )))
                     },
@@ -311,6 +315,8 @@ class _HomeLaporanState extends State<LaporanScreen> {
       availableCalendarFormats: const {CalendarFormat.month: ''},
       calendarStyle: CalendarStyle(
         outsideDaysVisible: true,
+
+        todayColor: Colors.deepOrange[200],
         weekendStyle: TextStyle().copyWith(
             color: Colors.black,
             fontSize: ScreenUtil(allowFontScaling: true).setSp(40)),
@@ -390,35 +396,35 @@ class _HomeLaporanState extends State<LaporanScreen> {
         },
         todayDayBuilder: (context, date, _) {
           return Container(
-            margin: const EdgeInsets.all(4.0),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(36.0),
-                border: Border.all(width: 2, color: Colors.white)),
-            child: Text(
-              '${date.day}',
-              style: TextStyle().copyWith(
-                  color: colorPrimary,
-                  fontSize: ScreenUtil(allowFontScaling: true).setSp(40)),
+            color: colorPrimary,
+            height: ScreenUtil().setHeight(100),
+            width: ScreenUtil().setHeight(100),
+            child: Align(
+              alignment: Alignment.center,
+              child: Text(
+                date.day.toString(),
+                style: TextStyle().copyWith(
+                    color: Colors.white,
+                    fontSize: ScreenUtil(allowFontScaling: true).setSp(40)),
+              ),
             ),
           );
         },
         dayBuilder: (context, date,dayBuilder){
           var data;
-          if(date.isBefore(_tanggal_tebar) ){
+          if(date.isAtSameMomentAs(_currentDate2)){
             data = Container(
               margin: const EdgeInsets.all(4.0),
               alignment: Alignment.center,
               child: Text(
-                '${date.day}',
+                'Cuk',
                 style: TextStyle().copyWith(
-                    color: Colors.black,
+                    color: Colors.grey,
                     fontSize: ScreenUtil(allowFontScaling: true).setSp(40)),
               ),
             );
           }else{
-            if(date.isAfter(_currentDate2) ){
+            if(date.isBefore(_tanggal_tebar) ){
               data = Container(
                 margin: const EdgeInsets.all(4.0),
                 alignment: Alignment.center,
@@ -430,22 +436,36 @@ class _HomeLaporanState extends State<LaporanScreen> {
                 ),
               );
             }else{
-              data = GestureDetector(
-                onTap: (){
-                  laporan_null_screen_one(context,date);
-                },
-                child:Container(
+              if(date.isAfter(_currentDate2) ){
+                data = Container(
                   margin: const EdgeInsets.all(4.0),
                   alignment: Alignment.center,
-                  color: Colors.red,
                   child: Text(
                     '${date.day}',
                     style: TextStyle().copyWith(
-                        color: Colors.white,
+                        color: Colors.grey,
                         fontSize: ScreenUtil(allowFontScaling: true).setSp(40)),
                   ),
-                ),
-              );
+                );
+              }else{
+                data = GestureDetector(
+                  onTap: (){
+                    laporan_null_screen_one(context,date);
+                  },
+                  child:Container(
+                    margin: const EdgeInsets.all(4.0),
+                    alignment: Alignment.center,
+                    color: Colors.red,
+                    child: Text(
+                      '${date.day}',
+                      style: TextStyle().copyWith(
+                          color: Colors.white,
+                          fontSize: ScreenUtil(allowFontScaling: true).setSp(40)),
+                    ),
+                  ),
+                );
+              }
+
             }
 
           };
@@ -484,7 +504,7 @@ class _HomeLaporanState extends State<LaporanScreen> {
         });
       },
       child: Container(
-        color: colorPrimary,
+        color: Colors.white,
         height: ScreenUtil().setHeight(100),
         width: ScreenUtil().setHeight(100),
         child: Align(
@@ -492,7 +512,7 @@ class _HomeLaporanState extends State<LaporanScreen> {
           child: Text(
             date.day.toString(),
             style: TextStyle().copyWith(
-                color: Colors.white,
+                color: Colors.black,
                 fontSize: ScreenUtil(allowFontScaling: true).setSp(40)),
           ),
         ),
@@ -573,7 +593,7 @@ class _HomeLaporanState extends State<LaporanScreen> {
             ),
             child: Padding(
               padding: EdgeInsets.fromLTRB(15, 20, 15, 45),
-              child: bottomSheetInserted(context,date,(int.parse(pakan)/1000).toString(),mati,berat),
+              child: bottomSheetInserted(context,date,(int.parse(pakan)).toString(),mati,berat),
             ),
           );
         });
