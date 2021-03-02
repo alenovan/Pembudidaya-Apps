@@ -96,26 +96,28 @@ class _LoginViewState extends State<LoginView> {
                       children: [
                         Container(
                           margin: EdgeInsets.only(
-                              top: ScreenUtil().setHeight(120),),
+                            top: ScreenUtil().setHeight(120),
+                          ),
                           width: double.infinity,
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Container(
                                   margin: EdgeInsets.only(
-                                      left: ScreenUtil().setWidth(60),top: ScreenUtil().setHeight(50)),
+                                      left: ScreenUtil().setWidth(60),
+                                      top: ScreenUtil().setHeight(50)),
                                   child: Align(
                                     alignment: Alignment.centerLeft,
-                                    child: Logo(context,Colors.white),
+                                    child: LogoPanen(context, colorPrimary),
                                   )),
-                              Container(
-                                  margin: EdgeInsets.only(
-                                      right: ScreenUtil().setWidth(60),
-                                      top: ScreenUtil().setHeight(70)),
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: LogoPanen(context,colorPrimary),
-                                  ))
+                              Spacer(),
+                              Image.asset(
+                                "assets/logo/logo_polinema.png",
+                                height: ScreenUtil().setWidth(150),
+                                width: ScreenUtil().setWidth(150),
+                              ),
+                              SizedBox(
+                                width: ScreenUtil().setWidth(60),
+                              ),
                             ],
                           ),
                         ),
@@ -126,7 +128,8 @@ class _LoginViewState extends State<LoginView> {
                               right: ScreenUtil().setWidth(50)),
                           child: Card(
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(ScreenUtil().setHeight(60)),
+                              borderRadius: BorderRadius.circular(
+                                  ScreenUtil().setHeight(60)),
                             ),
                             child: Container(
                               child: Container(
@@ -139,12 +142,20 @@ class _LoginViewState extends State<LoginView> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
+                                    Image.asset(
+                                      "assets/logo/logo_panenIkan.png",
+                                      height: ScreenUtil().setWidth(100),
+                                      // width: ScreenUtil().setWidth(150),
+                                    ),
+                                    SizedBox(
+                                      height: ScreenUtil().setHeight(50),
+                                    ),
                                     Text(
                                       titleLoginText,
                                       style: h1.copyWith(
-                                        fontSize: ScreenUtil(
-                                            allowFontScaling: false)
-                                            .setSp(80)),
+                                          fontSize: ScreenUtil(
+                                                  allowFontScaling: false)
+                                              .setSp(80)),
                                     ),
                                     Container(
                                       margin: EdgeInsets.only(
@@ -189,8 +200,7 @@ class _LoginViewState extends State<LoginView> {
                                                 fontFamily: 'lato',
                                                 letterSpacing: 0.4,
                                                 fontSize: ScreenUtil(
-                                                    allowFontScaling:
-                                                    false)
+                                                        allowFontScaling: false)
                                                     .setSp(45)),
                                           ),
                                         ],
@@ -202,7 +212,7 @@ class _LoginViewState extends State<LoginView> {
                                         margin: EdgeInsets.only(
                                             left: ScreenUtil().setWidth(60),
                                             top: ScreenUtil().setHeight(30),
-                                            right:ScreenUtil().setWidth(60)),
+                                            right: ScreenUtil().setWidth(60)),
                                         child: Text(
                                           "Nomor handphone anda belum terdaftar",
                                           style: TextStyle(
@@ -210,8 +220,7 @@ class _LoginViewState extends State<LoginView> {
                                               fontFamily: 'lato',
                                               letterSpacing: 0.4,
                                               fontSize: ScreenUtil(
-                                                  allowFontScaling:
-                                                  true)
+                                                      allowFontScaling: true)
                                                   .setSp(45)),
                                         ),
                                       ),
@@ -220,8 +229,8 @@ class _LoginViewState extends State<LoginView> {
                                       height: ScreenUtil().setHeight(50),
                                     ),
                                     Container(
-                                      transform: Matrix4.translationValues(
-                                          0.0, -ScreenUtil().setHeight(40), 0.0),
+                                      transform: Matrix4.translationValues(0.0,
+                                          -ScreenUtil().setHeight(40), 0.0),
                                       height: ScreenUtil().setHeight(110),
                                       width: MediaQuery.of(context).size.width,
                                       margin: EdgeInsets.only(
@@ -246,8 +255,8 @@ class _LoginViewState extends State<LoginView> {
                                                   fontFamily: 'poppins',
                                                   letterSpacing: 1.25,
                                                   fontSize: ScreenUtil(
-                                                      allowFontScaling:
-                                                      true)
+                                                          allowFontScaling:
+                                                              true)
                                                       .setSp(45)),
                                             ),
                                             shape: new RoundedRectangleBorder(
@@ -259,11 +268,13 @@ class _LoginViewState extends State<LoginView> {
                                     ),
                                     Container(
                                         transform: Matrix4.translationValues(
-                                            0.0, -ScreenUtil().setHeight(50), 0.0),
+                                            0.0,
+                                            -ScreenUtil().setHeight(50),
+                                            0.0),
                                         margin: EdgeInsets.only(
                                             left: ScreenUtil().setWidth(60),
                                             top: ScreenUtil().setHeight(50),
-                                            right:ScreenUtil().setWidth(60)),
+                                            right: ScreenUtil().setWidth(60)),
                                         child: new Align(
                                             alignment: FractionalOffset.center,
                                             child: Row(
@@ -293,15 +304,17 @@ class _LoginViewState extends State<LoginView> {
                                                     child: Text(
                                                       " Daftar",
                                                       style: body2.copyWith(
-                                                        fontSize: ScreenUtil(
-                                                            allowFontScaling:
-                                                            false)
-                                                            .setSp(40),color: colorPrimary),
+                                                          fontSize: ScreenUtil(
+                                                                  allowFontScaling:
+                                                                      false)
+                                                              .setSp(40),
+                                                          color: colorPrimary),
                                                     ))
                                               ],
                                             ))),
                                     Container(
-                                        margin: EdgeInsets.only(bottom: ScreenUtil().setHeight(50)),
+                                        margin: EdgeInsets.only(
+                                            bottom: ScreenUtil().setHeight(50)),
                                         child: new Align(
                                             alignment:
                                                 FractionalOffset.bottomCenter,
@@ -312,10 +325,10 @@ class _LoginViewState extends State<LoginView> {
                                                 Text(
                                                   "Hubungi admin ?",
                                                   style: body2.copyWith(
-                                                    fontSize: ScreenUtil(
-                                                        allowFontScaling:
-                                                        false)
-                                                        .setSp(42)),
+                                                      fontSize: ScreenUtil(
+                                                              allowFontScaling:
+                                                                  false)
+                                                          .setSp(42)),
                                                 ),
                                                 InkWell(
                                                     onTap: () {
@@ -333,9 +346,10 @@ class _LoginViewState extends State<LoginView> {
                                                       " Klik Disini",
                                                       style: body2.copyWith(
                                                           fontSize: ScreenUtil(
-                                                              allowFontScaling:
-                                                              false)
-                                                              .setSp(42),color: colorPrimary),
+                                                                  allowFontScaling:
+                                                                      false)
+                                                              .setSp(42),
+                                                          color: colorPrimary),
                                                     ))
                                               ],
                                             )))

@@ -79,6 +79,7 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
+    - assets/logo/
     - assets/svg/login/liquidright.svg
     - assets/svg/login/liquidleft.svg
     - assets/svg/logo_placeholder.svg
