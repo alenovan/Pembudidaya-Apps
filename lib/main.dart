@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/forgot/ForgotVerifView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/splash/SplashScreen.dart';
+
 void main() async {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
   runApp(new MaterialApp(
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Lelenesia',
+      title: 'PanenIkan - Pembudidaya',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,

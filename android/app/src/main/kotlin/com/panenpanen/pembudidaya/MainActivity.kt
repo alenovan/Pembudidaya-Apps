@@ -1,4 +1,4 @@
-package com.novan.lelenesia_pembudidaya
+package com.panenpanen.pembudidaya
 
 import io.flutter.embedding.android.FlutterActivity
 
