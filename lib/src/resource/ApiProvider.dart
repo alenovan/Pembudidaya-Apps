@@ -525,7 +525,7 @@ class ApiProvider {
     dynamic token = await FlutterSession().get("token_market");
     await Future<void>.delayed(Duration(seconds: 1));
     final response = await client
-        .get("$_url_market/seller/product", headers: {'Authorization': 'Bearer $token', 'Content-type': 'application/json'});
+        .get("$_url_market/pembudidaya/seller/product", headers: {'Authorization': 'Bearer $token', 'Content-type': 'application/json'});
     if (response.statusCode == 200) {
       return response.body;
     } else {
