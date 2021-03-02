@@ -60,7 +60,8 @@ class ApiProvider {
       dynamic token = await FlutterSession().get("token");
       await Future<void>.delayed(Duration(seconds: 1));
       response = await client.post("$_url/user/change/profile", headers: {
-        'Authorization': 'Bearer $token'
+        'Authorization': 'Bearer $token',
+        'Content-type': 'application/json'
       }, body: {
         "_method": "PUT",
         'name': nama,
@@ -81,7 +82,8 @@ class ApiProvider {
       dynamic token = await FlutterSession().get("token");
       await Future<void>.delayed(Duration(seconds: 1));
       response = await client.post("$_url/user/change/profile", headers: {
-        'Authorization': 'Bearer $token'
+        'Authorization': 'Bearer $token',
+        'Content-type': 'application/json'
       }, body: {
         "_method": "PUT",
         'latitude': latitude,
@@ -100,7 +102,8 @@ class ApiProvider {
       dynamic token = await FlutterSession().get("token");
       await Future<void>.delayed(Duration(seconds: 1));
       response = await client.post("$_url/user/address/new", headers: {
-        'Authorization': 'Bearer $token'
+        'Authorization': 'Bearer $token',
+        'Content-type': 'application/json'
       }, body: {
         'name': nama,
         'phone_number': phone,
@@ -124,7 +127,8 @@ class ApiProvider {
       dynamic token = await FlutterSession().get("token");
       await Future<void>.delayed(Duration(seconds: 1));
       response = await client.put("$_url/user/address/lock/${id}", headers: {
-        'Authorization': 'Bearer $token'
+        'Authorization': 'Bearer $token',
+        'Content-type': 'application/json'
       }, body: {
         'name': "",
       });
@@ -151,7 +155,7 @@ class ApiProvider {
       "$_url/user/change/ktp",
       data: formData,
       options: Options(
-        headers: {'Authorization': 'Bearer $token'},
+        headers: {'Authorization': 'Bearer $token', 'Content-type': 'application/json'},
       ),
     );
     print(response.data);
@@ -161,7 +165,7 @@ class ApiProvider {
   getProfile() async {
     dynamic token = await FlutterSession().get("token");
     final response = await client
-        .get("$_url/user/me", headers: {'Authorization': 'Bearer $token'});
+        .get("$_url/user/me", headers: {'Authorization': 'Bearer $token', 'Content-type': 'application/json'});
     if (response.statusCode == 200) {
       return response.body;
     } else {
@@ -188,7 +192,7 @@ class ApiProvider {
     try {
       await Future<void>.delayed(Duration(seconds: 1));
       response = await client.get("$_url/ponds/${idKolam}",
-          headers: {'Authorization': 'Bearer $token'});
+          headers: {'Authorization': 'Bearer $token', 'Content-type': 'application/json'});
     } on SocketException {
       throw NetworkException('Tidak ada koneksi internet');
     }
@@ -208,7 +212,7 @@ class ApiProvider {
     // print('panggil data Kolam');
     await Future<void>.delayed(Duration(seconds: 1));
     final response = await client
-        .get("$_url/ponds/", headers: {'Authorization': 'Bearer $token'});
+        .get("$_url/ponds/", headers: {'Authorization': 'Bearer $token', 'Content-type': 'application/json'});
     if (response.statusCode == 200) {
       return response.body;
     } else {
@@ -330,7 +334,7 @@ class ApiProvider {
     // print('panggil data Kolam');
     await Future<void>.delayed(Duration(seconds: 1));
     final response = await client
-        .get("$_url/feeds", headers: {'Authorization': 'Bearer $token'});
+        .get("$_url/feeds", headers: {'Authorization': 'Bearer $token', 'Content-type': 'application/json'});
     if (response.statusCode == 200) {
       return response.body;
     } else {
@@ -348,7 +352,7 @@ class ApiProvider {
     dynamic token = await FlutterSession().get("token");
     await Future<void>.delayed(Duration(seconds: 1));
     final response = await client.post("$_url/monit/weight",
-        headers: {'Authorization': 'Bearer $token'},
+        headers: {'Authorization': 'Bearer $token', 'Content-type': 'application/json'},
         body: {'pond_id': pond_id, "weight": weight, "created_at": created_at});
     return response;
   }
@@ -357,7 +361,8 @@ class ApiProvider {
     dynamic token = await FlutterSession().get("token");
     await Future<void>.delayed(Duration(seconds: 1));
     final response = await client.post("$_url/monit/feed", headers: {
-      'Authorization': 'Bearer $token'
+      'Authorization': 'Bearer $token',
+      'Content-type': 'application/json'
     }, body: {
       'pond_id': pond_id,
       "feed_spent": feed,
@@ -370,7 +375,8 @@ class ApiProvider {
     dynamic token = await FlutterSession().get("token");
     await Future<void>.delayed(Duration(seconds: 1));
     final response = await client.post("$_url/monit/survival", headers: {
-      'Authorization': 'Bearer $token'
+      'Authorization': 'Bearer $token',
+      'Content-type': 'application/json'
     }, body: {
       'pond_id': pond_id,
       "fish_died": fish_died,
@@ -391,7 +397,7 @@ class ApiProvider {
     dynamic token = await FlutterSession().get("token");
     await Future<void>.delayed(Duration(seconds: 1));
     final response = await client.get("$_url/orders/${id_order}",
-        headers: {'Authorization': 'Bearer $token'});
+        headers: {'Authorization': 'Bearer $token','Content-type': 'application/json'});
 
     return response;
   }
@@ -400,7 +406,7 @@ class ApiProvider {
     dynamic token = await FlutterSession().get("token");
     await Future<void>.delayed(Duration(seconds: 1));
     final response = await client.post("$_url/orders/${id_order}/checkout",
-        headers: {'Authorization': 'Bearer $token'});
+        headers: {'Authorization': 'Bearer $token','Content-type': 'application/json'});
     return response;
   }
 
@@ -411,7 +417,7 @@ class ApiProvider {
     await Future<void>.delayed(Duration(seconds: 1));
     final response = await client.get(
         "$_url/analytics?pond_id=${pond_id}&month=${month}&year=${year}",
-        headers: {'Authorization': 'Bearer $token'});
+        headers: {'Authorization': 'Bearer $token','Content-type': 'application/json'});
     return response;
   }
 
@@ -420,7 +426,7 @@ class ApiProvider {
     await Future<void>.delayed(Duration(seconds: 1));
     final response = await client.get(
         "$_url/analytics/daily?pond_id=${pond_id}&date=${date}",
-        headers: {'Authorization': 'Bearer $token'});
+        headers: {'Authorization': 'Bearer $token','Content-type': 'application/json'});
     return response;
   }
 
@@ -429,7 +435,7 @@ class ApiProvider {
     await Future<void>.delayed(Duration(seconds: 1));
     final response = await client.get(
         "$_url/analytics/survival?pond_id=${pond_id}&from=${from},&to=${to}",
-        headers: {'Authorization': 'Bearer $token'});
+        headers: {'Authorization': 'Bearer $token','Content-type': 'application/json'});
     return response;
   }
 
@@ -495,11 +501,11 @@ class ApiProvider {
     dynamic token = await FlutterSession().get("token");
     await Future<void>.delayed(Duration(seconds: 1));
     final response = await client
-        .get("$_url/bid/", headers: {'Authorization': 'Bearer $token'});
+        .get("$_url/bid/", headers: {'Authorization': 'Bearer $token', 'Content-type': 'application/json'});
     if (response.statusCode == 200) {
       return response.body;
     } else {
-      throw Exception('Failed to Load');
+      throw Exception('');
     }
   }
 
@@ -507,11 +513,11 @@ class ApiProvider {
     dynamic token = await FlutterSession().get("token");
     await Future<void>.delayed(Duration(seconds: 1));
     final response = await client
-        .get("$_url/bid/${id}/bidders/", headers: {'Authorization': 'Bearer $token'});
+        .get("$_url/bid/${id}/bidders/", headers: {'Authorization': 'Bearer $token', 'Content-type': 'application/json'});
     if (response.statusCode == 200) {
       return response.body;
     } else {
-      throw Exception('Failed to Load');
+      throw Exception('');
     }
   }
 
@@ -519,11 +525,11 @@ class ApiProvider {
     dynamic token = await FlutterSession().get("token_market");
     await Future<void>.delayed(Duration(seconds: 1));
     final response = await client
-        .get("$_url_market/pembudidaya/seller/product", headers: {'Authorization': 'Bearer $token'});
+        .get("$_url_market/seller/product", headers: {'Authorization': 'Bearer $token', 'Content-type': 'application/json'});
     if (response.statusCode == 200) {
       return response.body;
     } else {
-      throw Exception('Failed to Load');
+      throw Exception('');
     }
   }
 
@@ -604,6 +610,8 @@ class ApiProvider {
       "description": description,
       "weight": weight,
       "category_id": category_id,
+      "subcategory_id": "6",
+      "type_id":"18",
       "stock": stock,
       "product_photo": await MultipartFile.fromFile(product_photo, filename: "product_photo"),
     });

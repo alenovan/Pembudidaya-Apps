@@ -272,7 +272,7 @@ class _LelangViewState extends State<LelangHistory> {
                               if (snapshot.hasData) {
                                 return buildList2(snapshot);
                               } else if (snapshot.hasError) {
-                                return Text(snapshot.error.toString());
+                                return Text("");
                               }
                               return ListView.builder(
                                   itemCount: 1,

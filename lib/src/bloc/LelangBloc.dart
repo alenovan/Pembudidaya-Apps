@@ -71,15 +71,19 @@ class LelangBloc {
   }
 
 //market jual
-  Future<bool> addJualMarket(String name, String price, String description, String weight, String category_id, String product_photo, String stock) async {
+   addJualMarket(String name, String price, String description, String weight, String category_id, String product_photo, String stock) async {
     var status;
     var val = await _repository.addJualMarket(name,price,description,weight,category_id,product_photo,stock);
     if (val.statusCode == 200) {
-      status = true;
+      if (val.data["status"] == "201") {
+        status = true;
+      } else {
+        status = false;
+      }
     } else {
       status = false;
     }
-    return status;
+    return [status, val.data["message"].toString()];
   }
 
   Future<bool> addJualMarketAdma(String name, String image, String deskripsi, String harga, String cashback_reseller, String berat, String stock, String keterangan) async {

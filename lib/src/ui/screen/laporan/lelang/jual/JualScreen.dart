@@ -60,7 +60,7 @@ class _JualScreenState extends State<JualScreen> {
           stockProdukController.text.toString(),
       );
       AppExt.popScreen(context);
-      if (status) {
+      if (status[0]) {
         BottomSheetFeedback.show_success(
             context, title: "Selamat", description: "Penjualan anda berhasil");
         Timer(const Duration(seconds: 1), () {
@@ -81,7 +81,7 @@ class _JualScreenState extends State<JualScreen> {
       } else {
         AppExt.popScreen(context);
         BottomSheetFeedback.show(context,
-            title: "Mohon Maaf", description: "Pastikan data terisi semua");
+            title: "Mohon Maaf", description: status[1]);
       }
     } else {
       AppExt.popScreen(context);
