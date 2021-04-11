@@ -180,7 +180,7 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
         ),
         child: Scaffold(
             backgroundColor: Colors.grey[100],
-            resizeToAvoidBottomPadding: false,
+            resizeToAvoidBottomInset: false,
             appBar: AppBar(
               elevation: 0,
               leading: IconButton(

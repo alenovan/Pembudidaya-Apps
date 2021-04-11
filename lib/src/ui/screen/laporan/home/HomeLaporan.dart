@@ -221,7 +221,7 @@ class _HomeLaporanState extends State<HomeLaporan> {
         statusBarIconBrightness: Brightness.dark,
       ),
       child: Scaffold(
-        resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
         body: Stack(
           children: [

@@ -135,7 +135,7 @@ class _KtpScreenState extends State<KtpScreen> {
         ),
         child: Scaffold(
             backgroundColor: Colors.white,
-            resizeToAvoidBottomPadding: false,
+            resizeToAvoidBottomInset: false,
             body: Column(
               children: [
                 AppbarForgot(

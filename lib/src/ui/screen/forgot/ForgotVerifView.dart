@@ -38,7 +38,7 @@ class _ForgotVerifViewState extends State<ForgotVerifView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false,
       appBar: AppbarForgot(context, appBarForgotPassword, LoginView(),Colors.white),
       body: Container(
           child: Column(

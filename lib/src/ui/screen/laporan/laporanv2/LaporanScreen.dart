@@ -183,7 +183,7 @@ class _HomeLaporanState extends State<LaporanScreen> {
         statusBarIconBrightness: Brightness.dark,
       ),
       child: Scaffold(
-        resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
         body: Stack(
           children: [

@@ -41,7 +41,7 @@ class _PageOneState extends State<PageOne> {
           statusBarIconBrightness: Brightness.dark,
         ),
         child:Scaffold(
-          resizeToAvoidBottomPadding: false,
+          resizeToAvoidBottomInset: false,
           backgroundColor: backgroundGreyColor,
             appBar: AppBar(
               elevation: 0,

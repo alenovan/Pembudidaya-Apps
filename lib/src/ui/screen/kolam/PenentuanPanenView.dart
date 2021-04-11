@@ -178,7 +178,7 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
             onWillPop: _onBackPressed,
             child: Scaffold(
               backgroundColor: Colors.white,
-              // resizeToAvoidBottomPadding: false,
+              // resizeToAvoidBottomInset: false,
               body: Stack(
                 children: [
                   Container(

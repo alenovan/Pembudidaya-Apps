@@ -134,7 +134,7 @@ class _DetailKolamViewState extends State<DetailKolam> {
         child: WillPopScope(
             child: Scaffold(
                 backgroundColor: Colors.grey[100],
-                resizeToAvoidBottomPadding: false,
+                resizeToAvoidBottomInset: false,
                 body: Column(
                   children: [
                     Expanded(

@@ -185,7 +185,7 @@ class _LaporanMingguanDetailState extends State<LaporanMingguanDetail> {
         statusBarIconBrightness: Brightness.dark,
       ),
       child: Scaffold(
-          resizeToAvoidBottomPadding: false,
+          resizeToAvoidBottomInset: false,
           backgroundColor: backgroundGreyColor,
           appBar: AppBar(
             elevation: 0,

@@ -73,7 +73,7 @@ class _LoginViewState extends State<LoginView> {
           statusBarIconBrightness: Brightness.dark,
         ),
         child: Scaffold(
-            resizeToAvoidBottomPadding: false,
+            resizeToAvoidBottomInset: false,
             backgroundColor: Colors.white,
             body: Stack(
               children: [

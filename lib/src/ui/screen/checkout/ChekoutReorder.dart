@@ -218,7 +218,7 @@ class _CheckoutViewState extends State<CheckoutReorder> {
         child:  WillPopScope(
             onWillPop: _onBackPressed,
             child:Scaffold(
-              resizeToAvoidBottomPadding: false,
+              resizeToAvoidBottomInset: false,
               appBar: AppBar(
                 centerTitle: true,
                 elevation: 0,

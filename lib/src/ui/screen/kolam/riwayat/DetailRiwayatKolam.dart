@@ -82,7 +82,7 @@ class _DetailRiwayatKolamState extends State<DetailRiwayatKolam> {
         statusBarIconBrightness: Brightness.dark,
       ),
       child: Scaffold(
-          resizeToAvoidBottomPadding: false,
+          resizeToAvoidBottomInset: false,
           backgroundColor: Colors.white,
           appBar: AppBar(
             elevation: 0,

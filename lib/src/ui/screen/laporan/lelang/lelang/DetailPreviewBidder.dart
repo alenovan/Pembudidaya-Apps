@@ -83,7 +83,7 @@ class _ProfileScreenState extends State<DetailPreviewBidder> {
         ),
         child: Scaffold(
             backgroundColor: Colors.white,
-            resizeToAvoidBottomPadding: false,
+            resizeToAvoidBottomInset: false,
             drawer: Drawers(context),
             body: Stack(
               children: [

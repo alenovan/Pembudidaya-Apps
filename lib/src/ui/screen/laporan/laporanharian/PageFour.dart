@@ -144,7 +144,7 @@ class _PageFourState extends State<PageFour> {
         statusBarIconBrightness: Brightness.dark,
       ),
       child:Scaffold(
-          resizeToAvoidBottomPadding: false,
+          resizeToAvoidBottomInset: false,
           backgroundColor: backgroundGreyColor,
           appBar: AppBar(
             elevation: 0,

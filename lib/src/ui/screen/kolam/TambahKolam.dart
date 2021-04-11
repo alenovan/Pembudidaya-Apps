@@ -95,7 +95,7 @@ class _TambahKolamState extends State<TambahKolam> {
     ),
     child:Scaffold(
         backgroundColor: Colors.white,
-        resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomInset: false,
         body: Stack(
           children: [
             Container(

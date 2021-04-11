@@ -92,7 +92,7 @@ class _RegisterViewState extends State<RegisterView> {
     return WillPopScope(
         onWillPop: _onBackPressed,
         child: Scaffold(
-            resizeToAvoidBottomPadding: false,
+            resizeToAvoidBottomInset: false,
             backgroundColor: Colors.white,
             body: Stack(
               children: [

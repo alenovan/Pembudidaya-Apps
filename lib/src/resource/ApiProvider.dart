@@ -7,9 +7,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_session/flutter_session.dart';
 import 'package:http/http.dart' show Client, Response;
 import 'package:intl/intl.dart';
-import 'package:lelenesia_pembudidaya/src/Models/ListKolamModels.dart';
-import 'package:lelenesia_pembudidaya/src/Models/ProfileModels.dart';
-import 'package:lelenesia_pembudidaya/src/Models/RegisterModels.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/ApiException.dart';
 
 class ApiProvider {
@@ -525,7 +522,7 @@ class ApiProvider {
     dynamic token = await FlutterSession().get("token_market");
     await Future<void>.delayed(Duration(seconds: 1));
     final response = await client
-        .get("$_url_market/pembudidaya/seller/product", headers: {'Authorization': 'Bearer $token', 'Content-type': 'application/json'});
+        .get("$_url_market/seller/product", headers: {'Authorization': 'Bearer $token', 'Content-type': 'application/json'});
     if (response.statusCode == 200) {
       return response.body;
     } else {
@@ -616,7 +613,7 @@ class ApiProvider {
       "product_photo": await MultipartFile.fromFile(product_photo, filename: "product_photo"),
     });
     response = await dio.post(
-      "$_url_market/pembudidaya/addProduct",
+      "$_url_market/seller/addProduct",
       data: formData,
       options: Options(
         headers: {'Authorization': 'Bearer $token'},

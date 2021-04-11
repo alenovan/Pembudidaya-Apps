@@ -69,10 +69,10 @@ class _DashboardFirstViewState extends State<DashboardFirstView> {
     SizeConfig().init(context);
 
     return Scaffold(
-        resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomInset: false,
         key: _scaffoldKey,
         backgroundColor: Colors.white,
-        // resizeToAvoidBottomPadding: false,
+        // resizeToAvoidBottomInset: false,
         drawer: Drawers(context),
         body: Stack(
           children: [

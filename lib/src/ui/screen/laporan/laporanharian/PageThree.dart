@@ -71,7 +71,7 @@ class _PageThreeState extends State<PageThree> {
         statusBarIconBrightness: Brightness.dark,
       ),
       child:Scaffold(
-          resizeToAvoidBottomPadding: false,
+          resizeToAvoidBottomInset: false,
           backgroundColor: backgroundGreyColor,
           appBar: AppBar(
             elevation: 0,

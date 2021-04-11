@@ -75,7 +75,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
         key: _scaffoldKey,
         backgroundColor: Colors.white,
-        resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomInset: false,
         drawer: Drawers(context),
         body: Stack(
           children: [

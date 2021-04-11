@@ -153,7 +153,7 @@ class _DetailLelangViewState extends State<DetailLelangView> {
         statusBarIconBrightness: Brightness.dark,
       ),
         child: Scaffold(
-            resizeToAvoidBottomPadding: false,
+            resizeToAvoidBottomInset: false,
             backgroundColor: backgroundGreyColor,
             body: Stack(
               children: [

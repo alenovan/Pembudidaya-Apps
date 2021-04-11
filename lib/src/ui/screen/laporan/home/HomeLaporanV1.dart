@@ -247,7 +247,7 @@ class _HomeLaporanState extends State<HomeLaporan> {
         statusBarIconBrightness: Brightness.light,
       ),
       child: Scaffold(
-          resizeToAvoidBottomPadding: false,
+          resizeToAvoidBottomInset: false,
           backgroundColor: Colors.white,
           appBar: AppBar(
             elevation: 0,

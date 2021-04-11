@@ -36,7 +36,7 @@ class _RiwayatKolamState extends State<RiwayatKolam> {
         statusBarIconBrightness: Brightness.dark,
       ),
       child: Scaffold(
-          resizeToAvoidBottomPadding: false,
+          resizeToAvoidBottomInset: false,
           backgroundColor: backgroundGreyColor,
           appBar: AppBar(
             elevation: 0,

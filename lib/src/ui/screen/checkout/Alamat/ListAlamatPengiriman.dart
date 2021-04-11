@@ -114,7 +114,7 @@ class _ListAlamatPengirimanState extends State<ListAlamatPengiriman> {
           statusBarIconBrightness: Brightness.dark,
         ),
         child: Scaffold(
-          resizeToAvoidBottomPadding: false,
+          resizeToAvoidBottomInset: false,
           appBar: AppBar(
             centerTitle: true,
             elevation: 0,

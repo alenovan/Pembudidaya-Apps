@@ -68,7 +68,7 @@ class _PageTwoState extends State<PageTwo> {
         statusBarIconBrightness: Brightness.dark,
       ),
       child:Scaffold(
-          resizeToAvoidBottomPadding: false,
+          resizeToAvoidBottomInset: false,
           backgroundColor: backgroundGreyColor,
           appBar: AppBar(
             elevation: 0,

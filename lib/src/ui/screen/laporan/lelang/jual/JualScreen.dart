@@ -127,7 +127,7 @@ class _JualScreenState extends State<JualScreen> {
             onWillPop: _onBackPressed,
             child: Scaffold(
               backgroundColor: Colors.white,
-              // resizeToAvoidBottomPadding: false,
+              // resizeToAvoidBottomInset: false,
               body: Stack(
                 children: [
                   Container(

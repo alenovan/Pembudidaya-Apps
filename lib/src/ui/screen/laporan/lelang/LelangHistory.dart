@@ -110,7 +110,7 @@ class _LelangViewState extends State<LelangHistory> {
         statusBarIconBrightness: Brightness.dark,
       ),
       child: Scaffold(
-          resizeToAvoidBottomPadding: false,
+          resizeToAvoidBottomInset: false,
           backgroundColor: backgroundGreyColor,
           body: Stack(
             children: [

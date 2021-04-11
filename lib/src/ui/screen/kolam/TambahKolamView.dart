@@ -61,7 +61,7 @@ class _TambahKolamViewState extends State<TambahKolamView> {
     SizeConfig().init(context);
 
     return Scaffold(
-        resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomInset: false,
         key: _scaffoldKey,
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -80,7 +80,7 @@ class _TambahKolamViewState extends State<TambahKolamView> {
             style: h3,
           ),
         ),
-        // resizeToAvoidBottomPadding: false,
+        // resizeToAvoidBottomInset: false,
         // drawer: Drawers(context),
         body: Stack(
           children: [

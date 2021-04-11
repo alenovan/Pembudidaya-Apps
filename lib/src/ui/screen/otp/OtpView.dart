@@ -81,7 +81,7 @@ class _OtpViewState extends State<OtpView> {
         statusBarIconBrightness: Brightness.dark,
     ),
       child:Scaffold(
-          resizeToAvoidBottomPadding: false,
+          resizeToAvoidBottomInset: false,
           backgroundColor: Colors.white,
           appBar: AppBar(
             elevation: 0,
