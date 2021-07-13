@@ -42,6 +42,7 @@ class _PageFourState extends State<PageFour> {
     if(status_all){
       var data = await bloc.weightMonitor(widget.idKolam,weightController.text.toString(),dateSelected);
       var status = data['status'];
+      var message_weight = data['message'];
       if(status == 1){
         var statusFeed = await bloc.feedMonitor(widget.idKolam,widget.dataPageTwo,dateSelected);
         if(statusFeed){

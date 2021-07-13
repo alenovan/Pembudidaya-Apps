@@ -96,7 +96,7 @@ class _LoginViewState extends State<LoginView> {
                       children: [
                         Container(
                           margin: EdgeInsets.only(
-                            top: ScreenUtil().setHeight(120),
+                            top: ScreenUtil().setHeight(80),
                           ),
                           width: double.infinity,
                           child: Row(
@@ -107,13 +107,13 @@ class _LoginViewState extends State<LoginView> {
                                       top: ScreenUtil().setHeight(50)),
                                   child: Align(
                                     alignment: Alignment.centerLeft,
-                                    child: LogoPanen(context, colorPrimary),
+                                    child: LogoPanen(context, Colors.transparent),
                                   )),
                               Spacer(),
                               Image.asset(
-                                "assets/logo/logo_polinema.png",
-                                height: ScreenUtil().setWidth(150),
-                                width: ScreenUtil().setWidth(150),
+                                "assets/logo/logo_panenIkan.png",
+                                height: ScreenUtil().setHeight(350),
+                                width: ScreenUtil().setWidth(350),
                               ),
                               SizedBox(
                                 width: ScreenUtil().setWidth(60),
@@ -142,14 +142,6 @@ class _LoginViewState extends State<LoginView> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Image.asset(
-                                      "assets/logo/logo_panenIkan.png",
-                                      height: ScreenUtil().setWidth(100),
-                                      // width: ScreenUtil().setWidth(150),
-                                    ),
-                                    SizedBox(
-                                      height: ScreenUtil().setHeight(50),
-                                    ),
                                     Text(
                                       titleLoginText,
                                       style: h1.copyWith(

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:lelenesia_pembudidaya/src/Models/KecamatanModel.dart';
 import 'package:lelenesia_pembudidaya/src/Models/KotaModel.dart';
 import 'package:lelenesia_pembudidaya/src/Models/ProfileModels.dart';
@@ -39,7 +40,7 @@ class ProfilBloc {
   Future<bool> funUpdateProfileKtp(noKtp, ktp, selfie) async {
     var status;
     var val = await _repository.updateKtpProfile(noKtp, ktp, selfie);
-    Map<String, dynamic> map = val.data;
+    debugPrint("Alenovan");
     if (val.statusCode == 200) {
       status = true;
     } else {

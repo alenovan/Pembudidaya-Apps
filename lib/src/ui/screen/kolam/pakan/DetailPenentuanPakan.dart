@@ -470,6 +470,7 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
                                             padding: EdgeInsets.only(left: 10),
                                             child: Text(
                                               widget.nameManufacture,
+                                              overflow: TextOverflow.ellipsis,
                                               style: subtitle2.copyWith(
                                                   fontWeight: FontWeight.bold,
                                                   letterSpacing: 1.25,
@@ -483,6 +484,7 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
                                             padding: EdgeInsets.only(left: 10),
                                             child: Text(
                                               widget.addressManufacture,
+                                              overflow: TextOverflow.ellipsis,
                                               style: caption.copyWith(
                                                   color: greyTextColor,
                                                   fontSize: ScreenUtil(

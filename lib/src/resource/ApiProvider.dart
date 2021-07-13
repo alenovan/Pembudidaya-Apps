@@ -11,7 +11,7 @@ import 'package:lelenesia_pembudidaya/src/ui/tools/ApiException.dart';
 
 class ApiProvider {
   Client client = Client();
-  final String _url = "https://pembudidaya.lelenesia.panen-panen.com/v0";
+  final String _url = "http://192.168.2.3:8000/v0";
   final String _url_market = "http://marketplace.lelenesia.panen-panen.com/api";
 
   Future login(String nohp) async {
@@ -42,6 +42,7 @@ class ApiProvider {
     var response;
     try {
       await Future<void>.delayed(Duration(seconds: 1));
+      debugPrint("$_url/user/change/profile");
       response = await client.post("$_url/user/register",
           body: {'name': nama, 'phone_number': nohp});
     } on SocketException {
@@ -59,17 +60,18 @@ class ApiProvider {
       response = await client.post("$_url/user/change/profile", headers: {
         'Authorization': 'Bearer $token',
         'Content-type': 'application/json'
-      }, body: {
+      }, body: jsonEncode({
         "_method": "PUT",
         'name': nama,
         'address': address,
         'province': province,
         'city': city,
         'district': district,
-      });
+      }));
     } on SocketException {
       throw NetworkException('Tidak ada koneksi internet');
     }
+    debugPrint(response.body);
     return response;
   }
 
@@ -81,11 +83,11 @@ class ApiProvider {
       response = await client.post("$_url/user/change/profile", headers: {
         'Authorization': 'Bearer $token',
         'Content-type': 'application/json'
-      }, body: {
+      }, body: jsonEncode({
         "_method": "PUT",
         'latitude': latitude,
         'longitude': longtitude,
-      });
+      }));
     } on SocketException {
       throw NetworkException('Tidak ada koneksi internet');
     }
@@ -101,7 +103,7 @@ class ApiProvider {
       response = await client.post("$_url/user/address/new", headers: {
         'Authorization': 'Bearer $token',
         'Content-type': 'application/json'
-      }, body: {
+      }, body: jsonEncode({
         'name': nama,
         'phone_number': phone,
         'address': address,
@@ -110,7 +112,7 @@ class ApiProvider {
         'district_id': district,
         // 'latitude': district,
         // 'longitude': district,
-      });
+      }));
       print(response.body);
     } on SocketException {
       throw NetworkException('Tidak ada koneksi internet');
@@ -126,9 +128,9 @@ class ApiProvider {
       response = await client.put("$_url/user/address/lock/${id}", headers: {
         'Authorization': 'Bearer $token',
         'Content-type': 'application/json'
-      }, body: {
+      }, body: jsonEncode({
         'name': "",
-      });
+      }));
     } on SocketException {
       throw NetworkException('Tidak ada koneksi internet');
     }
@@ -148,14 +150,17 @@ class ApiProvider {
       "selfie_photo":
           await MultipartFile.fromFile(selfie_photo, filename: "ktp"),
     });
+
+
+
     response = await dio.post(
       "$_url/user/change/ktp",
       data: formData,
       options: Options(
-        headers: {'Authorization': 'Bearer $token', 'Content-type': 'application/json'},
+        contentType: 'multipart/form-data',
+        headers: {'Authorization': 'Bearer $token'},
       ),
     );
-    print(response.data);
     return response;
   }
 
@@ -258,8 +263,9 @@ class ApiProvider {
       String feed_amount) async {
     dynamic token = await FlutterSession().get("token");
     final response = await client.post("$_url/harvests/init", headers: {
-      'Authorization': 'Bearer $token'
-    }, body: {
+      'Authorization': 'Bearer $token',
+      'Content-type': 'application/json'
+    }, body: jsonEncode({
       'pond_id': pond_id.toString(),
       'sow_date': sow_date,
       'fish_type_id': fish_type_id,
@@ -272,7 +278,7 @@ class ApiProvider {
       'target_fish_count': target_fish_count.toString(),
       'target_price': target_price.toString(),
       'feed_amount': feed_amount.toString(),
-    });
+    }));
 
     return response;
   }
@@ -284,12 +290,13 @@ class ApiProvider {
       String amount) async {
     dynamic token = await FlutterSession().get("token");
     final response = await client.post("$_url/orders/new", headers: {
-      'Authorization': 'Bearer $token'
-    }, body: {
+      'Authorization': 'Bearer $token',
+      'Content-type': 'application/json'
+    }, body: jsonEncode({
       'pond_id': pond_id.toString(),
       'feed_id': feed_id,
       'amount': amount
-    });
+    }));
 
     return response;
   }
@@ -298,11 +305,12 @@ class ApiProvider {
       String pond_id,) async {
     dynamic token = await FlutterSession().get("token");
     final response = await client.post("$_url/ponds/reset", headers: {
-      'Authorization': 'Bearer $token'
-    }, body: {
+      'Authorization': 'Bearer $token',
+      'Content-type': 'application/json'
+    }, body: jsonEncode({
       "_method": "PUT",
       "pond_id": pond_id,
-    });
+    }));
 
     return response;
   }
@@ -320,6 +328,7 @@ class ApiProvider {
       "$_url/ponds/activate",
       data: formData,
       options: Options(
+        contentType: 'multipart/form-data',
         headers: {'Authorization': 'Bearer $token'},
       ),
     );
@@ -350,7 +359,7 @@ class ApiProvider {
     await Future<void>.delayed(Duration(seconds: 1));
     final response = await client.post("$_url/monit/weight",
         headers: {'Authorization': 'Bearer $token', 'Content-type': 'application/json'},
-        body: {'pond_id': pond_id, "weight": weight, "created_at": created_at});
+        body: jsonEncode({'pond_id': pond_id, "weight": weight, "created_at": created_at}));
     return response;
   }
 
@@ -360,11 +369,11 @@ class ApiProvider {
     final response = await client.post("$_url/monit/feed", headers: {
       'Authorization': 'Bearer $token',
       'Content-type': 'application/json'
-    }, body: {
+    }, body: jsonEncode({
       'pond_id': pond_id,
       "feed_spent": feed,
       "created_at": created_at
-    });
+    }));
     return response;
   }
 
@@ -374,11 +383,11 @@ class ApiProvider {
     final response = await client.post("$_url/monit/survival", headers: {
       'Authorization': 'Bearer $token',
       'Content-type': 'application/json'
-    }, body: {
+    }, body: jsonEncode({
       'pond_id': pond_id,
       "fish_died": fish_died,
       "created_at": created_at
-    });
+    }));
     return response;
     print(created_at);
   }

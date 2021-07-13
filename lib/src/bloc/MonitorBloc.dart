@@ -9,41 +9,43 @@ class LoginBloc {
   Future weightMonitor(_pondid, _weight,_created_at) async {
     var status;
     var hasil;
-
+    print("update weightMonitor");
     var val = await _repository.monitorWeight(_pondid, _weight,_created_at);
-
+    debugPrint("${val.statusCode}");
+    debugPrint("${val.body}");
     if (val.statusCode == 200) {
-      status = true;
+      String rawJson = '{"message":""}';
+      return jsonDecode(rawJson);
     } else {
-      status = false;
+      return jsonDecode(val.body);
     }
-    return status;
+
   }
 
-  Future<bool> feedMonitor(_pondid, _feed,_created_at) async {
+  Future feedMonitor(_pondid, _feed,_created_at) async {
     var status;
     print("update feed monitor");
     var val = await _repository.monitorFeed(_pondid, _feed,_created_at);
-    print(val.body);
+    print(val.statusCode);
     if (val.statusCode == 200) {
-      status = true;
+      String rawJson = '{"message":""}';
+      return jsonDecode(rawJson);
     } else {
-      status = false;
+      return jsonDecode(val.body);
     }
-    return status;
   }
 
-  Future<bool> feedSR(_pondid, _fishdead,_created_at) async {
+  Future feedSR(_pondid, _fishdead,_created_at) async {
     var status;
     print("update sr monitor");
     var val = await _repository.monitorSr(_pondid, _fishdead,_created_at);
     print(val.statusCode);
     if (val.statusCode == 200) {
-      status = true;
+      String rawJson = '{"message":""}';
+      return jsonDecode(rawJson);
     } else {
-      status = false;
+      return jsonDecode(val.body);
     }
-    return status;
   }
 
   Future<String> getToken() async {

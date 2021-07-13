@@ -1016,7 +1016,7 @@ class _CheckoutViewState extends State<CheckoutView> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
+                  Expanded(child:Container(
                       height: 35.0,
                       margin: EdgeInsets.only(
                           left: SizeConfig.blockVertical * 1,
@@ -1043,33 +1043,36 @@ class _CheckoutViewState extends State<CheckoutView> {
                             shape: new RoundedRectangleBorder(
                               borderRadius: new BorderRadius.circular(30.0),
                             ),
-                          ))),
-                  Container(
-                    height: 35.0,
-                    margin: EdgeInsets.only(
-                        left: SizeConfig.blockVertical * 1,
-                        right: SizeConfig.blockVertical * 1,
-                        top: SizeConfig.blockVertical * 3),
-                    child: CustomElevation(
-                        height: 35.0,
-                        child: RaisedButton(
-                          highlightColor: colorPrimary,
-                          //Replace with actual colors
-                          color: redTextColor,
-                          onPressed: () => {_clickOrder()},
-                          child: Text(
-                            "Pesan saja",
-                            style: TextStyle(
-                                color: backgroundColor,
-                                fontWeight: FontWeight.w500,
-                                fontFamily: 'poppins',
-                                letterSpacing: 1.25,
-                                fontSize: subTitleLogin),
-                          ),
-                          shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(30.0),
-                          ),
-                        )),
+                          )))),
+                  Expanded(
+                    flex: 2,
+                    child: Container(
+                      height: 35.0,
+                      margin: EdgeInsets.only(
+                          left: SizeConfig.blockVertical * 1,
+                          right: SizeConfig.blockVertical * 1,
+                          top: SizeConfig.blockVertical * 3),
+                      child: CustomElevation(
+                          height: 35.0,
+                          child: RaisedButton(
+                            highlightColor: colorPrimary,
+                            //Replace with actual colors
+                            color: redTextColor,
+                            onPressed: () => {_clickOrder()},
+                            child: Text(
+                              "Pesan saja",
+                              style: TextStyle(
+                                  color: backgroundColor,
+                                  fontWeight: FontWeight.w500,
+                                  fontFamily: 'poppins',
+                                  letterSpacing: 1.25,
+                                  fontSize: subTitleLogin),
+                            ),
+                            shape: new RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(30.0),
+                            ),
+                          )),
+                    ),
                   ),
                 ],
               )

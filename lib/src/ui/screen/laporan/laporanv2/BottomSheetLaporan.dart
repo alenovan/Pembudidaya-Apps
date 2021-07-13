@@ -44,13 +44,13 @@ class _MyBottomSheetState extends State<BottomSheetLaporan> {
       // print(weightController.text);
       var statusFeed = await monitor.bloc.feedMonitor(
           widget.idKolam, pakanController.text.toString(), dateSelected);
-      if (statusFeed) {
+      if (statusFeed["message"] == "") {
         var statusSr = await monitor.bloc
             .feedSR(widget.idKolam, srController.text.toString(), dateSelected);
-        if (statusSr) {
+        if (statusSr["message"] == "") {
           var statusWeight = await monitor.bloc.weightMonitor(
               widget.idKolam, weightController.text.toString(), dateSelected);
-          if (statusWeight) {
+          if (statusWeight["message"] == "") {
             AppExt.popScreen(context);
             BottomSheetFeedback.show_success(context, title: "Selamat", description: "Monitoring Tanggal ${date.day} Berhasil");
             Timer(Duration(seconds: 2), () {
@@ -67,15 +67,15 @@ class _MyBottomSheetState extends State<BottomSheetLaporan> {
             });
           } else {
             AppExt.popScreen(context);
-            BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Silahkan ulangi kembali di pada jumlah berat ikan");
+            BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Berat Ikan = "+statusWeight["message"]);
           }
         } else {
           AppExt.popScreen(context);
-          BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Silahkan ulangi kembali di pada jumlah kematian ikan");
+          BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Ikan Mati = "+statusSr["message"]);
         }
       } else {
         AppExt.popScreen(context);
-        BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Silahkan ulangi kembali pada jumlah pakan");
+        BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Berat Pakan = "+statusFeed["message"]);
       }
     } else {
       var statusFeed = await monitor.bloc.feedMonitor(

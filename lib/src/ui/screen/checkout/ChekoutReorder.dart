@@ -940,7 +940,7 @@ class _CheckoutViewState extends State<CheckoutReorder> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
+                  Expanded(child:Container(
                       height: 35.0,
                       margin: EdgeInsets.only(
                           left: SizeConfig.blockVertical * 1,
@@ -956,7 +956,7 @@ class _CheckoutViewState extends State<CheckoutReorder> {
                               _clickCheckOut()
                             },
                             child: Text(
-                              "Checkout",
+                              "Ya",
                               style: TextStyle(
                                   color: backgroundColor,
                                   fontWeight: FontWeight.w500,
@@ -967,8 +967,8 @@ class _CheckoutViewState extends State<CheckoutReorder> {
                             shape: new RoundedRectangleBorder(
                               borderRadius: new BorderRadius.circular(30.0),
                             ),
-                          ))),
-                  Container(
+                          )))),
+                  Expanded(flex: 2,child:Container(
                     height: 35.0,
                     margin: EdgeInsets.only(
                         left: SizeConfig.blockVertical * 1,
@@ -994,7 +994,7 @@ class _CheckoutViewState extends State<CheckoutReorder> {
                             borderRadius: new BorderRadius.circular(30.0),
                           ),
                         )),
-                  ),
+                  )),
                 ],
               )
             ],

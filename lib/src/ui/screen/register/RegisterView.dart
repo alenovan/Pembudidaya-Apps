@@ -115,14 +115,17 @@ class _RegisterViewState extends State<RegisterView> {
                                       top: ScreenUtil().setHeight(50)),
                                   child: Align(
                                     alignment: Alignment.centerLeft,
-                                    child: LogoPanen(context, Colors.white),
+                                    child: Logo(context, colorPrimary),
                                   )),
                               Spacer(),
-                              Image.asset(
-                                "assets/logo/logo_polinema.png",
-                                height: ScreenUtil().setWidth(150),
-                                width: ScreenUtil().setWidth(150),
-                              ),
+                              Container(
+                                  margin: EdgeInsets.only(
+                                      left: ScreenUtil().setWidth(60),
+                                      top: ScreenUtil().setHeight(50)),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: LogoPanen(context, Colors.white),
+                                  )),
                               SizedBox(
                                 width: ScreenUtil().setWidth(60),
                               ),

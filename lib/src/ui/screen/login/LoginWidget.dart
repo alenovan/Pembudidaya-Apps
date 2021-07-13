@@ -87,20 +87,31 @@ Widget Logo(BuildContext context,Color clr) {
 Widget LogoPanen(BuildContext context,Color clr ) {
   ScreenUtil.instance = ScreenUtil()..init(context);
   SizeConfig().init(context);
-
+  var widget;
   String assetName = "";
-  if(clr == Colors.white){
+  if(clr == Colors.white) {
     assetName = "assets/svg/logo_primary.svg";
+    widget = SvgPicture.asset(
+      assetName,
+      width: ScreenUtil().setWidth(300),
+    );
+  }else if(clr == Colors.transparent){
+    assetName = "assets/svg/logo_primary.svg";
+    widget =  Image.asset(
+      "assets/logo/white_logo.png",
+      width: ScreenUtil().setWidth(300),
+    );
   }else{
     assetName = "assets/svg/img_logo_panen.svg";
+    widget = SvgPicture.asset(
+      assetName,
+      width: ScreenUtil().setWidth(300),
+    );
   }
   final Widget svgIcon = Container(
     child: Column(
       children: [
-        SvgPicture.asset(
-          assetName,
-          width: ScreenUtil().setWidth(300),
-        ),
+        widget
       ],
     ),
   );
