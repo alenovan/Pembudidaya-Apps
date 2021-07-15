@@ -238,7 +238,7 @@ class _DetailKolamViewState extends State<DetailKolam> {
                                       top: ikanTop,
                                         left: ikanLeft),
                                     height: ScreenUtil().setHeight(850),
-                                    child: Image.asset(
+                                    child: ikanAssets==""?Container():Image.asset(
                                       ikanAssets,
                                       fit: BoxFit.fitHeight,
                                     ),
