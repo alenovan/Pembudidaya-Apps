@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_session/flutter_session.dart';
 import 'package:lelenesia_pembudidaya/src/Models/ListKolamModels.dart';
 import 'package:lelenesia_pembudidaya/src/Models/ListKolamModelsNew.dart';
@@ -26,6 +27,7 @@ class KolamBloc {
 
   fetchAllKolam() async {
     var kolam = await _repository.fetchAllKolam();
+    debugPrint("fetch kolam");
     var enc = json.encode(json.decode(kolam)['data']);
     var data = listKolamModelsNewFromJson(enc);
     return data;

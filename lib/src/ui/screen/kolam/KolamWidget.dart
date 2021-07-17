@@ -116,7 +116,7 @@ Widget CardPenentuanPakan(BuildContext context, String title, String rating,
                               Container(
                                 margin: EdgeInsets.only(left: ScreenUtil().setWidth(20), top: ScreenUtil().setWidth(4)),
                                 child: Text(
-                                  " Pay Later",
+                                  " COD",
                                   style: caption.copyWith(color: colorPrimary,fontWeight: FontWeight.bold,fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
                                 ),
                               )

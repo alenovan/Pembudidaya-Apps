@@ -10,7 +10,6 @@ class LelangBloc {
       String amount_per_kilo,String start_date,String end_date,String open_price) async {
     var status;
     var val = await _repository.addlelang(harvest_id, fish_type, total_amount, amount_per_kilo, start_date, end_date, open_price);
-    print(val.body);
     if(val.statusCode == 200){
       status = true;
     }else {

@@ -264,8 +264,7 @@ class _DashboardViewState extends State<DashboardView> {
                                         borderRadius:
                                             BorderRadius.circular(15.0),
                                       ),
-                                      child: Expanded(
-                                        child: Column(
+                                      child:  Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           mainAxisAlignment:
@@ -343,7 +342,7 @@ class _DashboardViewState extends State<DashboardView> {
                                           ],
                                         ),
                                       ),
-                                    )));
+                                    ));
                           },
                         ),
                       )),

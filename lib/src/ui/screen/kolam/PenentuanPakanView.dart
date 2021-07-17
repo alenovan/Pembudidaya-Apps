@@ -531,7 +531,7 @@ class ListItem extends StatelessWidget {
                                       left: ScreenUtil().setWidth(20),
                                       top: ScreenUtil().setWidth(4)),
                                   child: Text(
-                                    " Pay Later",
+                                    " COD",
                                     style: caption.copyWith(
                                         color: colorPrimary,
                                         fontWeight: FontWeight.bold,

@@ -269,7 +269,7 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
                                               margin:
                                                   EdgeInsets.only(left: 3.0),
                                               child: Text(
-                                                " Pay Later",
+                                                " COD",
                                                 style: caption.copyWith(
                                                     color: colorPrimary,
                                                     fontWeight:

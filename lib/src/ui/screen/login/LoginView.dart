@@ -3,10 +3,13 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:lelenesia_pembudidaya/src/bloc/LoginBloc.dart';
 import 'package:lelenesia_pembudidaya/src/typography.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardFirstView.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/otp/OtpView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/register/RegisterView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/ScreenUtil.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
+import 'package:lelenesia_pembudidaya/src/ui/widget/BottomSheetFeedback.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/CustomElevation.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/login/LoginWidget.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
@@ -17,7 +20,7 @@ import 'package:lelenesia_pembudidaya/src/ui/widget/LoadingDialog.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/extensions.dart' as AppExt;
-
+import 'package:lelenesia_pembudidaya/src/bloc/KolamBloc.dart' as kolamBloc;
 class LoginView extends StatefulWidget {
   const LoginView({Key key}) : super(key: key);
 
@@ -46,16 +49,33 @@ class _LoginViewState extends State<LoginView> {
       setState(() {
         _statusLogin = false;
       });
-      AppExt.popScreen(context);
-      Navigator.push(
-          context,
-          PageTransition(
-              type: PageTransitionType.fade,
-              child: OtpView(
-                no_phone: nohpController.text.toString(),
-              )));
+      BottomSheetFeedback.show_success(context, title: "Selamat", description: "Selamat Datang Di Panen Panen");
+      bool status = await kolamBloc.bloc.getCheckKolam();
+      if (status) {
+        Navigator.push(
+            context,
+            PageTransition(
+                type: PageTransitionType.fade,
+                // duration: Duration(microseconds: 1000),
+                child: DashboardFirstView()));
+      } else {
+        Navigator.push(
+            context,
+            PageTransition(
+                type: PageTransitionType.fade,
+                // duration: Duration(microseconds: 1000),
+                child: DashboardView()));
+      }
+      // Navigator.push(
+      //     context,
+      //     PageTransition(
+      //         type: PageTransitionType.fade,
+      //         child: OtpView(
+      //           no_phone: nohpController.text.toString(),
+      //         )));
     } else {
       AppExt.popScreen(context);
+      BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Nomor Handphone anda belum terdaftar");
       setState(() {
         _statusLogin = true;
       });

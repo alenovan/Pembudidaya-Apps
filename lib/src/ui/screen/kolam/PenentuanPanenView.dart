@@ -115,24 +115,30 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
             : targetHargaController.text.toString()),
         0);
     var update = await _dbHelper.update(data);
-    if (update == 1) {
-      AppExt.popScreen(context);
-      BottomSheetFeedback.show_success(context,
-          title: "Selamat", description: "Penentuan Panen Berhasil");
-      Timer(const Duration(seconds: 2), () {
-        Navigator.push(
-            context,
-            PageTransition(
-                type: PageTransitionType.fade,
-                child: PenentuanPakanView(
-                  idKolam: widget.idKolam,
-                )));
-      });
-    } else {
-      AppExt.popScreen(context);
-      BottomSheetFeedback.show(context,
-          title: "Mohon Maaf", description: "Silahkan ulangi kembali");
-    }
+   try{
+     if (update == 1) {
+       AppExt.popScreen(context);
+       BottomSheetFeedback.show_success(context,
+           title: "Selamat", description: "Penentuan Panen Berhasil");
+       Timer(const Duration(seconds: 2), () {
+         Navigator.push(
+             context,
+             PageTransition(
+                 type: PageTransitionType.fade,
+                 child: PenentuanPakanView(
+                   idKolam: widget.idKolam,
+                 )));
+       });
+     } else {
+       AppExt.popScreen(context);
+       BottomSheetFeedback.show(context,
+           title: "Mohon Maaf", description: "Silahkan ulangi kembali");
+     }
+   }catch(e){
+     AppExt.popScreen(context);
+     BottomSheetFeedback.show(context,
+         title: "Mohon Maaf", description: "Silahkan ulangi kembali");
+   }
   }
 
   void _buttonPenentuan() async {
