@@ -145,7 +145,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   Visibility(
                     visible: false,
-                      child: Column(
+                      child: ListView(
                     children: [
                       Container(
                           child: Container(

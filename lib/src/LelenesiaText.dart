@@ -69,6 +69,6 @@ int tryCoba(String data) {
   try {
     return int.parse(data);
   } catch (_) {
-    return 0;
+    return -1;
   }
 }

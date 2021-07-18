@@ -23,7 +23,8 @@ class _RiwayatPakanState extends State<RiwayatPakan> {
   var itemsSudahCheckout = List<ListOrdersFeedModels>();
   var itemsPerjalananCheckout = List<ListOrdersFeedModels>();
   var itemsSelesaiCheckout = List<ListOrdersFeedModels>();
-  void fetchData()  {
+  var loading = true;
+  void fetchData() async {
      bloc.fetchRiwayatList().then((value) {
       List<ListOrdersFeedModels> dataKolam = new List();
       setState(() {
@@ -33,6 +34,7 @@ class _RiwayatPakanState extends State<RiwayatPakan> {
         itemsSudahCheckout.addAll(dataKolam);
         itemsPerjalananCheckout.addAll(dataKolam);
         itemsSelesaiCheckout.addAll(dataKolam);
+        loading = false;
       });
 
     });
@@ -135,6 +137,11 @@ class _RiwayatPakanState extends State<RiwayatPakan> {
                 scrollDirection: Axis.vertical,
                 itemCount: itemsBelumCheckout.length,
                 itemBuilder: (BuildContext context, int index) {
+                  if(loading){
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
                   return itemsBelumCheckout[index].status == 1?InkWell(
                       onTap: () {},
                       child: Container(

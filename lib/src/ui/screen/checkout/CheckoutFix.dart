@@ -137,17 +137,18 @@ class _CheckoutViewState extends State<CheckoutFix> {
   void _clickCheckOut() async {
     AppExt.popScreen(context);
     LoadingDialog.show(context);
-    var dataOrder = await order.bloc.funReOrderFeed(
-        widget.idKolam,
-        widget.feedId,
-        feed_amount.toString());
+    // var dataOrder = await order.bloc.funReOrderFeed(
+    //     widget.idKolam,
+    //     widget.feedId,
+    //     feed_amount.toString());
+    var dataOrder = true;
     if(dataOrder){
       var detail = await bloc.getKolamDetail(widget.idKolam);
       var data = detail['data'];
       setState(() {
         id_order = data['harvest']['last_order_id'];
       });
-      var statusCheckout = await checkout.bloc.checkout(id_order.toString());
+      var statusCheckout = await checkout.bloc.checkout(data['harvest']['last_order_id'].toString());
       if(statusCheckout){
         AppExt.popScreen(context);
         BottomSheetFeedback.show_success(context, title: "Selamat", description: "Pembelian anda berhasil di checkout");

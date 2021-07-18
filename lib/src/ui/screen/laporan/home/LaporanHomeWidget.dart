@@ -450,7 +450,7 @@ Widget CardKolamDetail(BuildContext context, String title, String sub,
                                       fontSize: ScreenUtil(allowFontScaling: false).setSp(35),
                                       fontWeight: FontWeight.bold)),
                             stock != "null"?TextSpan(
-                                  text: stock,
+                                  text: stock == "null Kg" ?"0 Kg":stock,
                                   style: subtitle1.copyWith(
                                       fontWeight: FontWeight.bold,fontSize: ScreenUtil(allowFontScaling: false).setSp(40))):Shimmer.fromColors(
                                   baseColor: Colors.grey[300],

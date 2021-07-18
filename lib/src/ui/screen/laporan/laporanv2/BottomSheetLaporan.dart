@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -6,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaDimens.dart';
+import 'package:lelenesia_pembudidaya/src/LelenesiaText.dart';
 import 'package:lelenesia_pembudidaya/src/typography.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanMain.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/laporanv2/LaporanScreen.dart';
@@ -22,6 +24,7 @@ import 'package:shimmer/shimmer.dart';
 
 class BottomSheetLaporan extends StatefulWidget {
   DateTime date;
+
   final String idKolam;
 
   BottomSheetLaporan({Key key, @required this.date, this.idKolam})
@@ -36,77 +39,196 @@ class _MyBottomSheetState extends State<BottomSheetLaporan> {
   TextEditingController srController = TextEditingController();
   TextEditingController pakanController = TextEditingController();
   TextEditingController weightController = TextEditingController();
+  var lastsr = "";
+  var lastpakan = "";
+  var lastweight = "";
+  var saveFeed = false;
+  var saveSr = false;
+  var saveWeight = false;
 
   void _simpanLaporan(DateTime date) async {
     var dateSelected = DateFormat("yyyy-MM-dd hh:mm:ss", "id_ID").format(date);
     LoadingDialog.show(context);
-    if (weightController.text.trim().length >= 1) {
-      // print(weightController.text);
+    if (!saveFeed) {
       var statusFeed = await monitor.bloc.feedMonitor(
           widget.idKolam, pakanController.text.toString(), dateSelected);
       if (statusFeed["message"] == "") {
-        var statusSr = await monitor.bloc
-            .feedSR(widget.idKolam, srController.text.toString(), dateSelected);
-        if (statusSr["message"] == "") {
-          var statusWeight = await monitor.bloc.weightMonitor(
-              widget.idKolam, weightController.text.toString(), dateSelected);
-          if (statusWeight["message"] == "") {
-            AppExt.popScreen(context);
-            BottomSheetFeedback.show_success(context, title: "Selamat", description: "Monitoring Tanggal ${date.day} Berhasil");
-            Timer(Duration(seconds: 2), () {
-              Navigator.push(
-                  context,
-                  PageTransition(
-                      type: PageTransitionType
-                          .fade,
-                      child: LaporanMain(
-                        page: 1,
-                        laporan_page: "home",
-                        idKolam: widget.idKolam,
-                      )));
-            });
-          } else {
-            AppExt.popScreen(context);
-            BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Berat Ikan = "+statusWeight["message"]);
-          }
-        } else {
-          AppExt.popScreen(context);
-          BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Ikan Mati = "+statusSr["message"]);
-        }
+        AppExt.popScreen(context);
+        setState(() {
+          saveFeed = true;
+        });
+        lastpakan = pakanController.text.toString();
+        BottomSheetFeedback.show_success(context,
+            title: "Selamat",
+            description: "Monitoring Pakan Tanggal ${date.day} Berhasil");
       } else {
         AppExt.popScreen(context);
-        BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Berat Pakan = "+statusFeed["message"]);
-      }
-    } else {
-      var statusFeed = await monitor.bloc.feedMonitor(
-          widget.idKolam, pakanController.text.toString(), dateSelected);
-      if (statusFeed) {
-        var statusSr = await monitor.bloc
-            .feedSR(widget.idKolam, srController.text.toString(), dateSelected);
-        if (statusSr) {
-          AppExt.popScreen(context);
-          BottomSheetFeedback.show_success(context, title: "Selamat", description: "Monitoring Tanggal ${date.day} Berhasil");
-          Timer(Duration(seconds: 2), () {
-            Navigator.push(
-                context,
-                PageTransition(
-                    type: PageTransitionType
-                        .fade,
-                    child: LaporanMain(
-                      page: 1,
-                      laporan_page: "home",
-                      idKolam: widget.idKolam,
-                    )));
-          });
-        } else {
-          AppExt.popScreen(context);
-          BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Silahkan ulangi kembali di pada jumlah kematian ikan");
-        }
-      } else {
-        AppExt.popScreen(context);
-        BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Silahkan ulangi kembali pada jumlah pakan");
+        BottomSheetFeedback.show(context,
+            title: "Mohon Maaf",
+            description: "Berat Pakan = " + statusFeed["message"]);
       }
     }
+
+    if (!saveSr) {
+      var statusSr = await monitor.bloc
+          .feedSR(widget.idKolam, srController.text.toString(), dateSelected);
+      if (statusSr["message"] == "") {
+        AppExt.popScreen(context);
+        setState(() {
+          saveSr = true;
+        });
+        lastsr = srController.text.toString();
+        BottomSheetFeedback.show_success(context,
+            title: "Selamat",
+            description: "Monitoring Kematian Ikan Tanggal ${date.day} Berhasil");
+      } else {
+        AppExt.popScreen(context);
+        BottomSheetFeedback.show(context,
+            title: "Mohon Maaf",
+            description: "Kematian Ikan = " + statusSr["message"]);
+      }
+    }
+
+    if (!saveWeight) {
+      var statusWeight = await monitor.bloc.weightMonitor(
+          widget.idKolam, weightController.text.toString(), dateSelected);
+      if (statusWeight["message"] == "") {
+        AppExt.popScreen(context);
+        setState(() {
+          saveWeight = true;
+        });
+        lastweight = weightController.text.toString();
+        BottomSheetFeedback.show_success(context,
+            title: "Selamat",
+            description: "Monitoring Berat Ikan Tanggal ${date.day} Berhasil");
+        Timer(Duration(seconds: 2), () {
+          Navigator.push(
+              context,
+              PageTransition(
+                  type: PageTransitionType.fade,
+                  child: LaporanMain(
+                    page: 1,
+                    laporan_page: "home",
+                    idKolam: widget.idKolam,
+                  )));
+        });
+      } else {
+        AppExt.popScreen(context);
+        BottomSheetFeedback.show(context,
+            title: "Mohon Maaf",
+            description: "Berat Ikan = " + statusWeight["message"]);
+      }
+    }
+
+    // if (weightController.text.trim().length >= 1) {
+    //   // print(weightController.text);
+    //   var statusFeed = await monitor.bloc.feedMonitor(
+    //       widget.idKolam, pakanController.text.toString(), dateSelected);
+    //   if (statusFeed["message"] == "") {
+    //     saveFeed = true;
+    //     var statusSr = await monitor.bloc
+    //         .feedSR(widget.idKolam, srController.text.toString(), dateSelected);
+    //     if (statusSr["message"] == "") {
+    //       saveSr = true;
+    //       var statusWeight = await monitor.bloc.weightMonitor(
+    //           widget.idKolam, weightController.text.toString(), dateSelected);
+    //       if (statusWeight["message"] == "") {
+    //         saveWeight = true;
+    //         AppExt.popScreen(context);
+    //         BottomSheetFeedback.show_success(context, title: "Selamat", description: "Monitoring Tanggal ${date.day} Berhasil");
+    //         Timer(Duration(seconds: 2), () {
+    //           Navigator.push(
+    //               context,
+    //               PageTransition(
+    //                   type: PageTransitionType
+    //                       .fade,
+    //                   child: LaporanMain(
+    //                     page: 1,
+    //                     laporan_page: "home",
+    //                     idKolam: widget.idKolam,
+    //                   )));
+    //         });
+    //       } else {
+    //         AppExt.popScreen(context);
+    //         BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Berat Ikan = "+statusWeight["message"]);
+    //       }
+    //     } else {
+    //       AppExt.popScreen(context);
+    //       BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Ikan Mati = "+statusSr["message"]);
+    //     }
+    //   } else {
+    //     AppExt.popScreen(context);
+    //     BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Berat Pakan = "+statusFeed["message"]);
+    //   }
+    // } else {
+    //   var statusFeed = await monitor.bloc.feedMonitor(
+    //       widget.idKolam, pakanController.text.toString(), dateSelected);
+    //   if (statusFeed) {
+    //     var statusSr = await monitor.bloc
+    //         .feedSR(widget.idKolam, srController.text.toString(), dateSelected);
+    //     if (statusSr) {
+    //       AppExt.popScreen(context);
+    //       BottomSheetFeedback.show_success(context, title: "Selamat", description: "Monitoring Tanggal ${date.day} Berhasil");
+    //       Timer(Duration(seconds: 2), () {
+    //         Navigator.push(
+    //             context,
+    //             PageTransition(
+    //                 type: PageTransitionType
+    //                     .fade,
+    //                 child: LaporanMain(
+    //                   page: 1,
+    //                   laporan_page: "home",
+    //                   idKolam: widget.idKolam,
+    //                 )));
+    //       });
+    //     } else {
+    //       AppExt.popScreen(context);
+    //       BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Silahkan ulangi kembali di pada jumlah kematian ikan");
+    //     }
+    //   } else {
+    //     AppExt.popScreen(context);
+    //     BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Silahkan ulangi kembali pada jumlah pakan");
+    //   }
+    // }
+  }
+
+  Future<dynamic> dataInserted(date) async {
+    var data = await monitor.bloc
+        .analyticsMonitorByDate(widget.idKolam, date.toString());
+    var datax = json.decode(json.encode(data));
+    print(datax);
+    return [
+      datax["date"].toString(),
+      tryCoba(datax["feed_spent"].toString()).toString(),
+      tryCoba(datax["fish_died"].toString()).toString(),
+      tryCoba(datax["weight"].toString()).toString()
+    ];
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    var data = dataInserted(widget.date.toIso8601String());
+    data.then((val) {
+      setState(() {
+        if (val[1].toString() != "-1") {
+          saveFeed = true;
+          _status_null_laporan = false;
+          pakanController.text = val[1].toString();
+        }
+        if (val[2].toString() != "-1") {
+          saveSr = true;
+          _status_null_laporan = false;
+          srController.text = val[2].toString();
+        }
+        if (val[3].toString() != "-1") {
+          saveWeight = true;
+          _status_null_laporan = false;
+          weightController.text = val[3].toString();
+        }
+      });
+    });
   }
 
   @override
@@ -143,6 +265,7 @@ class _MyBottomSheetState extends State<BottomSheetLaporan> {
           ),
           Container(
             child: TextFormField(
+              readOnly: saveFeed,
               controller: pakanController,
               decoration:
                   EditTextDecorationText(context, "Kilogram", 20.0, 0, 0, 0),
@@ -152,6 +275,11 @@ class _MyBottomSheetState extends State<BottomSheetLaporan> {
                   fontFamily: 'lato',
                   letterSpacing: 0.4,
                   fontSize: subTitleLogin),
+              onChanged: (e) {
+                // if (saveFeed) {
+                //   pakanController.text = lastpakan;
+                // }
+              },
             ),
           ),
           SizedBox(
@@ -169,9 +297,15 @@ class _MyBottomSheetState extends State<BottomSheetLaporan> {
           ),
           Container(
             child: TextFormField(
+              readOnly: saveSr,
               controller: srController,
               decoration: EditTextDecorationText(context, "0", 20.0, 0, 0, 0),
               keyboardType: TextInputType.number,
+              onChanged: (e) {
+                // if (saveFeed) {
+                //   srController.text = lastsr;
+                // }
+              },
               style: TextStyle(
                   color: blackTextColor,
                   fontFamily: 'lato',
@@ -193,6 +327,12 @@ class _MyBottomSheetState extends State<BottomSheetLaporan> {
           ),
           Container(
             child: TextFormField(
+              readOnly: saveWeight,
+              onChanged: (e) {
+                // if (saveFeed) {
+                //   weightController.text = lastweight;
+                // }
+              },
               controller: weightController,
               decoration: EditTextDecorationText(context, "0", 20.0, 0, 0, 0),
               keyboardType: TextInputType.number,
@@ -228,7 +368,8 @@ class _MyBottomSheetState extends State<BottomSheetLaporan> {
                         fontWeight: FontWeight.w700,
                         fontFamily: 'poppins',
                         letterSpacing: 1.25,
-                        fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
+                        fontSize:
+                            ScreenUtil(allowFontScaling: false).setSp(40)),
                   ),
                   shape: new RoundedRectangleBorder(
                     borderRadius: new BorderRadius.circular(30.0),
@@ -256,7 +397,7 @@ class _MyBottomSheetState extends State<BottomSheetLaporan> {
           height: 10,
         ),
         Text(
-          "Laporan Tanggal ${widget.date.day} Kosong",
+          "Laporan Tanggal ${widget.date.day} Ada yang Kosong",
           textAlign: TextAlign.center,
           style: subtitle2.copyWith(
               color: Colors.black,
@@ -367,7 +508,8 @@ void message(BuildContext context, String message) {
                     textAlign: TextAlign.center,
                     style: subtitle2.copyWith(
                         color: Colors.black,
-                        fontSize: ScreenUtil(allowFontScaling: false).setSp(50)),
+                        fontSize:
+                            ScreenUtil(allowFontScaling: false).setSp(50)),
                   ),
                 )
               ],
@@ -420,7 +562,8 @@ Widget bottomSheetInserted(BuildContext context, String date, String pakan,
                     textAlign: TextAlign.start,
                     style: caption.copyWith(
                         color: greyTextColor,
-                        fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
+                        fontSize:
+                            ScreenUtil(allowFontScaling: false).setSp(40)),
                   ),
                 )
               ],
@@ -459,7 +602,8 @@ Widget bottomSheetInserted(BuildContext context, String date, String pakan,
                     textAlign: TextAlign.start,
                     style: caption.copyWith(
                         color: greyTextColor,
-                        fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
+                        fontSize:
+                            ScreenUtil(allowFontScaling: false).setSp(40)),
                   ),
                 )
               ],
@@ -497,7 +641,8 @@ Widget bottomSheetInserted(BuildContext context, String date, String pakan,
                     textAlign: TextAlign.start,
                     style: caption.copyWith(
                         color: greyTextColor,
-                        fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
+                        fontSize:
+                            ScreenUtil(allowFontScaling: false).setSp(40)),
                   ),
                 )
               ],
@@ -535,7 +680,8 @@ Widget bottomSheetInserted(BuildContext context, String date, String pakan,
                     textAlign: TextAlign.start,
                     style: caption.copyWith(
                         color: greyTextColor,
-                        fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
+                        fontSize:
+                            ScreenUtil(allowFontScaling: false).setSp(40)),
                   ),
                 )
               ],

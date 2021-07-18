@@ -374,6 +374,7 @@ class ApiProvider {
       "feed_spent": feed,
       "created_at": created_at
     }));
+    debugPrint("test"+response.body);
     return response;
   }
 
@@ -409,6 +410,7 @@ class ApiProvider {
   }
 
   Future checkout(String id_order) async {
+    // debugPrint(id_order);
     dynamic token = await FlutterSession().get("token");
     await Future<void>.delayed(Duration(seconds: 1));
     final response = await client.post("$_url/orders/${id_order}/checkout",

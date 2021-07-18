@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_session/flutter_session.dart';
 import 'package:lelenesia_pembudidaya/src/Models/ProfileModels.dart';
 import 'package:lelenesia_pembudidaya/src/models/ListPakanModels.dart';
@@ -45,7 +46,7 @@ class CheckoutBloc {
 
   Future<bool> checkout(String id_order) async {
     var status;
-
+    debugPrint("checkout"+id_order);
     var val = await _repository.checkout(id_order);
     print(val.body);
     if (val.statusCode == 200) {

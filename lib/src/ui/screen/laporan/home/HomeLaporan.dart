@@ -115,12 +115,14 @@ class _HomeLaporanState extends State<HomeLaporan> {
   void detailOrder(String id_orders) async {
     try {
       var detail = await checkout.bloc.getCheckOrderId(id_orders.toString());
+      print("Detail Order ${detail}");
+
       // await WidgetsBinding.instance.addPostFrameCallback((_) {
       //
       // });
       setState(() {
         status_checkout = detail;
-        print(status_checkout);
+        print("Chekout =>"+ status_checkout.toString());
         if (status_checkout) {
           text_status_checkout = "Checkout";
         } else {
@@ -258,38 +260,38 @@ class _HomeLaporanState extends State<HomeLaporan> {
                   floating: true,
                   snap: true,
                   actions: <Widget>[
-                    PopupMenuButton<int>(
-                      itemBuilder: (context) => [
-                        PopupMenuItem(
-                          value: 1,
-                          child: Row(
-                            children: [
-                              Icon(Icons.history, color: tmblColor),
-                              Text(
-                                "  Riwayat Kolam",
-                                style: body2,
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                      onSelected: (value) {
-                        if (value == 1) {
-                          Navigator.push(
-                              context,
-                              PageTransition(
-                                  type: PageTransitionType.fade,
-                                  child: RiwayatKolam(
-                                    idKolam: widget.idKolam,
-                                  )));
-                        }
-                      },
-                      icon: Icon(
-                        Icons.more_vert,
-                        color: tmblColor,
-                        size: ScreenUtil(allowFontScaling: false).setSp(80),
-                      ),
-                    )
+                    // PopupMenuButton<int>(
+                    //   itemBuilder: (context) => [
+                    //     PopupMenuItem(
+                    //       value: 1,
+                    //       child: Row(
+                    //         children: [
+                    //           // Icon(Icons.history, color: tmblColor),
+                    //           // Text(
+                    //           //   "  Riwayat Kolam",
+                    //           //   style: body2,
+                    //           // )
+                    //         ],
+                    //       ),
+                    //     ),
+                    //   ],
+                    //   onSelected: (value) {
+                    //     if (value == 1) {
+                    //       Navigator.push(
+                    //           context,
+                    //           PageTransition(
+                    //               type: PageTransitionType.fade,
+                    //               child: RiwayatKolam(
+                    //                 idKolam: widget.idKolam,
+                    //               )));
+                    //     }
+                    //   },
+                    //   icon: Icon(
+                    //     Icons.more_vert,
+                    //     color: tmblColor,
+                    //     size: ScreenUtil(allowFontScaling: false).setSp(80),
+                    //   ),
+                    // )
                   ],
                   // pinned: true,
                   flexibleSpace: FlexibleSpaceBar(),

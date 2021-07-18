@@ -12,27 +12,37 @@ class LoginBloc {
     var status;
     var hasil;
     print("update weightMonitor");
-    var val = await _repository.monitorWeight(_pondid, _weight, _created_at);
-    debugPrint("${val.statusCode}");
-    debugPrint("${val.body}");
-    if (val.statusCode == 200) {
-      String rawJson = '{"message":""}';
+    try {
+      var val = await _repository.monitorWeight(_pondid, _weight, _created_at);
+      debugPrint("${val.statusCode}");
+      debugPrint("${val.body}");
+      if (val.statusCode == 200) {
+        String rawJson = '{"message":""}';
+        return jsonDecode(rawJson);
+      } else {
+        return jsonDecode(val.body);
+      }
+    } catch (e) {
+      String rawJson = '{"message":"Error = {e}"}';
       return jsonDecode(rawJson);
-    } else {
-      return jsonDecode(val.body);
     }
   }
 
   Future feedMonitor(_pondid, _feed, _created_at) async {
     var status;
     print("update feed monitor");
-    var val = await _repository.monitorFeed(_pondid, _feed, _created_at);
-    print(val.statusCode);
-    if (val.statusCode == 200) {
-      String rawJson = '{"message":""}';
+    try {
+      var val = await _repository.monitorFeed(_pondid, _feed, _created_at);
+      print(val.statusCode);
+      if (val.statusCode == 200) {
+        String rawJson = '{"message":""}';
+        return jsonDecode(rawJson);
+      } else {
+        return jsonDecode(val.body);
+      }
+    } catch (e) {
+      String rawJson = '{"message":"Error = {e}"}';
       return jsonDecode(rawJson);
-    } else {
-      return jsonDecode(val.body);
     }
   }
 

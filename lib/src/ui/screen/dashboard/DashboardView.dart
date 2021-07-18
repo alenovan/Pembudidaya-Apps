@@ -58,6 +58,7 @@ class _DashboardViewState extends State<DashboardView> {
 
   void cek_profil() async {
     var blox = await profile.bloc.getProfile();
+    debugPrint("KTP=>"+blox['data']['ktp_photo'].toString());
     setState(() {
       statusAktivasi = blox['data']['ktp_photo'].toString() == "null" ||
               blox['data']['ktp_photo'].toString() == ""
@@ -122,7 +123,7 @@ class _DashboardViewState extends State<DashboardView> {
   @override
   void dispose() {
     super.dispose();
-    bloc.dispose();
+    // bloc.dispose();
   }
 
   @override

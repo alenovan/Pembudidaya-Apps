@@ -82,8 +82,7 @@ class _HomeLaporanState extends State<LaporanScreen> {
     var dataz = dataInserted("${activeYear}-${activeMonth}-${date.day}T00:00:00Z");
     dataz.then((val) {
       AppExt.popScreen(context);
-
-      if (val[1] == "0") {
+      if(val[1] == "-1" || val[2] == "-1" || val[3] == "-1") {
         laporan_null_screen_one(context, date);
       } else {
         laporan_not_null(context, val[0], val[1].toString(),
@@ -374,7 +373,8 @@ class _HomeLaporanState extends State<LaporanScreen> {
             var data = dataInserted(date.toIso8601String());
             data.then((val) {
               AppExt.popScreen(context);
-              if(val[1] == "0"){
+              debugPrint("ikan mati"+val[2]);
+              if(val[1] == "-1" || val[2] == "-1" || val[3] == "-1") {
                 laporan_null_screen_one(context,date);
               }else{
                 laporan_not_null(context, val[0], val[1].toString(),
@@ -500,7 +500,11 @@ class _HomeLaporanState extends State<LaporanScreen> {
         var data = dataInserted(date.toIso8601String());
          data.then((val){
            AppExt.popScreen(context);
-           laporan_not_null(context,val[0],val[1].toString(),val[2].toString(),val[3].toString());
+           if(val[1] == "-1" || val[2] == "-1" || val[3] == "-1") {
+             laporan_null_screen_one(context,date);
+           }else{
+             laporan_not_null(context,val[0],val[1].toString(),val[2].toString(),val[3].toString());
+           }
         });
       },
       child: Container(

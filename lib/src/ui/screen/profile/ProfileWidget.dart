@@ -106,7 +106,6 @@ Widget ProfileMenu(BuildContext context, String title, Widget page) {
       }
     },
     child: Container(
-        height: ScreenUtil().setHeight(120),
         padding: EdgeInsets.only(left: 30.0, right: 30.0),
         color: Colors.white,
         child: Column(
