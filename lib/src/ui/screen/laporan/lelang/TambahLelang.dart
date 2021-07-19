@@ -61,9 +61,9 @@ class _TambahLelangState extends State<TambahLelang> {
   void _buttonLelang() async {
     LoadingDialog.show(context);
     var status = await lelang.bloc.addlelang(harvest_id.toString(),_jenisIkanLelang.text,_maxValue_kilo.text,_jumlahIkanPerEkorLelang.text,_tglStartLelang.text,_tglEndLelang.text,_bukaHargaLelang.text);
-    if(status){
+    if(status[0]){
       AppExt.popScreen(context);
-      BottomSheetFeedback.show_success(context, title: "Selamat", description: "Lelang berhasil ");
+      BottomSheetFeedback.show_success(context, title: "Selamat", description: "${status[1]}");
       Timer(const Duration(seconds: 2), () {
         Navigator.push(
             context,
@@ -76,7 +76,7 @@ class _TambahLelangState extends State<TambahLelang> {
       });
     }else{
       AppExt.popScreen(context);
-      BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Silahkan ulangi kembali");
+      BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "${status[1]}");
     }
 
 

@@ -1,12 +1,13 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:lelenesia_pembudidaya/src/models/AuctionModels.dart';
 import 'package:lelenesia_pembudidaya/src/models/BidderModels.dart';
 import 'package:lelenesia_pembudidaya/src/models/ListSellModels.dart';
 import 'package:lelenesia_pembudidaya/src/resource/Repository.dart';
 class LelangBloc {
   final _repository = Repository();
-  Future<bool> addlelang(String harvest_id,String fish_type, String total_amount,
+   addlelang(String harvest_id,String fish_type, String total_amount,
       String amount_per_kilo,String start_date,String end_date,String open_price) async {
     var status;
     var val = await _repository.addlelang(harvest_id, fish_type, total_amount, amount_per_kilo, start_date, end_date, open_price);
@@ -15,13 +16,13 @@ class LelangBloc {
     }else {
       status = false;
     }
-    return status;
+    return [status, val.data["message"].toString()];
   }
 
   Future<List<AuctionModels>> getHistoryLelang() async {
     var auction = await _repository.fetchAllBid();
-    var enc = json.encode(json.decode(auction)["data"]);
-    var data = auctionModelsFromJson(enc);
+    var enc = json.encode(json.decode(auction));
+    var data = auctionModelsFromJson(auction);
     return data;
   }
 
@@ -34,8 +35,8 @@ class LelangBloc {
 
   Future<List<ListSellModels>> getJualMarket() async {
     var datax = await _repository.fetchByIdJual();
-    var enc = json.encode(json.decode(datax)["data"]);
-    var data = listOrdersFeedModelsFromJson(enc);
+    var data = listSellModelsFromJson(datax);
+    debugPrint("${data}");
     return data;
   }
 
@@ -70,18 +71,15 @@ class LelangBloc {
   }
 
 //market jual
-   addJualMarket(String name, String price, String description, String weight, String category_id, String product_photo, String stock) async {
+   addJualMarket(String name, String price, String description, String weight, String category_id, String product_photo, String stock,String harvest_id) async {
     var status;
-    var val = await _repository.addJualMarket(name,price,description,weight,category_id,product_photo,stock);
-    if (val.statusCode == 200) {
-      if (val.data["status"] == "201") {
-        status = true;
-      } else {
-        status = false;
-      }
+    var val = await _repository.addJualMarket(name,price,description,weight,category_id,product_photo,stock,harvest_id);
+    if (val.statusCode == 201) {
+      status = true;
     } else {
       status = false;
     }
+    debugPrint("Status ADD JUal = ${val.statusCode}");
     return [status, val.data["message"].toString()];
   }
 

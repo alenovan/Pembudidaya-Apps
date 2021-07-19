@@ -26,7 +26,7 @@ class LoginBloc {
     Map<String, dynamic> responseJson = json.decode(val.body);
     print(val.body);
     if(val.statusCode == 200){;
-      await FlutterSession().set("token_market", responseJson['token']);
+      // await FlutterSession().set("token_market", responseJson['token']);
 
       status = true;
     }else {

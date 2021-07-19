@@ -22,6 +22,7 @@ import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanWidget.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:lelenesia_pembudidaya/src/bloc/LelangBloc.dart' as lelang;
 import 'package:shimmer/shimmer.dart';
+
 class LelangView extends StatefulWidget {
   final String idKolam;
   final String halaman;
@@ -43,7 +44,6 @@ class _LelangViewState extends State<LelangView> {
   var items = List<ListSellModels>();
   var refreshKey = GlobalKey<RefreshIndicatorState>();
   final formatter = new NumberFormat('#,##0', 'ID');
-
 
   Future<Null> refreshList() async {
     refreshKey.currentState?.show(atTop: false);
@@ -112,7 +112,6 @@ class _LelangViewState extends State<LelangView> {
           backgroundColor: backgroundGreyColor,
           body: Stack(
             children: [
-
               Container(
                 width: double.infinity,
                 child: Image.asset(
@@ -122,7 +121,6 @@ class _LelangViewState extends State<LelangView> {
                   height: ScreenUtil().setHeight(550),
                 ),
               ),
-
               CustomScrollView(
                 controller: _controller_scroll,
                 slivers: <Widget>[
@@ -133,8 +131,8 @@ class _LelangViewState extends State<LelangView> {
                       margin: EdgeInsets.only(
                           left: ScreenUtil().setWidth(50),
                           right: ScreenUtil().setWidth(50)),
-                      child:GestureDetector(
-                        onTap: ()=>{
+                      child: GestureDetector(
+                        onTap: () => {
                           Navigator.push(
                               context,
                               PageTransition(
@@ -145,7 +143,8 @@ class _LelangViewState extends State<LelangView> {
                         },
                         child: Icon(Icons.arrow_back,
                             color: tmblColor,
-                            size: ScreenUtil(allowFontScaling: false).setSp(80)),
+                            size:
+                                ScreenUtil(allowFontScaling: false).setSp(80)),
                       ),
                     ),
                     floating: true,
@@ -166,9 +165,14 @@ class _LelangViewState extends State<LelangView> {
                                   top: ScreenUtil().setHeight(10),
                                   left: ScreenUtil().setWidth(20),
                                   right: ScreenUtil().setWidth(50)),
-                              child:  Text(
+                              child: Text(
                                 "Pasarkan",
-                                style: h3.copyWith(color: blackPrimaryTextColor,fontWeight: FontWeight.bold,fontSize: ScreenUtil(allowFontScaling: false).setSp(60)),
+                                style: h3.copyWith(
+                                    color: blackPrimaryTextColor,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize:
+                                        ScreenUtil(allowFontScaling: false)
+                                            .setSp(60)),
                                 textAlign: TextAlign.start,
                               ),
                             ),
@@ -181,7 +185,10 @@ class _LelangViewState extends State<LelangView> {
                                 "Jual atau lelang hasil panen ikanmu agar anda segera mendapat keuntungan !",
                                 style: caption.copyWith(
                                     color: greyTextColor,
-                                    fontWeight: FontWeight.w700,fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
+                                    fontWeight: FontWeight.w700,
+                                    fontSize:
+                                        ScreenUtil(allowFontScaling: false)
+                                            .setSp(40)),
                                 textAlign: TextAlign.start,
                               ),
                             ),
@@ -208,8 +215,9 @@ class _LelangViewState extends State<LelangView> {
                                               context,
                                               PageTransition(
                                                   type: PageTransitionType.fade,
-                                                  child: JualLanding(
-                                                    idKolam: widget.idKolam,
+                                                  child: JualScreen(
+                                                    idKolam: widget.idKolam
+                                                        .toString(),
                                                   )))
                                         },
                                         child: Text(
@@ -220,7 +228,7 @@ class _LelangViewState extends State<LelangView> {
                                         ),
                                         shape: new RoundedRectangleBorder(
                                           borderRadius:
-                                          new BorderRadius.circular(30.0),
+                                              new BorderRadius.circular(30.0),
                                         ),
                                       ))),
                             ),
@@ -254,7 +262,7 @@ class _LelangViewState extends State<LelangView> {
                                         ),
                                         shape: new RoundedRectangleBorder(
                                           borderRadius:
-                                          new BorderRadius.circular(30.0),
+                                              new BorderRadius.circular(30.0),
                                         ),
                                       ))),
                             )
@@ -269,14 +277,19 @@ class _LelangViewState extends State<LelangView> {
                             top: ScreenUtil().setHeight(20),
                             left: ScreenUtil().setWidth(70),
                             right: ScreenUtil().setWidth(100)),
-                        child:  Text(
+                        child: Text(
                           "Histori Penjualan",
-                          style: h3.copyWith(color: blackPrimaryTextColor,fontWeight: FontWeight.bold,fontSize: ScreenUtil(allowFontScaling: false).setSp(50)),
+                          style: h3.copyWith(
+                              color: blackPrimaryTextColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: ScreenUtil(allowFontScaling: false)
+                                  .setSp(50)),
                           textAlign: TextAlign.start,
                         ),
                       ),
                       Container(
-                          transform: Matrix4.translationValues(0.0, -ScreenUtil().setHeight(60), 0.0),
+                          transform: Matrix4.translationValues(
+                              0.0, -ScreenUtil().setHeight(60), 0.0),
                           margin: EdgeInsets.only(
                               left: ScreenUtil().setWidth(60),
                               right: ScreenUtil().setWidth(60)),
@@ -297,67 +310,85 @@ class _LelangViewState extends State<LelangView> {
                                   itemCount: 5,
                                   shrinkWrap: true,
                                   // Important code
-                                  itemBuilder: (context, index) =>
-                                      Container(
-                                          height:
-                                          ScreenUtil().setHeight(320),
-                                          child: Card(
-                                            elevation: 4,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                              BorderRadius.circular(
-                                                  15.0),
-                                            ),
-                                            child: Row(
-                                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                                              children: [
-                                                Expanded(
-                                                  child: Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                    mainAxisSize: MainAxisSize.min,
-                                                    children: [
-                                                      Shimmer.fromColors(
-                                                        period: Duration(milliseconds: 1000),
-                                                        baseColor: Colors.grey[300],
-                                                        highlightColor: Colors.white,
-                                                        child:  Container(
-                                                          margin: EdgeInsets.only(left: 10.0,right: 10.0),
-                                                          width: ScreenUtil().setWidth(200),
-                                                          decoration: BoxDecoration(
-                                                              color: Colors.white,
-                                                              borderRadius: BorderRadius.all(Radius.circular(16.0))
-                                                          ),
-                                                          child: SizedBox(height: ScreenUtil().setHeight(80),),
-                                                        ),),
-                                                      Shimmer.fromColors(
-                                                        period: Duration(milliseconds: 1000),
-                                                        baseColor: Colors.grey[300],
-                                                        highlightColor: Colors.white,
-                                                        child:  Container(
-                                                          margin: EdgeInsets.only(left: 10.0,right: 10.0,top: 2.0),
-                                                          width: double.infinity,
-                                                          decoration: BoxDecoration(
-                                                              color: Colors.white,
-                                                              borderRadius: BorderRadius.all(Radius.circular(16.0))
-                                                          ),
-                                                          child: SizedBox(height: ScreenUtil().setHeight(80),),
-                                                        ),),
-                                                    ],
+                                  itemBuilder: (context, index) => Container(
+                                      height: ScreenUtil().setHeight(320),
+                                      child: Card(
+                                        elevation: 4,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(15.0),
+                                        ),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.stretch,
+                                          children: [
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Shimmer.fromColors(
+                                                    period: Duration(
+                                                        milliseconds: 1000),
+                                                    baseColor: Colors.grey[300],
+                                                    highlightColor:
+                                                        Colors.white,
+                                                    child: Container(
+                                                      margin: EdgeInsets.only(
+                                                          left: 10.0,
+                                                          right: 10.0),
+                                                      width: ScreenUtil()
+                                                          .setWidth(200),
+                                                      decoration: BoxDecoration(
+                                                          color: Colors.white,
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius.circular(
+                                                                      16.0))),
+                                                      child: SizedBox(
+                                                        height: ScreenUtil()
+                                                            .setHeight(80),
+                                                      ),
+                                                    ),
                                                   ),
-                                                ),
-                                              ],
+                                                  Shimmer.fromColors(
+                                                    period: Duration(
+                                                        milliseconds: 1000),
+                                                    baseColor: Colors.grey[300],
+                                                    highlightColor:
+                                                        Colors.white,
+                                                    child: Container(
+                                                      margin: EdgeInsets.only(
+                                                          left: 10.0,
+                                                          right: 10.0,
+                                                          top: 2.0),
+                                                      width: double.infinity,
+                                                      decoration: BoxDecoration(
+                                                          color: Colors.white,
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius.circular(
+                                                                      16.0))),
+                                                      child: SizedBox(
+                                                        height: ScreenUtil()
+                                                            .setHeight(80),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
-                                          )
-                                      ));
+                                          ],
+                                        ),
+                                      )));
                             },
                           )),
-
                       SizedBox(
                         height: 20,
                       ),
-
-
                     ]),
                   )
                 ],
@@ -367,7 +398,6 @@ class _LelangViewState extends State<LelangView> {
     );
   }
 
-
   Widget buildList(AsyncSnapshot<dynamic> snapshot) {
     return ListView.builder(
       primary: false,
@@ -375,12 +405,13 @@ class _LelangViewState extends State<LelangView> {
       itemCount: items.length,
       itemBuilder: (BuildContext context, int index) {
         return InkWell(
-          onTap: (){
-
-          },
+          onTap: () {},
           child: Container(
-            child: LelangLeftRight(context, items[index].name,
-                "Rp.${formatter.format(items[index].price)}", DateFormat("dd MMMM yyyy ").format(items[index].createdAt)),
+            child: LelangLeftRight(
+                context,
+                items[index].name,
+                "Rp.${formatter.format(items[index].price)}",
+                DateFormat("dd MMMM yyyy ").format(items[index].createdAt)),
           ),
         );
       },

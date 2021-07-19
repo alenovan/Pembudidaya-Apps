@@ -1,3 +1,6 @@
+// To parse this JSON data, do
+//
+//     final auctionModels = auctionModelsFromJson(jsonString);
 
 import 'dart:convert';
 
@@ -8,71 +11,79 @@ String auctionModelsToJson(List<AuctionModels> data) => json.encode(List<dynamic
 class AuctionModels {
   AuctionModels({
     this.id,
-    this.firstPrice,
-    this.quantity,
-    this.fishermanId,
-    this.bidName,
-    this.sellerId,
-    this.fishperkg,
+    this.comodityId,
+    this.winnerId,
     this.description,
-    this.idHarvest,
     this.startBid,
     this.endBid,
     this.bidPhoto,
     this.createdAt,
     this.updatedAt,
-    this.winnerId,
+    this.weight,
+    this.highPrice,
+    this.firstPrice,
+    this.userId,
+    this.idHarvest,
+    this.quantity,
+    this.bidName,
+    this.fishperkg,
   });
 
   int id;
-  int firstPrice;
-  int quantity;
-  int fishermanId;
-  String bidName;
-  int sellerId;
-  int fishperkg;
+  dynamic comodityId;
+  dynamic winnerId;
   String description;
-  int idHarvest;
   DateTime startBid;
   DateTime endBid;
-  dynamic bidPhoto;
+  String bidPhoto;
   DateTime createdAt;
   DateTime updatedAt;
-  dynamic winnerId;
+  dynamic weight;
+  dynamic highPrice;
+  int firstPrice;
+  int userId;
+  String idHarvest;
+  String quantity;
+  String bidName;
+  String fishperkg;
 
   factory AuctionModels.fromJson(Map<String, dynamic> json) => AuctionModels(
     id: json["id"] == null ? null : json["id"],
-    firstPrice: json["first_price"] == null ? null : json["first_price"],
-    quantity: json["quantity"] == null ? null : json["quantity"],
-    fishermanId: json["fisherman_id"] == null ? null : json["fisherman_id"],
-    bidName: json["bid_name"] == null ? null : json["bid_name"],
-    sellerId: json["seller_id"] == null ? null : json["seller_id"],
-    fishperkg: json["fishperkg"] == null ? null : json["fishperkg"],
+    comodityId: json["comodity_id"],
+    winnerId: json["winner_id"],
     description: json["description"] == null ? null : json["description"],
-    idHarvest: json["id_harvest"] == null ? null : json["id_harvest"],
     startBid: json["start_bid"] == null ? null : DateTime.parse(json["start_bid"]),
     endBid: json["end_bid"] == null ? null : DateTime.parse(json["end_bid"]),
-    bidPhoto: json["bid_photo"],
+    bidPhoto: json["bid_photo"] == null ? null : json["bid_photo"],
     createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
     updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
-    winnerId: json["winner_id"],
+    weight: json["weight"],
+    highPrice: json["high_price"],
+    firstPrice: json["first_price"] == null ? null : json["first_price"],
+    userId: json["user_id"] == null ? null : json["user_id"],
+    idHarvest: json["id_harvest"] == null ? null : json["id_harvest"],
+    quantity: json["quantity"] == null ? null : json["quantity"],
+    bidName: json["bid_name"] == null ? null : json["bid_name"],
+    fishperkg: json["fishperkg"] == null ? null : json["fishperkg"],
   );
 
   Map<String, dynamic> toJson() => {
     "id": id == null ? null : id,
-    "first_price": firstPrice == null ? null : firstPrice,
-    "quantity": quantity == null ? null : quantity,
-    "fisherman_id": fishermanId == null ? null : fishermanId,
-    "bid_name": bidName == null ? null : bidName,
-    "seller_id": sellerId == null ? null : sellerId,
-    "fishperkg": fishperkg == null ? null : fishperkg,
+    "comodity_id": comodityId,
+    "winner_id": winnerId,
     "description": description == null ? null : description,
-    "id_harvest": idHarvest == null ? null : idHarvest,
     "start_bid": startBid == null ? null : startBid.toIso8601String(),
     "end_bid": endBid == null ? null : endBid.toIso8601String(),
-    "bid_photo": bidPhoto,
+    "bid_photo": bidPhoto == null ? null : bidPhoto,
     "created_at": createdAt == null ? null : createdAt.toIso8601String(),
     "updated_at": updatedAt == null ? null : updatedAt.toIso8601String(),
-    "winner_id": winnerId,
+    "weight": weight,
+    "high_price": highPrice,
+    "first_price": firstPrice == null ? null : firstPrice,
+    "user_id": userId == null ? null : userId,
+    "id_harvest": idHarvest == null ? null : idHarvest,
+    "quantity": quantity == null ? null : quantity,
+    "bid_name": bidName == null ? null : bidName,
+    "fishperkg": fishperkg == null ? null : fishperkg,
   };
 }

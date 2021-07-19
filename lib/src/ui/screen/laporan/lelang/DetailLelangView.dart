@@ -384,7 +384,7 @@ class _DetailLelangViewState extends State<DetailLelangView> {
                                   left: ScreenUtil().setWidth(50),
                                   right: ScreenUtil().setWidth(50)),
                               child: Center(
-                                child: CardColumnLelang(context,"Sisa Waktu Lelang","${time.days == null?"0":time.days}h : ${time.hours == null?"0":time.hours}j : ${time.min== null?"0":time.min}m",Alignment.center,0),
+                                child: CardColumnLelang(context,"Sisa Waktu Lelang","${time.days == null?"0":time.days}h : ${time.hours == null?"0":time.hours}j : ${time.min== null?"0":time.min}m :${time.sec== null?"":"${time.sec}d"}",Alignment.center,0),
                               ),
                             );
                           },

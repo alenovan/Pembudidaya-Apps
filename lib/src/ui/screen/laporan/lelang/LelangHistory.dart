@@ -491,7 +491,6 @@ class _LelangViewState extends State<LelangHistory> {
       shrinkWrap: true,
       itemCount: items2.length,
       itemBuilder: (BuildContext context, int index) {
-        print(items2[index].endBid);
         return items2[index].endBid.isAfter(DateTime.now()) && items2[index].winnerId.toString() == "null"?InkWell(
           onTap: (){
           },

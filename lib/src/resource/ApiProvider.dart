@@ -530,13 +530,14 @@ class ApiProvider {
   }
 
   Future fetchByIdJual() async {
-    dynamic token = await FlutterSession().get("token_market");
+    dynamic token = await FlutterSession().get("token");
     await Future<void>.delayed(Duration(seconds: 1));
     final response = await client
-        .get("$_url_market/seller/product", headers: {'Authorization': 'Bearer $token', 'Content-type': 'application/json'});
+        .get("$_url/seller/sell", headers: {'Authorization': 'Bearer $token', 'Content-type': 'application/json'});
     if (response.statusCode == 200) {
       return response.body;
     } else {
+    //   debugPrint("${response.body}");
       throw Exception('');
     }
   }
@@ -597,7 +598,7 @@ class ApiProvider {
       'end_date': end_date,
       'open_price': open_price,
     });
-    return response;
+    return response.body;
   }
 
 
@@ -608,8 +609,8 @@ class ApiProvider {
 
 //jual market
   Future addJualMarket(
-      String name, String price, String description, String weight, String category_id, String product_photo, String stock) async {
-    dynamic token = await FlutterSession().get("token_market");
+      String name, String price, String description, String weight, String category_id, String product_photo, String stock, String harvest_id) async {
+    dynamic token = await FlutterSession().get("token");
     var response;
     Dio dio = new Dio();
     FormData formData = new FormData.fromMap({
@@ -621,16 +622,16 @@ class ApiProvider {
       "subcategory_id": "6",
       "type_id":"18",
       "stock": stock,
+      "harvest_id": harvest_id,
       "product_photo": await MultipartFile.fromFile(product_photo, filename: "product_photo"),
     });
     response = await dio.post(
-      "$_url_market/seller/addProduct",
+      "$_url/seller/sell",
       data: formData,
       options: Options(
         headers: {'Authorization': 'Bearer $token'},
       ),
     );
-    print(response.data);
     return response;
   }
 

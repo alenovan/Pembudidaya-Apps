@@ -24,7 +24,7 @@ import 'package:lelenesia_pembudidaya/src/ui/widget/LoadingDialog.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:lelenesia_pembudidaya/src/bloc/LelangBloc.dart' as lelang;
 import 'package:lelenesia_pembudidaya/src/ui/tools/extensions.dart' as AppExt;
-
+import 'package:lelenesia_pembudidaya/src/bloc/KolamBloc.dart' as kolam;
 class JualScreen extends StatefulWidget {
   final String idKolam;
 
@@ -45,8 +45,20 @@ class _JualScreenState extends State<JualScreen> {
   TextEditingController hargaProdukController = TextEditingController();
   TextEditingController descProdukController = TextEditingController();
   TextEditingController stockProdukController = TextEditingController();
-
-
+  double _value = 0;
+  double _max = 0;
+  double last_stock = 0;
+  int harvest_id= 0;
+  void update() async {
+    var detail = await kolam.bloc.getKolamDetail(widget.idKolam);
+    var data = detail['data'];
+    print(widget.idKolam);
+    setState(() {
+      _max = (data['harvest']['current_weight'] *
+          data['harvest']['current_amount']) / 1000;
+      harvest_id = data['harvest']['id'];
+    });
+  }
   void _toggleButton() async {
     if (base64ImageProduk != null) {
       LoadingDialog.show(context);
@@ -58,11 +70,13 @@ class _JualScreenState extends State<JualScreen> {
           "1",
           base64ImageProduk,
           stockProdukController.text.toString(),
+          harvest_id.toString()
       );
       AppExt.popScreen(context);
       if (status[0]) {
         BottomSheetFeedback.show_success(
             context, title: "Selamat", description: "Penjualan anda berhasil");
+
         Timer(const Duration(seconds: 1), () {
           Navigator.push(
               context,
@@ -81,7 +95,7 @@ class _JualScreenState extends State<JualScreen> {
       } else {
         AppExt.popScreen(context);
         BottomSheetFeedback.show(context,
-            title: "Mohon Maaf", description: status[1]);
+            title: "Mohon Maaf", description: "${status[1]}");
       }
     } else {
       AppExt.popScreen(context);
@@ -113,6 +127,12 @@ class _JualScreenState extends State<JualScreen> {
       base64ImageProduk = image.path;
       _imageProduk = image;
     });
+  }
+
+  @override
+  void initState() {
+    update();
+    super.initState();
   }
 
   @override
@@ -286,7 +306,7 @@ class _JualScreenState extends State<JualScreen> {
                                         top: SizeConfig.blockVertical * 2,
                                         right: ScreenUtil().setWidth(100)),
                                     child: Text(
-                                      "Stock",
+                                      "Jumlah Stock (Kilogram)",
                                       style: TextStyle(
                                           color: appBarTextColor,
                                           fontFamily: 'lato',
@@ -298,19 +318,109 @@ class _JualScreenState extends State<JualScreen> {
                                   ),
                                   Container(
                                     margin: EdgeInsets.only(
-                                        left: ScreenUtil().setWidth(100),
+                                        left: SizeConfig.blockVertical * 5,
                                         top: SizeConfig.blockVertical * 1,
-                                        right: ScreenUtil().setWidth(100)),
-                                    child: TextFormField(
-                                      controller:stockProdukController,
-                                      decoration: EditTextDecorationText(
-                                          context, "", 20.0, 0, 0, 0),
-                                      keyboardType: TextInputType.number,
-                                      style: TextStyle(
-                                          color: blackTextColor,
-                                          fontFamily: 'lato',
-                                          letterSpacing: 0.4,
-                                          fontSize: subTitleLogin),
+                                        right: SizeConfig.blockVertical * 5),
+                                    child: Row(
+                                      children: [
+                                        Flexible(
+                                            flex: 3,
+                                            child: SizedBox(
+                                              child: Column(
+                                                children: [
+                                                  SliderTheme(
+                                                    data:  SliderThemeData(
+                                                        thumbColor: colorPrimary,
+                                                        activeTrackColor: colorPrimary,
+                                                        inactiveTrackColor: Colors.purple[50],
+                                                        thumbShape: RoundSliderThumbShape(enabledThumbRadius: 10)),
+                                                    child:Slider(
+                                                      min: 0,
+                                                      max: _max,
+                                                      value: _value,
+                                                      label: _value.toString(),
+                                                      // divisions: 15,
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          _value = value;
+                                                          stockProdukController.text =
+                                                              value.floor().toStringAsFixed(0);
+                                                        });
+                                                      },
+                                                    ),
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                    MainAxisAlignment.spaceBetween,
+                                                    children: <Widget>[
+                                                      Container(
+                                                        margin: EdgeInsets.only(
+                                                          left: SizeConfig.blockVertical * 3,),
+                                                        child: Text(
+                                                          '0',
+                                                          style: TextStyle(
+                                                              color: appBarTextColor,
+                                                              fontFamily: 'lato',
+                                                              letterSpacing: 0.4,
+                                                              fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
+                                                        ),
+                                                      ),
+                                                      Container(
+                                                        margin: EdgeInsets.only(
+                                                          right: SizeConfig.blockVertical * 3,),
+                                                        child: Text(
+                                                          '${_max.floor().toStringAsFixed(0)}',
+                                                          style: TextStyle(
+                                                              color: appBarTextColor,
+                                                              fontFamily: 'lato',
+                                                              letterSpacing: 0.4,
+                                                              fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                            )),
+                                        Flexible(
+                                            child: SizedBox(
+                                              width: 100,
+                                              child: Container(
+                                                alignment: Alignment.center,
+                                                child: TextFormField(
+                                                  readOnly: true,
+                                                  textAlign: TextAlign.center,
+                                                  controller: stockProdukController,
+                                                  decoration: EditTextDecorationText(
+                                                      context, "", 0.0, 0, 0, 0),
+                                                  keyboardType: TextInputType.number,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      if(double.parse(value) > _max){
+                                                        debugPrint("kena ini");
+                                                        try {
+                                                          if(int.parse(value) >= 0 && int.parse(value) <= _max) {
+                                                            stockProdukController.text = value;
+                                                          }else{
+                                                            stockProdukController.text = _max.toString();
+                                                          }
+                                                        } catch (e) {
+                                                          stockProdukController.text = _max.toString();
+                                                        }
+                                                      }else{
+                                                        _value = double.parse(value);
+                                                      }
+                                                    });
+                                                  },
+                                                  style: TextStyle(
+                                                      color: blackTextColor,
+                                                      fontFamily: 'lato',
+                                                      letterSpacing: 0.4,
+                                                      fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
+                                                ),
+                                              ),
+                                            ))
+                                      ],
                                     ),
                                   ),
                                   Container(

@@ -143,8 +143,8 @@ class Repository {
       todoApiProvider.stopLelang(auction_id);
 
 //  market
-  Future addJualMarket(String name, String price, String description, String weight, String category_id, String product_photo, String stock) =>
-      todoApiProvider.addJualMarket(name,price,description,weight,category_id,product_photo,stock);
+  Future addJualMarket(String name, String price, String description, String weight, String category_id, String product_photo, String stock,String harvest_id) =>
+      todoApiProvider.addJualMarket(name,price,description,weight,category_id,product_photo,stock,harvest_id);
 
   Future addJualMarketAdma( String name, String image, String deskripsi, String harga, String cashback_reseller, String berat, String stock, String keterangan) =>
       todoApiProvider.addJualMarketAdma(name,image,deskripsi,harga,cashback_reseller,berat,stock,keterangan);
