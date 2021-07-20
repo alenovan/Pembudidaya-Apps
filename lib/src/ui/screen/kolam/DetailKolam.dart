@@ -55,7 +55,7 @@ class _DetailKolamViewState extends State<DetailKolam> {
     setState(() {
       currentAmount = data['harvest']['current_amount'].toString() + " Ekor";
       harvest_weight_estimation = (int.parse(
-          data['harvest']['harvest_weight_estimation'].toStringAsFixed(0)))
+          data['harvest']['harvest_weight_estimation']))
           .toStringAsFixed(0)
           .toString();
       harvest_date_estimation=data['harvest']['harvest_date_estimation'].toString();

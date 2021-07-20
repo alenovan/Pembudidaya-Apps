@@ -179,7 +179,7 @@ class _HomeLaporanState extends State<HomeLaporan> {
       }
       _sr = "${data['harvest']['survival_rate']} %";
       _seed_amount = data['harvest']['seed_amount'].toString() + " Ekor";
-      _feed_requirement_estimation =data['harvest']['feed_requirement_estimation'].toStringAsFixed(0) +" Kg";
+      _feed_requirement_estimation =data['harvest']['feed_requirement_estimation'] +" Kg";
       fish_type = data['harvest']['fish_type_id'].toString();
       feed_id = data['harvest']['feed_id'].toString();
       if(fish_type == "1"){
@@ -191,7 +191,7 @@ class _HomeLaporanState extends State<HomeLaporan> {
       }
       _fcr = data['harvest']['feed_conversion_ratio'].toString();
       _target_fish_count = data['harvest']['target_fish_count'].toString();
-      _seed_price = "Rp." + formatter.format(data['harvest']['seed_price']);
+      _seed_price = "Rp." + formatter.format(int.parse(data['harvest']['seed_price']));
       _stock_pakan ="${data['harvest']['current_stocked_feed']} Kg";
       _sow_date = DateFormat('dd/MM/yyyy')
           .format(DateTime.parse(data['harvest']['sow_date']));
@@ -202,15 +202,15 @@ class _HomeLaporanState extends State<HomeLaporan> {
           data['harvest']['current_amount'].toString() + " Ekor";
       _weight_fish_current = (data['harvest']['current_weight']).toString();
       _target_price =
-          "Rp." + formatter.format(data['harvest']['target_price']).toString();
-      var feed = (data['harvest']['feed_requirement_estimation']);
-      _budget_seed = "Rp." + formatter.format(data['harvest']['seed_price'] * data['harvest']['seed_amount']).toString();
+          "Rp." + formatter.format(int.parse(data['harvest']['target_price'])).toString();
+      var feed = int.parse(data['harvest']['feed_requirement_estimation']);
+      _budget_seed = "Rp." + formatter.format(int.parse(data['harvest']['seed_price']) * int.parse(data['harvest']['seed_amount'])).toString();
       _budget = "Rp." + formatter.format(data['harvest']['budget']).toString();
       _omset = "Rp." + formatter.format(data['harvest']['revenue']).toString();
       _profit = "Rp." + formatter.format(data['harvest']['profit']).toString();
       // _laba = "Rp." + formatter.format(int.parse(data['harvest']['profit_estimation']));
       _est_weight_fish = data['harvest']['target_weight_per_fish'].toString()+" gram ";
-      _est_feed_budget = "Rp." +formatter.format(int.parse(((feed * data['harvest']['feed_price']/30).toStringAsFixed(0))));
+      _est_feed_budget = "Rp." +formatter.format(int.parse(((feed * int.parse(data['harvest']['feed_price'])/30).toStringAsFixed(0))));
     });
     print(_est_weight_fish);
   }

@@ -28,7 +28,7 @@ class ListOrdersFeedModels {
   String feedPrice;
   String orderAmount;
   String totalPayment;
-  int status;
+  String status;
 
   factory ListOrdersFeedModels.fromJson(Map<String, dynamic> json) => ListOrdersFeedModels(
     orderId: json["order_id"] == null ? null : json["order_id"],

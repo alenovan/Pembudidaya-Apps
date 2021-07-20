@@ -30,7 +30,7 @@ class BidderModels {
     id: json["id"] == null ? null : json["id"],
     auctionId: json["auction_id"] == null ? null : json["auction_id"],
     auctionName: json["auction_name"],
-    bid: json["bid"] == null ? null : json["bid"],
+    bid: json["bid"] == null ? null : int.parse(json["bid"]),
     bidderName: json["bidder_name"] == null ? null : json["bidder_name"],
     bidTime: json["bid_time"] == null ? null : json["bid_time"],
   );

@@ -58,7 +58,7 @@ class _DashboardViewState extends State<DashboardView> {
 
   void cek_profil() async {
     var blox = await profile.bloc.getProfile();
-    debugPrint("KTP=>"+blox['data']['ktp_photo'].toString());
+    debugPrint("KTP=>" + blox['data']['ktp_photo'].toString());
     setState(() {
       statusAktivasi = blox['data']['ktp_photo'].toString() == "null" ||
               blox['data']['ktp_photo'].toString() == ""
@@ -258,14 +258,14 @@ class _DashboardViewState extends State<DashboardView> {
                                 itemCount: 5,
                                 // Important code
                                 itemBuilder: (context, index) => Container(
-                                    height: ScreenUtil().setHeight(320),
-                                    child: Card(
-                                      elevation: 4,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(15.0),
-                                      ),
-                                      child:  Column(
+                                      height: ScreenUtil().setHeight(320),
+                                      child: Card(
+                                        elevation: 4,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(15.0),
+                                        ),
+                                        child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           mainAxisAlignment:
@@ -473,7 +473,8 @@ class _DashboardViewState extends State<DashboardView> {
         itemCount: items.length,
         itemBuilder: (BuildContext context, int index) {
           var fish_type;
-          if (items[index].status.toString() == "2"  || items[index].status.toString() == "3" ) {
+          if (items[index].status.toString() == "2" ||
+              items[index].status.toString() == "3") {
             if (items[index].harvest.fishTypeId == 1) {
               fish_type = "Ikan Lele";
             } else if (items[index].harvest.fishTypeId == 2) {
@@ -536,10 +537,13 @@ class _DashboardViewState extends State<DashboardView> {
                         items[index].name,
                         fish_type,
                         !statusAktivasi ? "-1" : items[index].status.toString(),
-                        items[index].harvest.currentSr.toInt().toString() +
-                            " %",
-                        items[index].harvest.feedConversionRatio.toInt(),
-                        items[index].harvest.currentAmount.toInt()),
+                        items[index].harvest.currentSr.toString() + " %",
+                        int.parse(items[index]
+                            .harvest
+                            .feedConversionRatio
+                            .toString()),
+                        int.parse(
+                            items[index].harvest.currentAmount.toString())),
               ));
         },
       );

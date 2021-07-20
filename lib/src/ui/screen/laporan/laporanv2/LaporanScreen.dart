@@ -60,12 +60,12 @@ class _HomeLaporanState extends State<LaporanScreen> {
   void detailKolam() async {
     var detail = await kolam.bloc.getKolamDetail(widget.idKolam);
     var data = detail['data'];
-    setState(() {
+    // setState(() {
       idIkan = data['harvest']['fish_type_id'].toString();
-      _tanggal_tebar = DateTime.parse(data['harvest']['sow_date']);
+      _tanggal_tebar = DateTime.parse(data['harvest']['sow_date']).add(Duration(days: 1));
       activeYear = _currentDate2.year;
       activeMonth = _currentDate2.month;
-    });
+    // });
     var dataEvent = await monitor.bloc.analyticsCalendar(
         widget.idKolam,
         "${activeYear}-01-01T00:00:00Z",

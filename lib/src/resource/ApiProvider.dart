@@ -11,7 +11,7 @@ import 'package:lelenesia_pembudidaya/src/ui/tools/ApiException.dart';
 
 class ApiProvider {
   Client client = Client();
-  final String _url = "http://192.168.2.8:8000/v0";
+  final String _url = "http://skripsi.alen.arafah.hk/v0";
   final String _url_market = "http://marketplace.lelenesia.panen-panen.com/api";
 
   Future login(String nohp) async {
@@ -598,7 +598,7 @@ class ApiProvider {
       'end_date': end_date,
       'open_price': open_price,
     });
-    return response.body;
+    return response;
   }
 
 

@@ -11,12 +11,20 @@ class LelangBloc {
       String amount_per_kilo,String start_date,String end_date,String open_price) async {
     var status;
     var val = await _repository.addlelang(harvest_id, fish_type, total_amount, amount_per_kilo, start_date, end_date, open_price);
+    // var datz= val;
     if(val.statusCode == 200){
+      return [true, "Product Berhasil Di lelang"];
       status = true;
     }else {
       status = false;
+      if(val.statusCode == 400){
+        return [false, "Stock Ikan Habis"];
+      }else{
+        return [false, "Pastikan Data Terisi Semua"];
+      }
+
     }
-    return [status, val.data["message"].toString()];
+
   }
 
   Future<List<AuctionModels>> getHistoryLelang() async {

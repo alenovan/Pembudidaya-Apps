@@ -13,6 +13,7 @@ import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/lelang/LelangWidget.
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/lelang/TambahLelang.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/lelang/lelang/WinnerBidder.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/ScreenUtil.dart';
+import 'package:lelenesia_pembudidaya/src/ui/widget/BottomSheetFeedback.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/CustomElevation.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shimmer/shimmer.dart';
@@ -449,35 +450,40 @@ class _LelangViewState extends State<LelangHistory> {
       itemBuilder: (BuildContext context, int index) {
         return items2[index].endBid.isBefore(DateTime.now())|| items2[index].winnerId.toString() != "null"?InkWell(
           onTap: (){
-            if(items2[index].winnerId.toString() != "null"){
-              Navigator.push(
-                  context,
-                  PageTransition(
-                      type: PageTransitionType.fade,
-                      child: WinnerBidder(
-                        idBidder: items2[index].winnerId.toString(),
-                        idKolam: widget.idKolam,
-                        idLelang: items[index].id.toString(),
-                      )));
-            }else{
+            if(items2[index].winnerId.toString() != "null") {
+              if(items[index].winnerId.toString() == "0") {
+                BottomSheetFeedback.show(context, title: "Mohon Maaf",
+                    description: "Mohon Maaf Lelang Telah Di Hentikan");
+              }else {
+                Navigator.push(
+                    context,
+                    PageTransition(
+                        type: PageTransitionType.fade,
+                        child: WinnerBidder(
+                          idBidder: items2[index].winnerId.toString(),
+                          idKolam: widget.idKolam,
+                          idLelang: items[index].id.toString(),
+                        )));
+              }
+            }else {
               Navigator.push(
                   context,
                   PageTransition(
                       type: PageTransitionType.fade,
                       child: DetailLelangView(
                         idKolam: widget.idKolam,
-                        idLelang: items[index].id.toString(),
+                        idLelang: items[index].bidName,
                         endLelang: items[index].endBid,
-                        price: formatter.format(items[index].firstPrice).toString(),
+                        price: formatter.format(items[index].firstPrice)
+                            .toString(),
                         perKilo: items[index].fishperkg.toString(),
                         stock: items[index].quantity.toString(),
                       )));
             }
-
           },
           child: Container(
             child: LelangLeftRight(
-                context, items[index].bidName, "Rp.${formatter.format(items[index].firstPrice)}", "${DateFormat('dd MMMM yyyy').format(items[index].startBid)}"),
+                context, items[index].bidName.toString(), "Rp.${formatter.format(int.parse(items[index].firstPrice))}", "${DateFormat('dd MMMM yyyy').format(items[index].startBid)}"),
           ),
         ):SizedBox(height: 0.1,);
       },
@@ -491,6 +497,7 @@ class _LelangViewState extends State<LelangHistory> {
       shrinkWrap: true,
       itemCount: items2.length,
       itemBuilder: (BuildContext context, int index) {
+        print(items2[index].endBid);
         return items2[index].endBid.isAfter(DateTime.now()) && items2[index].winnerId.toString() == "null"?InkWell(
           onTap: (){
           },
@@ -500,7 +507,7 @@ class _LelangViewState extends State<LelangHistory> {
               idKolam: widget.idKolam,
               idLelang: items2[index].id.toString(),
               endLelang: items2[index].endBid,
-              price: formatter.format(items2[index].firstPrice).toString(),
+              price: formatter.format(int.parse(items2[index].firstPrice)).toString(),
               perKilo: items2[index].fishperkg.toString(),
               stock: items2[index].quantity.toString(),
             )),

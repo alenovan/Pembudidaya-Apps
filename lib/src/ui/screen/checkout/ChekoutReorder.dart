@@ -84,7 +84,7 @@ class _CheckoutViewState extends State<CheckoutReorder> {
     setState(() {
       url_pakanx = data["data"]["photo"].toString();
       name_pakan = data["data"]["name"].toString();
-      pricex = data["data"]["price"];
+      pricex = int.parse(data["data"]["price"]);
       total_kebutuhan_kilo = (feed_amount * 30).toString() +" Kg";
       total_payment = ((pricex * feed_amount) + ongkir);
     });
@@ -145,7 +145,7 @@ class _CheckoutViewState extends State<CheckoutReorder> {
         var detail = await bloc.getKolamDetail(widget.idKolam);
         var data = detail['data'];
         setState(() {
-          id_order = data['harvest']['last_order_id'];
+          id_order =int.parse( data['harvest']['last_order_id']);
         });
         var statusCheckout = await checkout.bloc.checkout(id_order.toString());
         if(statusCheckout){

@@ -96,6 +96,30 @@ class _DetailLelangViewState extends State<DetailLelangView> {
   }
 
 
+  void StopLelang() async{
+    LoadingDialog.show(context);
+    var status = await lelang.bloc.setWinnerlelang("-1",widget.idLelang);
+    if (status) {
+      AppExt.popScreen(context);
+      BottomSheetFeedback.show_success(context, title: "Selamat", description: "Lelang Berhasil DI batalkan");
+      Timer(const Duration(seconds: 2), () {
+        Navigator.push(
+            context,
+            PageTransition(
+                type: PageTransitionType.fade,
+                // duration: Duration(microseconds: 1000),
+                child: LelangHistory(
+                  idKolam: widget.idKolam,
+                )));
+      });
+
+
+    } else {
+      AppExt.popScreen(context);
+      BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Silahkan ulangi kembali");
+    }
+  }
+
   void _toggleDetail() {
     setState(() {
       _showDetail = !_showDetail;
@@ -414,54 +438,49 @@ class _DetailLelangViewState extends State<DetailLelangView> {
                               "${widget.price}", "Rupiah"),
                         ),
 
-                        // Container(
-                        //     margin: EdgeInsets.only(
-                        //         left: ScreenUtil().setWidth(50),
-                        //         right: ScreenUtil().setWidth(50)),
-                        //     child: new Align(
-                        //         alignment: FractionalOffset.bottomCenter,
-                        //         child: Column(
-                        //           mainAxisAlignment: MainAxisAlignment.end,
-                        //           children: [
-                        //             Container(
-                        //               height: 45.0,
-                        //               width: MediaQuery
-                        //                   .of(context)
-                        //                   .size
-                        //                   .width,
-                        //               margin: EdgeInsets.only(
-                        //                   top: 15.0),
-                        //               child: CustomElevation(
-                        //                   height: 30.0,
-                        //                   child: RaisedButton(
-                        //                     highlightColor: redTextColor,
-                        //                     //Replace with actual colors
-                        //                     color: redTextColor,
-                        //                     onPressed: () => {
-                        //                       Navigator.push(
-                        //                           context,
-                        //                           PageTransition(
-                        //                               type: PageTransitionType.fade,
-                        //                               // duration: Duration(microseconds: 1000),
-                        //                               child: DashboardView())),
-                        //                     },
-                        //                     child: Text(
-                        //                       "Stop Lelang",
-                        //                       style: TextStyle(
-                        //                           color: backgroundColor,
-                        //                           fontWeight: FontWeight.w500,
-                        //                           fontFamily: 'poppins',
-                        //                           letterSpacing: 1.25,
-                        //                           fontSize: subTitleLogin),
-                        //                     ),
-                        //                     shape: new RoundedRectangleBorder(
-                        //                       borderRadius:
-                        //                       new BorderRadius.circular(30.0),
-                        //                     ),
-                        //                   )),
-                        //             ),
-                        //           ],
-                        //         ))),
+                        Container(
+                            margin: EdgeInsets.only(
+                                left: ScreenUtil().setWidth(50),
+                                right: ScreenUtil().setWidth(50)),
+                            child: new Align(
+                                alignment: FractionalOffset.bottomCenter,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Container(
+                                      height: 45.0,
+                                      width: MediaQuery
+                                          .of(context)
+                                          .size
+                                          .width,
+                                      margin: EdgeInsets.only(
+                                          top: 15.0),
+                                      child: CustomElevation(
+                                          height: 30.0,
+                                          child: RaisedButton(
+                                            highlightColor: redTextColor,
+                                            //Replace with actual colors
+                                            color: redTextColor,
+                                            onPressed: () => {
+                                              StopLelang()
+                                            },
+                                            child: Text(
+                                              "Stop Lelang",
+                                              style: TextStyle(
+                                                  color: backgroundColor,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontFamily: 'poppins',
+                                                  letterSpacing: 1.25,
+                                                  fontSize: subTitleLogin),
+                                            ),
+                                            shape: new RoundedRectangleBorder(
+                                              borderRadius:
+                                              new BorderRadius.circular(30.0),
+                                            ),
+                                          )),
+                                    ),
+                                  ],
+                                ))),
                         SizedBox(
                           height: 60,
                         ),
@@ -496,7 +515,7 @@ class _DetailLelangViewState extends State<DetailLelangView> {
           },
           child: Container(
             child: CardLeftRightButton(context, "Rp.${formatter.format(items[index].bid)}",
-                "${items[index].bidderName.toString()}",DetailPreviewBidder(idBidder: items[index].id.toString(),idLelang: items[index].auctionId.toString(),idKolam: widget.idKolam,)),
+                "${items[index].bidderName.toString()}",DetailPreviewBidder(idBidder: items[index].id.toString(),idLelang: items[index].auctionId.toString(),idKolam: widget.idKolam,),),
           ),
         ):SizedBox(height: 0.1,);
       },

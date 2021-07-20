@@ -31,7 +31,7 @@ class TambahLelang extends StatefulWidget {
 class _TambahLelangState extends State<TambahLelang> {
   bool _clickForgot = true;
   double _value = 0;
-  double _max = 0;
+  double _max = 0.0;
   int harvest_id= 0;
   TextEditingController _maxValue_kilo = TextEditingController();
   TextEditingController _tglStartLelang = TextEditingController();
@@ -39,23 +39,47 @@ class _TambahLelangState extends State<TambahLelang> {
   TextEditingController _jenisIkanLelang = TextEditingController();
   TextEditingController _jumlahIkanPerEkorLelang = TextEditingController();
   TextEditingController _bukaHargaLelang = TextEditingController();
+  int last_stock = 0;
 
-
-  void update() async {
+  void update() async {;
     var detail = await kolam.bloc.getKolamDetail(widget.idKolam);
     var data = detail['data'];
-    // print(widget.idKolam);
+
+    var jual   =  lelang.bloc.getJualMarket();
+    await jual.then((value) {
+      value.forEach((element) {
+        setState(() {
+          last_stock += element.stock;
+        });
+      });
+    });
+
+    await lelang.bloc.getHistoryLelang().then((value) {
+      value.forEach((element) {
+        setState(() {
+          if(int.parse(element.winnerId)> 0 || element.winnerId == null)last_stock += int.parse(element.quantity);
+        });
+      });
+    });
+
+  var last  = ((int.parse(data['harvest']['current_weight']) * int.parse(data['harvest']['current_amount'])) / 1000) - last_stock.toDouble();
+    debugPrint("last Stvok"+last.toString());
     setState(() {
-      _max = (data['harvest']['current_weight'] *
-          data['harvest']['current_amount']) / 1000;
+      _max = last<=0?0:last;
       harvest_id = data['harvest']['id'];
     });
+
+    if(_max<=0){
+      BottomSheetFeedback.show(context, title: "Mohon Maaf", description: "Stock habis");
+    }
   }
+
 
   @override
   void initState() {
-    super.initState();
     update();
+    super.initState();
+
     // print(_max);
   }
   void _buttonLelang() async {
@@ -241,6 +265,7 @@ class _TambahLelangState extends State<TambahLelang> {
                                   child: Container(
                                     alignment: Alignment.center,
                                     child: TextFormField(
+                                      readOnly: true,
                                       textAlign: TextAlign.center,
                                       controller: _maxValue_kilo,
                                       decoration: EditTextDecorationText(
@@ -248,19 +273,19 @@ class _TambahLelangState extends State<TambahLelang> {
                                       keyboardType: TextInputType.number,
                                       onChanged: (value) {
                                         setState(() {
-                                          if(double.parse(value) > _max){
-                                            try {
-                                              if(int.parse(value) >= 0 && int.parse(value) <= _max) {
-                                                _maxValue_kilo.text = value;
-                                              }else{
-                                                _maxValue_kilo.text = _max.toString();
-                                              }
-                                            } catch (e) {
-
-                                            }
-                                          }else{
-                                            _value = double.parse(value);
-                                          }
+                                          // if(double.parse(value) > _max){
+                                          //   try {
+                                          //     if(int.parse(value) >= 0 && int.parse(value) <= _max) {
+                                          //       _maxValue_kilo.text = value;
+                                          //     }else{
+                                          //       _maxValue_kilo.text = _max.toString();
+                                          //     }
+                                          //   } catch (e) {
+                                          //
+                                          //   }
+                                          // }else{
+                                          //   _value = double.parse(value);
+                                          // }
                                         });
                                       },
                                       style: TextStyle(

@@ -31,7 +31,7 @@ class AuctionModels {
 
   int id;
   dynamic comodityId;
-  dynamic winnerId;
+  String winnerId;
   String description;
   DateTime startBid;
   DateTime endBid;
@@ -40,8 +40,8 @@ class AuctionModels {
   DateTime updatedAt;
   dynamic weight;
   dynamic highPrice;
-  int firstPrice;
-  int userId;
+  String firstPrice;
+  String userId;
   String idHarvest;
   String quantity;
   String bidName;
@@ -50,7 +50,7 @@ class AuctionModels {
   factory AuctionModels.fromJson(Map<String, dynamic> json) => AuctionModels(
     id: json["id"] == null ? null : json["id"],
     comodityId: json["comodity_id"],
-    winnerId: json["winner_id"],
+    winnerId: json["winner_id"] == null ? null : json["winner_id"],
     description: json["description"] == null ? null : json["description"],
     startBid: json["start_bid"] == null ? null : DateTime.parse(json["start_bid"]),
     endBid: json["end_bid"] == null ? null : DateTime.parse(json["end_bid"]),
@@ -70,7 +70,7 @@ class AuctionModels {
   Map<String, dynamic> toJson() => {
     "id": id == null ? null : id,
     "comodity_id": comodityId,
-    "winner_id": winnerId,
+    "winner_id": winnerId == null ? null : winnerId,
     "description": description == null ? null : description,
     "start_bid": startBid == null ? null : startBid.toIso8601String(),
     "end_bid": endBid == null ? null : endBid.toIso8601String(),

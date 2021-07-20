@@ -120,7 +120,7 @@ class _CheckoutViewState extends State<CheckoutView> {
       target_price = dataPenentuan["target_price"];
       url_pakanx = data["data"]["photo"].toString();
       name_pakan = data["data"]["name"].toString();
-      pricex = data["data"]["price"];
+      pricex = int.parse(data["data"]["price"]);
       total_kebutuhan_kilo = (feed_amount * 30).toString() +" Kg";
       total_payment = ((pricex * feed_amount) + ongkir);
 
@@ -201,7 +201,7 @@ class _CheckoutViewState extends State<CheckoutView> {
       var detail = await bloc.getKolamDetail(widget.idKolam);
       var data = detail['data'];
       setState(() {
-        id_order = data['harvest']['last_order_id'];
+        id_order =int.parse( data['harvest']['last_order_id']);
       });
       var statusCheckout = await checkout.bloc.checkout(id_order.toString());
       if(statusCheckout){
@@ -644,83 +644,83 @@ class _CheckoutViewState extends State<CheckoutView> {
                                   )),
                             ],
                           ),
+                          // Container(
+                          //   margin: EdgeInsets.only(
+                          //       top: SizeConfig.blockVertical * 2),
+                          //   child: Row(
+                          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //     children: [
+                          //       Container(
+                          //           alignment: Alignment.centerLeft,
+                          //           child: Text(
+                          //             "Tanggal Pengiriman",
+                          //             style: TextStyle(
+                          //                 color: Colors.black,
+                          //                 fontFamily: 'lato',
+                          //                 letterSpacing: 0.4,
+                          //                 fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
+                          //           )),
+                          //       Container(
+                          //           alignment: Alignment.centerLeft,
+                          //           child: Text(
+                          //             "-",
+                          //             style: TextStyle(
+                          //                 color: Colors.black,
+                          //                 fontFamily: 'lato',
+                          //                 letterSpacing: 0.4,
+                          //                 fontWeight: FontWeight.w700,
+                          //                 fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
+                          //           ))
+                          //     ],
+                          //   ),
+                          // ),
+                          // Container(
+                          //   margin: EdgeInsets.only(
+                          //       top: SizeConfig.blockVertical * 2),
+                          //   height: 1,
+                          //   width: MediaQuery.of(context).size.width,
+                          //   color: Colors.grey[300],
+                          // ),
+                          // Container(
+                          //   margin: EdgeInsets.only(
+                          //       top: SizeConfig.blockVertical * 1),
+                          //   child: Row(
+                          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //     children: [
+                          //       Container(
+                          //           alignment: Alignment.centerLeft,
+                          //           child: Text(
+                          //             "Area Pengiriman",
+                          //             style: TextStyle(
+                          //                 color: Colors.black,
+                          //                 fontFamily: 'lato',
+                          //                 letterSpacing: 0.4,
+                          //                 fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
+                          //           )),
+                          //       Container(
+                          //           alignment: Alignment.centerLeft,
+                          //           child: Text(
+                          //             "-",
+                          //             style: TextStyle(
+                          //                 color: Colors.black,
+                          //                 fontFamily: 'lato',
+                          //                 letterSpacing: 0.4,
+                          //                 fontWeight: FontWeight.w700,
+                          //                 fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
+                          //           ))
+                          //     ],
+                          //   ),
+                          // ),
+                          // Container(
+                          //   margin: EdgeInsets.only(
+                          //       top: SizeConfig.blockVertical * 2),
+                          //   height: 1,
+                          //   width: MediaQuery.of(context).size.width,
+                          //   color: Colors.grey[300],
+                          // ),
                           Container(
                             margin: EdgeInsets.only(
                                 top: SizeConfig.blockVertical * 2),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      "Tanggal Pengiriman",
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontFamily: 'lato',
-                                          letterSpacing: 0.4,
-                                          fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
-                                    )),
-                                Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      "-",
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontFamily: 'lato',
-                                          letterSpacing: 0.4,
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
-                                    ))
-                              ],
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(
-                                top: SizeConfig.blockVertical * 2),
-                            height: 1,
-                            width: MediaQuery.of(context).size.width,
-                            color: Colors.grey[300],
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(
-                                top: SizeConfig.blockVertical * 1),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      "Area Pengiriman",
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontFamily: 'lato',
-                                          letterSpacing: 0.4,
-                                          fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
-                                    )),
-                                Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      "-",
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontFamily: 'lato',
-                                          letterSpacing: 0.4,
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
-                                    ))
-                              ],
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(
-                                top: SizeConfig.blockVertical * 2),
-                            height: 1,
-                            width: MediaQuery.of(context).size.width,
-                            color: Colors.grey[300],
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(
-                                top: SizeConfig.blockVertical * 1),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [

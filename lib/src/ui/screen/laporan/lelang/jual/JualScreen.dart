@@ -7,8 +7,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:lelenesia_pembudidaya/src/models/ListSellModels.dart';
 import 'package:lelenesia_pembudidaya/src/typography.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanMain.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/lelang/LelangView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/lelang/jual/JualLanding.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/lelang/jual/JualScreenAdma.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/ScreenUtil.dart';
@@ -47,17 +49,36 @@ class _JualScreenState extends State<JualScreen> {
   TextEditingController stockProdukController = TextEditingController();
   double _value = 0;
   double _max = 0;
-  double last_stock = 0;
+  int last_stock = 0;
   int harvest_id= 0;
   void update() async {
+
+    var jual   =  lelang.bloc.getJualMarket();
+    await jual.then((value) {
+      value.forEach((element) {
+        setState(() {
+          last_stock += element.stock;
+        });
+      });
+    });
+
+    await lelang.bloc.getHistoryLelang().then((value) {
+      value.forEach((element) {
+        setState(() {
+          if(element.winnerId != "0" || element.winnerId == null)last_stock += int.parse(element.quantity);
+        });
+      });
+    });
+
     var detail = await kolam.bloc.getKolamDetail(widget.idKolam);
     var data = detail['data'];
-    print(widget.idKolam);
+    var last  = ((int.parse(data['harvest']['current_weight']) * int.parse(data['harvest']['current_amount'])) / 1000) - last_stock.toDouble();
     setState(() {
-      _max = (data['harvest']['current_weight'] *
-          data['harvest']['current_amount']) / 1000;
+      _max = last<=0?0:last;
       harvest_id = data['harvest']['id'];
     });
+
+    debugPrint("last_stock = ${last}");
   }
   void _toggleButton() async {
     if (base64ImageProduk != null) {
@@ -131,8 +152,9 @@ class _JualScreenState extends State<JualScreen> {
 
   @override
   void initState() {
-    update();
+
     super.initState();
+    update();
   }
 
   @override
@@ -162,12 +184,32 @@ class _JualScreenState extends State<JualScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      AppBarContainer(
-                          context, "", JualLanding(
-                        idKolam: widget
-                            .idKolam
-                            .toString(),
-                      ), Colors.transparent),
+                      Container(
+                        color: Colors.transparent,
+                        margin: EdgeInsets.only(
+                            left: ScreenUtil().setWidth(20),
+                            top: ScreenUtil().setHeight(100)),
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.arrow_back,
+                            color: Colors.black,
+                            size:
+                            ScreenUtil(allowFontScaling: false).setSp(70),
+                          ),
+                          onPressed: () => {
+                            Navigator.push(
+                                context,
+                                PageTransition(
+                                    type: PageTransitionType
+                                        .fade,
+                                    child: LaporanMain(
+                                      page: 2,
+                                      laporan_page: "home",
+                                      idKolam: widget.idKolam,
+                                    )))
+                          },
+                        ),
+                      ),
                       Container(
                         margin: EdgeInsets.only(
                             left: ScreenUtil().setWidth(100),

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:lelenesia_pembudidaya/src/ui/screen/dashboard/DashboardView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/laporanharian/Laporan.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/laporanharian/PageOne.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/laporanharian/PageThree.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/laporanharian/PageTwo.dart';
+import 'package:page_transition/page_transition.dart';
 class LaporanHome extends StatefulWidget {
   int active;
   LaporanHome({Key key, @required this.active}) : super(key: key);
@@ -51,12 +53,11 @@ class _LaporanHomeState extends State<LaporanHome> {
   }
 
   Future<bool> customPop(BuildContext context) {
-    // if (_backstack.length > 1) {
-    //   _backstack.removeAt(_backstack.length - 1);
-    //   navigateBack(_backstack[_backstack.length - 1]);
-    //   return Future.value(false);
-    // } else {
-    //   return Future.value(true);
-    // }
+    Navigator.push(
+        context,
+        PageTransition(
+            type: PageTransitionType.fade,
+            child: DashboardView(
+            )));
   }
 }

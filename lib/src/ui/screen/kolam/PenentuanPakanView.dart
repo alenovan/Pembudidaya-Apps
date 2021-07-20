@@ -400,7 +400,7 @@ class _PenentuanPakanViewState extends State<PenentuanPakanView> {
             },
             child: Container(
               child: CardPenentuanPakan(context, items[index].name, "5.0",
-                  "0.5 Km", items[index].price, items[index].photo),
+                  "-", items[index].price, items[index].photo),
             ));
       },
     );

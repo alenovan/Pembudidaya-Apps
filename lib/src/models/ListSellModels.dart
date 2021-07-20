@@ -39,17 +39,17 @@ class ListSellModels {
 
   factory ListSellModels.fromJson(Map<String, dynamic> json) => ListSellModels(
     id: json["id"] == null ? null : json["id"],
-    userId: json["user_id"] == null ? null : json["user_id"],
+    userId: json["user_id"] == null ? null : int.parse(json["user_id"]),
     productPhoto: json["product_photo"] == null ? null : json["product_photo"],
     name: json["name"] == null ? null : json["name"],
     description: json["description"] == null ? null : json["description"],
-    price: json["price"] == null ? null : json["price"],
-    sold: json["sold"] == null ? null : json["sold"],
-    stock: json["stock"] == null ? null : json["stock"],
-    weight: json["weight"] == null ? null : json["weight"],
+    price: json["price"] == null ? null : int.parse(json["price"]),
+    sold: json["sold"] == null ? null : int.parse(json["sold"]),
+    stock: json["stock"] == null ? null : int.parse(json["stock"]),
+    weight: json["weight"] == null ? null : int.parse(json["weight"]),
     createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
     updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
-    status: json["status"] == null ? null : json["status"],
+    status: json["status"] == null ? null : int.parse(json["status"]),
   );
 
   Map<String, dynamic> toJson() => {

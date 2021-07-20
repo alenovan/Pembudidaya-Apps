@@ -77,25 +77,25 @@ class Harvest {
   });
 
   int id;
-  int pondId;
-  int fishTypeId;
-  int feedId;
-  int lastOrderId;
+  String pondId;
+  String fishTypeId;
+  String feedId;
+  String lastOrderId;
   String tag;
   DateTime sowDate;
-  int seedAmount;
-  int seedWeight;
-  int seedPrice;
-  int survivalRate;
-  int feedConversionRatio;
-  int feedPrice;
-  int targetFishCount;
-  int targetPrice;
-  double currentSr;
-  int currentAmount;
-  int currentWeight;
-  double growthPerDay;
-  int harvestDurationEstimation;
+  String seedAmount;
+  String seedWeight;
+  String seedPrice;
+  String survivalRate;
+  String feedConversionRatio;
+  String feedPrice;
+  String targetFishCount;
+  String targetPrice;
+  String currentSr;
+  String currentAmount;
+  String currentWeight;
+  String growthPerDay;
+  String harvestDurationEstimation;
   String harvestDateEstimation;
   String harvestWeightEstimation;
   String feedRequirementEstimation;
@@ -105,13 +105,15 @@ class Harvest {
   String status;
   DateTime createdAt;
   DateTime updatedAt;
+  int targetWeightPerFish;
   String budget;
   String revenue;
+  String profit;
 
   factory Harvest.fromJson(Map<String, dynamic> json) => Harvest(
     id: json["id"] == null ? null : json["id"],
-    pondId: json["pond_id"] == null ? null : json["pond_id"],
-    fishTypeId: json["fish_type_id"] == null ? null : json["fish_type_id"],
+    pondId: json["pond_id"].toString() == null ? null : json["pond_id"].toString(),
+    fishTypeId: json["fish_type_id"] == null ? null : json["fish_type_id"].toString(),
     feedId: json["feed_id"] == null ? null : json["feed_id"],
     lastOrderId: json["last_order_id"] == null ? null : json["last_order_id"],
     tag: json["tag"] == null ? null : json["tag"],
@@ -124,10 +126,10 @@ class Harvest {
     feedPrice: json["feed_price"] == null ? null : json["feed_price"],
     targetFishCount: json["target_fish_count"] == null ? null : json["target_fish_count"],
     targetPrice: json["target_price"] == null ? null : json["target_price"],
-    currentSr: json["current_sr"]== null ? 0.0 : json['current_sr'].toDouble(),
+    currentSr: json["current_sr"]== null ? 0.0 : json['current_sr'],
     currentAmount: json["current_amount"] == null ? null : json["current_amount"],
     currentWeight: json["current_weight"] == null ? null : json["current_weight"],
-    growthPerDay: json["growth_per_day"] == null ? null : json["growth_per_day"].toDouble(),
+    growthPerDay: json["growth_per_day"] == null ? null : json["growth_per_day"],
     harvestDurationEstimation: json["harvest_duration_estimation"] == null ? null : json["harvest_duration_estimation"],
     harvestDateEstimation: json["harvest_date_estimation"].toString() == null ? null : json["harvest_date_estimation"].toString(),
     harvestWeightEstimation: json["harvest_weighwt_estimation"].toString() == null ? null : json["harvest_weight_estimation"].toString(),

@@ -39,7 +39,7 @@ class _ProfileScreenState extends State<DetailPreviewBidder> {
     setState(() {
       _name = data['name'].toString();
       _phone = "-";
-      _price = "Rp.${formatter.format(data['bid_price'])}";
+      _price = "Rp.${formatter.format(int.parse(data['bid_price']))}";
       _alamat = "-";
     });
   }
