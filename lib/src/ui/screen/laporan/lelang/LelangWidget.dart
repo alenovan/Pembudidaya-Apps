@@ -6,7 +6,7 @@ import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/ScreenUtil.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
 import 'package:page_transition/page_transition.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart' as fltr;
 class LelangWidget extends StatelessWidget {
   const LelangWidget({Key key}) : super(key: key);
 
@@ -19,7 +19,7 @@ class LelangWidget extends StatelessWidget {
 Widget CardColumnLelang(BuildContext context, String title, String sub,Alignment align,double left) {
   ScreenUtil.instance = ScreenUtil();
   final Widget svgIcon = Container(
-    height: ScreenUtil().setHeight(250),
+    height: 100.h,
     width: double.infinity,
     child: Card(
         elevation: 2,
@@ -36,8 +36,7 @@ Widget CardColumnLelang(BuildContext context, String title, String sub,Alignment
                   alignment: align,
                   child: Text(
                     title,
-                    style: subtitle2.copyWith(color: colorPrimary, fontSize: ScreenUtil(allowFontScaling: false)
-                        .setSp(40),fontWeight: FontWeight.bold),
+                    style: subtitle2.copyWith(color: colorPrimary, fontSize: 25.sp,fontWeight: FontWeight.bold),
                   )),
               Container(
                   alignment: align,
@@ -47,8 +46,7 @@ Widget CardColumnLelang(BuildContext context, String title, String sub,Alignment
                         color: Colors.black,
                         fontWeight: FontWeight.w500,
                         letterSpacing: 1.15,
-                        fontSize: ScreenUtil(allowFontScaling: false)
-                            .setSp(80)),
+                        fontSize: 30.sp),
                   )),
             ],
           ),
@@ -73,8 +71,7 @@ Widget CardInfoLelang(
               children: [
                 Text(
                   title,
-                  style: caption.copyWith(color:colorPrimary, fontSize: ScreenUtil(allowFontScaling: false)
-                      .setSp(40)),
+                  style: caption.copyWith(color:colorPrimary, fontSize: 20.sp),
                 ),
                 Container(
                     margin: EdgeInsets.only(top: 5.0),
@@ -82,12 +79,11 @@ Widget CardInfoLelang(
                         text: TextSpan(children: <TextSpan>[
                           TextSpan(
                             text: number,
-                            style: h3.copyWith( fontSize: ScreenUtil(allowFontScaling: false)
-                                .setSp(70)),
+                            style: h3.copyWith( fontSize: 40.sp),
                           ),
                           TextSpan(
                             text: "  "+satuan,
-                            style: overline,
+                            style: overline.copyWith(fontSize: 20.sp),
                           ),
                         ]))),
               ],
@@ -103,7 +99,7 @@ Widget LelangLeftRight(
   ScreenUtil.instance = ScreenUtil();
   final Widget svgIcon = Container(
 
-    height: ScreenUtil().setHeight(250),
+    height: 80.h,
     child: Card(
         elevation: 2,
         shape: RoundedRectangleBorder(
@@ -122,13 +118,13 @@ Widget LelangLeftRight(
                         child: Text(
                           "${date}",
                           style: subtitle2.copyWith(
-                              color: Colors.grey, fontSize: ScreenUtil(allowFontScaling: false).setSp(38)),
+                              color: Colors.grey, fontSize: 15.sp),
                         )),
                     Container(
                         child: Text(
                           title,
                           style: subtitle2.copyWith(
-                              color: Colors.black, fontSize: ScreenUtil(allowFontScaling: false).setSp(48)),
+                              color: Colors.black, fontSize: 20.sp),
                         ))
                   ],
                 ),
@@ -138,7 +134,7 @@ Widget LelangLeftRight(
                     child: Text(
                       number,
                       style: subtitle2.copyWith(
-                          color: greyIconColor, fontSize: ScreenUtil(allowFontScaling: false).setSp(50),fontWeight: FontWeight.bold),
+                          color: greyIconColor, fontSize: 18.sp,fontWeight: FontWeight.bold),
                     ))
               ],
             ))),
@@ -150,7 +146,7 @@ Widget CardLeftRightButton(
     BuildContext context, String title, String date,Widget next) {
   ScreenUtil.instance = ScreenUtil();
   final Widget svgIcon = Container(
-    height: ScreenUtil().setHeight(250),
+    height: 94.h,
     child: Card(
         elevation: 2,
         shape: RoundedRectangleBorder(
@@ -165,7 +161,7 @@ Widget CardLeftRightButton(
                     child: next));
           },
           child: Container(
-              padding: EdgeInsets.only(left: 15.0, right: 15.0),
+              padding: EdgeInsets.only(left: 10.w, right: 10.w,top: 10.h,bottom: 10.h),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -176,14 +172,14 @@ Widget CardLeftRightButton(
                       Text(
                         date,
                         style: subtitle2.copyWith(
-                            color: Colors.grey, fontSize: ScreenUtil(allowFontScaling: false).setSp(38)),
+                            color: Colors.grey, fontSize: 20.sp),
                       ),
                       Container(
                           margin: EdgeInsets.only(top: 5.0),
                           child: Text(
                             title,
                             style: subtitle2.copyWith(
-                                color: Colors.black, fontSize: ScreenUtil(allowFontScaling: false).setSp(48)),
+                                color: Colors.black, fontSize: 25.sp),
                           ))
                     ],
                   ),
@@ -192,7 +188,7 @@ Widget CardLeftRightButton(
                       child:  Icon(
                         FontAwesomeIcons.chevronCircleRight,
                         color: purpleTextColor,
-                        size: ScreenUtil().setHeight(70),
+                        size: 40.sp,
                       ))
                 ],
               )),

@@ -82,101 +82,95 @@ class _TambahKolamViewState extends State<TambahKolamView> {
         ),
         // resizeToAvoidBottomInset: false,
         // drawer: Drawers(context),
-        body: Stack(
-          children: [
-            new Container(
-              margin: EdgeInsets.only(
-                  left: SizeConfig.blockVertical * 3,
-                  right: SizeConfig.blockVertical * 3),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Align(
-                                alignment: Alignment.center,
-                                child: DetailNull(context)),
-                            Text(
-                              "Anda mau menambah berapa kolam ? ",
-                              textAlign: TextAlign.center,
-                              style: h3.copyWith(
-                                  color: blackTextColor,
-                                  fontWeight: FontWeight.w700),
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(
-                                  top: SizeConfig.blockVertical * 2),
-                              child: Text(
-                                subTextNullFirst,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: blackTextColor,
-                                    fontFamily: 'poppins',
-                                    letterSpacing: 0.25,
-                                    fontSize: 14.0),
-                              ),
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(
-                                  left: 30.0, right: 30.0,top: SizeConfig.blockVertical * 1),
-                              child: Center(
-                                child: Container(
-                                  width: 200.0,
-                                  padding:
-                                  EdgeInsets.only(left: 30.0, right: 30.0),
-                                  child: TextFormField(
-                                    controller: countController,
-                                    textAlign: TextAlign.center,
-                                    decoration: EditTextDecorationText(
-                                        context, "", 0, 0, 0, 0),
-                                    keyboardType: TextInputType.number,
-                                    style: TextStyle(
-                                        color: blackTextColor,
-                                        fontFamily: 'lato',
-                                        fontSize: subTitleLogin),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              height: 45.0,
-                              width: MediaQuery.of(context).size.width,
-                              margin: EdgeInsets.only(
-                                  left: SizeConfig.blockVertical * 3,
-                                  right: SizeConfig.blockVertical * 3,
-                                  top: SizeConfig.blockVertical * 3),
-                              child: CustomElevation(
-                                  height: 30.0,
-                                  child: RaisedButton(
-                                    highlightColor: colorPrimary,
-                                    //Replace with actual colors
-                                    color: colorPrimary,
-                                    onPressed: () => {
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) =>
-                                            AlertquestionInsert(
-                                                context, DashboardView()),
-                                      )
-                                    },
-                                    child: Text(
-                                      "Tambah Kolam",
-                                      style: TextStyle(
-                                          color: backgroundColor,
-                                          fontWeight: FontWeight.w500,
-                                          fontFamily: 'poppins',
-                                          letterSpacing: 1.25,
-                                          fontSize: subTitleLogin),
-                                    ),
-                                    shape: new RoundedRectangleBorder(
-                                      borderRadius:
-                                      new BorderRadius.circular(30.0),
-                                    ),
-                                  )),
-                            ),
-                          ],
-                        )),
-          ],
-        ));
+        body: Container(
+            margin: EdgeInsets.only(
+                left: SizeConfig.blockVertical * 3,
+                right: SizeConfig.blockVertical * 3),
+            child: ListView(
+              children: [
+                Align(
+                    alignment: Alignment.center,
+                    child: DetailNull(context)),
+                Text(
+                  "Anda mau menambah berapa kolam ? ",
+                  textAlign: TextAlign.center,
+                  style: h3.copyWith(
+                      color: blackTextColor,
+                      fontWeight: FontWeight.w700),
+                ),
+                Container(
+                  margin: EdgeInsets.only(
+                      top: SizeConfig.blockVertical * 2),
+                  child: Text(
+                    subTextNullFirst,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: blackTextColor,
+                        fontFamily: 'poppins',
+                        letterSpacing: 0.25,
+                        fontSize: 14.0),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(
+                      left: 30.0, right: 30.0,top: SizeConfig.blockVertical * 1),
+                  child: Center(
+                    child: Container(
+                      width: 200.0,
+                      padding:
+                      EdgeInsets.only(left: 30.0, right: 30.0),
+                      child: TextFormField(
+                        controller: countController,
+                        textAlign: TextAlign.center,
+                        decoration: EditTextDecorationText(
+                            context, "", 0, 0, 0, 0),
+                        keyboardType: TextInputType.number,
+                        style: TextStyle(
+                            color: blackTextColor,
+                            fontFamily: 'lato',
+                            fontSize: subTitleLogin),
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  height: 45.0,
+                  width: MediaQuery.of(context).size.width,
+                  margin: EdgeInsets.only(
+                      left: SizeConfig.blockVertical * 3,
+                      right: SizeConfig.blockVertical * 3,
+                      top: SizeConfig.blockVertical * 3),
+                  child: CustomElevation(
+                      height: 30.0,
+                      child: RaisedButton(
+                        highlightColor: colorPrimary,
+                        //Replace with actual colors
+                        color: colorPrimary,
+                        onPressed: () => {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) =>
+                                AlertquestionInsert(
+                                    context, DashboardView()),
+                          )
+                        },
+                        child: Text(
+                          "Tambah Kolam",
+                          style: TextStyle(
+                              color: backgroundColor,
+                              fontWeight: FontWeight.w500,
+                              fontFamily: 'poppins',
+                              letterSpacing: 1.25,
+                              fontSize: subTitleLogin),
+                        ),
+                        shape: new RoundedRectangleBorder(
+                          borderRadius:
+                          new BorderRadius.circular(30.0),
+                        ),
+                      )),
+                ),
+              ],
+            )));
   }
 
   Widget AlertquestionInsert(BuildContext context, Widget success) {

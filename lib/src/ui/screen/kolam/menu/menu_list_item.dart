@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:lelenesia_pembudidaya/src/typography.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/ScreenUtil.dart';
+
+import 'package:flutter_screenutil/flutter_screenutil.dart' as fltr;
 class menu_list_item extends StatelessWidget {
 
   const menu_list_item({
@@ -51,6 +53,7 @@ class menu_list_item extends StatelessWidget {
                             style: subtitle2.copyWith(
                               fontWeight: FontWeight.w700,
                               color: colorPrimary,
+                              fontSize: 19.sp
                             ),
                           ),
                           TextSpan(
@@ -58,6 +61,7 @@ class menu_list_item extends StatelessWidget {
                             style: subtitle2.copyWith(
                               fontWeight: FontWeight.w400,
                               color: colorPrimary,
+                                fontSize: 19.sp
                             ),
                           ),
                         ],
@@ -65,7 +69,7 @@ class menu_list_item extends StatelessWidget {
                     ),
                     Text(
                       label,
-                      style: subtitle2.copyWith(color: greyTextColor,fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
+                      style: subtitle2.copyWith(color: greyTextColor,fontSize:  20.sp),
                     )
                   ],
                 ),
@@ -74,6 +78,7 @@ class menu_list_item extends StatelessWidget {
         Expanded(
           flex: 45,
           child: ClipPath(
+
             clipper: ShapeBorderClipper(shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.only(
                     bottomRight: Radius.circular(10),

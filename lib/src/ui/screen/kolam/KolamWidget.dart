@@ -9,7 +9,7 @@ import 'package:lelenesia_pembudidaya/src/ui/tools/ScreenUtil.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaText.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart' as fltr;
 class KolamWidget extends StatelessWidget {
   const KolamWidget({Key key}) : super(key: key);
 
@@ -24,7 +24,7 @@ Widget CardPenentuanPakan(BuildContext context, String title, String rating,
   ScreenUtil.instance = ScreenUtil()..init(context);
   final formatter = new NumberFormat("#,###");
   final Widget svgIcon = Container(
-    height: ScreenUtil().setHeight(420),
+    height: 150.h,
     child: Card(
         elevation: 2,
         shape: RoundedRectangleBorder(
@@ -65,7 +65,7 @@ Widget CardPenentuanPakan(BuildContext context, String title, String rating,
                           ),
                           child: Text(
                             title,
-                            style: subtitle2.copyWith(fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
+                            style: subtitle2.copyWith(fontSize: 20.sp),
                           )),
                       Container(
                           margin: EdgeInsets.only(
@@ -74,31 +74,8 @@ Widget CardPenentuanPakan(BuildContext context, String title, String rating,
                           ),
                           child: Text(
                         "Rp."+formatter.format(price),
-                        style: subtitle2.copyWith(color: Colors.black,fontWeight: FontWeight.bold,fontSize: ScreenUtil(allowFontScaling: false).setSp(45)),
+                        style: subtitle2.copyWith(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 19.sp),
                       )),
-                      Container(
-                          margin: EdgeInsets.only(
-                            top: SizeConfig.blockHorizotal * 1,
-                            left: SizeConfig.blockVertical * 1,
-                          ),
-                          child: Row(
-                            children: [
-                              Container(
-                                  margin: EdgeInsets.only(left: ScreenUtil().setWidth(20)),
-                                  child: Icon(
-                                    Icons.circle,
-                                    color: Colors.grey[300],
-                                    size: ScreenUtil(allowFontScaling: false).setSp(30),
-                                  )),
-                              Container(
-                                margin: EdgeInsets.only(left: ScreenUtil().setWidth(40)),
-                                child: Text(
-                                  " "+kilo,
-                                  style: caption.copyWith(fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
-                                ),
-                              )
-                            ],
-                          )),
                       Container(
                           margin: EdgeInsets.only(
                             top: SizeConfig.blockHorizotal * 1,
@@ -111,13 +88,13 @@ Widget CardPenentuanPakan(BuildContext context, String title, String rating,
                                   child: Icon(
                                     Boxicons.bx_dollar_circle,
                                     color: colorPrimary,
-                                    size: ScreenUtil(allowFontScaling: false).setSp(60),
+                                    size: 10.sp,
                                   )),
                               Container(
                                 margin: EdgeInsets.only(left: ScreenUtil().setWidth(20), top: ScreenUtil().setWidth(4)),
                                 child: Text(
                                   " COD",
-                                  style: caption.copyWith(color: colorPrimary,fontWeight: FontWeight.bold,fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
+                                  style: caption.copyWith(color: colorPrimary,fontWeight: FontWeight.bold,fontSize: 15.sp),
                                 ),
                               )
                             ],

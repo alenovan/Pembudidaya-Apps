@@ -18,7 +18,7 @@ import 'package:lelenesia_pembudidaya/src/ui/widget/LoadingDialog.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/extensions.dart' as AppExt;
-
+import 'package:flutter_screenutil/flutter_screenutil.dart' as fltr;
 class RegisterView extends StatefulWidget {
   RegisterView({Key key}) : super(key: key);
 
@@ -153,17 +153,13 @@ class _RegisterViewState extends State<RegisterView> {
                               Text(
                                 titleDaftarText,
                                 style: h1.copyWith(
-                                    fontSize:
-                                        ScreenUtil(allowFontScaling: false)
-                                            .setSp(80)),
+                                    fontSize:30.sp),
                               ),
                               Container(
                                 child: Text(
                                   subTitleDaftarText,
                                   style: caption.copyWith(
-                                      fontSize:
-                                          ScreenUtil(allowFontScaling: true)
-                                              .setSp(40),
+                                      fontSize:25.sp,
                                       color: greyTextColor),
                                 ),
                               ),
@@ -184,8 +180,7 @@ class _RegisterViewState extends State<RegisterView> {
                                 color: blackTextColor,
                                 fontFamily: 'lato',
                                 letterSpacing: 0.4,
-                                fontSize: ScreenUtil(allowFontScaling: false)
-                                    .setSp(40)),
+                                fontSize: 25.sp),
                           ),
                         ),
                         Container(
@@ -202,8 +197,7 @@ class _RegisterViewState extends State<RegisterView> {
                                 color: blackTextColor,
                                 fontFamily: 'lato',
                                 letterSpacing: 0.4,
-                                fontSize: ScreenUtil(allowFontScaling: false)
-                                    .setSp(40)),
+                                fontSize: 25.sp),
                           ),
                         ),
                         Visibility(
@@ -219,8 +213,7 @@ class _RegisterViewState extends State<RegisterView> {
                                   color: Colors.red,
                                   fontFamily: 'lato',
                                   letterSpacing: 0.4,
-                                  fontSize: ScreenUtil(allowFontScaling: false)
-                                      .setSp(40)),
+                                  fontSize: 25.sp),
                             ),
                           ),
                         ),
@@ -240,8 +233,7 @@ class _RegisterViewState extends State<RegisterView> {
                                       fontFamily: 'lato',
                                       letterSpacing: 0.4,
                                       fontSize:
-                                          ScreenUtil(allowFontScaling: false)
-                                              .setSp(30)),
+                                          20.sp),
                                 ),
                                 TextSpan(
                                   text: twoDaftarText,
@@ -250,8 +242,7 @@ class _RegisterViewState extends State<RegisterView> {
                                       fontFamily: 'lato',
                                       letterSpacing: 0.4,
                                       fontSize:
-                                          ScreenUtil(allowFontScaling: false)
-                                              .setSp(30)),
+                                      20.sp),
                                 ),
                                 TextSpan(
                                   text: danDaftarText,
@@ -260,8 +251,7 @@ class _RegisterViewState extends State<RegisterView> {
                                       fontFamily: 'lato',
                                       letterSpacing: 0.4,
                                       fontSize:
-                                          ScreenUtil(allowFontScaling: false)
-                                              .setSp(30)),
+                                      20.sp),
                                 ),
                                 TextSpan(
                                   text: threeDaftarText,
@@ -270,8 +260,7 @@ class _RegisterViewState extends State<RegisterView> {
                                       fontFamily: 'lato',
                                       letterSpacing: 0.4,
                                       fontSize:
-                                          ScreenUtil(allowFontScaling: false)
-                                              .setSp(30)),
+                                      20.sp),
                                 ),
                               ],
                             ),
@@ -280,14 +269,14 @@ class _RegisterViewState extends State<RegisterView> {
                         Container(
                           transform: Matrix4.translationValues(
                               0.0, -ScreenUtil().setHeight(50), 0.0),
-                          height: ScreenUtil().setHeight(110),
+                          height: 40.h,
                           width: MediaQuery.of(context).size.width,
                           margin: EdgeInsets.only(
                               left: ScreenUtil().setWidth(60),
                               top: ScreenUtil().setHeight(50),
                               right: ScreenUtil().setWidth(60)),
                           child: CustomElevation(
-                              height: ScreenUtil().setHeight(110),
+                              height: 40.h,
                               child: RaisedButton(
                                 highlightColor: colorPrimary,
                                 //Replace with actual colors
@@ -304,9 +293,7 @@ class _RegisterViewState extends State<RegisterView> {
                                       fontWeight: FontWeight.w500,
                                       fontFamily: 'poppins',
                                       letterSpacing: 1.25,
-                                      fontSize:
-                                          ScreenUtil(allowFontScaling: true)
-                                              .setSp(45)),
+                                      fontSize:20.sp),
                                 ),
                                 shape: new RoundedRectangleBorder(
                                   borderRadius: new BorderRadius.circular(30.0),
@@ -323,8 +310,7 @@ class _RegisterViewState extends State<RegisterView> {
                               Text(
                                 bottomOneText,
                                 style: body2.copyWith(
-                                    fontSize: ScreenUtil(allowFontScaling: true)
-                                        .setSp(44)),
+                                    fontSize: 20.sp),
                               ),
                               InkWell(
                                   onTap: () {
@@ -337,9 +323,7 @@ class _RegisterViewState extends State<RegisterView> {
                                   child: Text(
                                     bottomTwoText,
                                     style: body2.copyWith(
-                                        fontSize:
-                                            ScreenUtil(allowFontScaling: true)
-                                                .setSp(44),
+                                        fontSize:20.sp,
                                         color: colorPrimary),
                                   ))
                             ],
@@ -358,8 +342,7 @@ class _RegisterViewState extends State<RegisterView> {
                               Text(
                                 "Hubungi admin ? ",
                                 style: body2.copyWith(
-                                    fontSize: ScreenUtil(allowFontScaling: true)
-                                        .setSp(44)),
+                                    fontSize: 20.sp),
                               ),
                               InkWell(
                                   onTap: () {
@@ -372,9 +355,7 @@ class _RegisterViewState extends State<RegisterView> {
                                   child: Text(
                                     "Klik Di Sini",
                                     style: body2.copyWith(
-                                        fontSize:
-                                            ScreenUtil(allowFontScaling: true)
-                                                .setSp(44),
+                                        fontSize:20.sp,
                                         color: colorPrimary),
                                   ))
                             ],

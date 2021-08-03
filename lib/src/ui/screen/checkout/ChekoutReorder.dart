@@ -29,6 +29,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/extensions.dart' as AppExt;
 import 'package:shimmer/shimmer.dart';
 import 'package:lelenesia_pembudidaya/src/bloc/PakanBloc.dart' as order;
+import 'package:flutter_screenutil/flutter_screenutil.dart' as fltr;
 class CheckoutReorder extends StatefulWidget {
   final String idKolam;
   final String feedId;
@@ -225,6 +226,15 @@ class _CheckoutViewState extends State<CheckoutReorder> {
                 leading: IconButton(
                   icon: Icon(Icons.arrow_back, color: Colors.black),
                   onPressed: () => {
+                    // Navigator.push(
+                    //     context,
+                    //     PageTransition(
+                    //         type: PageTransitionType.fade,
+                    //         child: LaporanMain(
+                    //           page: 0,
+                    //           laporan_page: "home",
+                    //           idKolam: widget.idKolam,
+                    //         )))
                     Navigator.of(context).pop(true)
                   },
                 ),
@@ -263,26 +273,26 @@ class _CheckoutViewState extends State<CheckoutReorder> {
                                                 fontFamily: 'lato',
                                                 letterSpacing: 0.4,
                                                 fontWeight: FontWeight.w700,
-                                                fontSize: ScreenUtil(allowFontScaling: false).setSp(45)),
+                                                fontSize: 20.sp),
                                           )),
-                                      // Container(
-                                      //     alignment: Alignment.centerLeft,
-                                      //     child: InkWell(
-                                      //       onTap: ()=>{
-                                      //         Navigator.push(
-                                      //             context,
-                                      //             PageTransition(
-                                      //                 type: PageTransitionType.fade,
-                                      //                 child: ListAlamatPengiriman(
-                                      //                   idKolam: widget.idKolam,
-                                      //                 )))
-                                      //       },
-                                      //       child: Text(
-                                      //         "Pilih Alamat Lain",
-                                      //         style:
-                                      //         overline.copyWith(color: colorPrimary),
-                                      //       ),
-                                      //     ))
+                                      Container(
+                                          alignment: Alignment.centerLeft,
+                                          child: InkWell(
+                                            onTap: ()=>{
+                                              Navigator.push(
+                                                  context,
+                                                  PageTransition(
+                                                      type: PageTransitionType.fade,
+                                                      child: ListAlamatPengiriman(
+                                                        idKolam: widget.idKolam,
+                                                      )))
+                                            },
+                                            child: Text(
+                                              "Pilih Alamat Lain",
+                                              style:
+                                              overline.copyWith(color: colorPrimary),
+                                            ),
+                                          ))
                                     ],
                                   ),
                                   Wrap(
@@ -321,7 +331,7 @@ class _CheckoutViewState extends State<CheckoutReorder> {
                                                           fontFamily: 'poppins',
                                                           letterSpacing: 0.4,
                                                           fontWeight: FontWeight.w700,
-                                                          fontSize: 14.0),
+                                                          fontSize: 14.sp),
                                                     ),
                                                     Container(
                                                       margin: EdgeInsets.only(
@@ -332,7 +342,7 @@ class _CheckoutViewState extends State<CheckoutReorder> {
                                                         style: TextStyle(
                                                             fontFamily: 'poppins',
                                                             letterSpacing: 0.4,
-                                                            fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
+                                                            fontSize: 18.sp),
                                                       ),
                                                     ),
                                                     // Container(
@@ -341,7 +351,7 @@ class _CheckoutViewState extends State<CheckoutReorder> {
                                                     //     style: TextStyle(
                                                     //         fontFamily: 'poppins',
                                                     //         letterSpacing: 0.4,
-                                                    //         fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
+                                                    //         fontSize: 19.sp),
                                                     //   ),
                                                     // ),
                                                     // Container(
@@ -350,7 +360,7 @@ class _CheckoutViewState extends State<CheckoutReorder> {
                                                     //     style: TextStyle(
                                                     //         fontFamily: 'poppins',
                                                     //         letterSpacing: 0.4,
-                                                    //         fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
+                                                    //         fontSize: 19.sp),
                                                     //   ),
                                                     // ),
                                                     Container(
@@ -365,7 +375,7 @@ class _CheckoutViewState extends State<CheckoutReorder> {
                                                         style: TextStyle(
                                                             fontFamily: 'poppins',
                                                             letterSpacing: 0.4,
-                                                            fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
+                                                            fontSize: 14.sp),
                                                       ),
                                                     )
                                                   ],
@@ -410,7 +420,7 @@ class _CheckoutViewState extends State<CheckoutReorder> {
                                                 fontFamily: 'lato',
                                                 letterSpacing: 0.4,
                                                 fontWeight: FontWeight.w700,
-                                                fontSize: ScreenUtil(allowFontScaling: false).setSp(45)),
+                                                fontSize: 20.sp),
                                           )),
                                     ],
                                   ),
@@ -418,12 +428,12 @@ class _CheckoutViewState extends State<CheckoutReorder> {
                                   //     "Rp.${formatter.format(pricex)} / 30 Kg", "", url_pakanx),
                                   Container(
                                     margin: EdgeInsets.only(top: 10.0,bottom: 10.0),
-                                    height: ScreenUtil().setHeight(200),
+                                    height: 120.h,
                                     child: Container(
                                         child: Row(
                                           children: [
                                             Container(
-                                              width: ScreenUtil().setHeight(200),
+                                              width: 80.w,
                                               child: ClipRRect(
                                                   borderRadius: BorderRadius.circular(8.0),
                                                   child: Image.network(
@@ -477,10 +487,10 @@ class _CheckoutViewState extends State<CheckoutReorder> {
                                                             color: purpleTextColor,
                                                             fontFamily: 'poppins',
                                                             letterSpacing: 0.4,
-                                                            fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
+                                                            fontSize: 19.sp),
                                                       )),
                                                   Container(
-                                                      margin: EdgeInsets.only(top: 5.0),
+                                                      margin: EdgeInsets.only(top: 1),
                                                       child: Row(
                                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                         children: [
@@ -493,7 +503,7 @@ class _CheckoutViewState extends State<CheckoutReorder> {
                                                                       color: Colors.black,
                                                                       fontFamily: 'lato',
                                                                       letterSpacing: 0.4,
-                                                                      fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
+                                                                      fontSize: 19.sp),
                                                                 ),
                                                               )
                                                             ],
@@ -504,7 +514,7 @@ class _CheckoutViewState extends State<CheckoutReorder> {
                                                                 child: Container(
                                                                   child: Icon(
                                                                     Boxicons.bx_minus_circle,
-                                                                    color: colorPrimary, size: ScreenUtil(allowFontScaling: false).setSp(70),
+                                                                    color: colorPrimary, size: 40.sp,
                                                                   ),
                                                                 ),
                                                                 onTap: () {
@@ -526,14 +536,14 @@ class _CheckoutViewState extends State<CheckoutReorder> {
                                                                       color: Colors.black,
                                                                       fontFamily: 'lato',
                                                                       letterSpacing: 0.4,
-                                                                      fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
+                                                                      fontSize: 23.sp),
                                                                 ),
                                                               ),
                                                               InkWell(
                                                                 child: Container(
                                                                   child: Icon(
                                                                     Boxicons.bx_plus_circle,
-                                                                    color: colorPrimary, size: ScreenUtil(allowFontScaling: false).setSp(70),
+                                                                    color: colorPrimary, size: 40.sp,
                                                                   ),
                                                                 ),
                                                                 onTap: () {
@@ -564,87 +574,87 @@ class _CheckoutViewState extends State<CheckoutReorder> {
                                                 fontFamily: 'lato',
                                                 letterSpacing: 0.4,
                                                 fontWeight: FontWeight.w700,
-                                                fontSize: ScreenUtil(allowFontScaling: false).setSp(45)),
+                                                fontSize: 20.sp),
                                           )),
                                     ],
                                   ),
+                                  // Container(
+                                  //   margin: EdgeInsets.only(
+                                  //       top: SizeConfig.blockVertical * 2),
+                                  //   child: Row(
+                                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  //     children: [
+                                  //       Container(
+                                  //           alignment: Alignment.centerLeft,
+                                  //           child: Text(
+                                  //             "Tanggal Pengiriman",
+                                  //             style: TextStyle(
+                                  //                 color: Colors.black,
+                                  //                 fontFamily: 'lato',
+                                  //                 letterSpacing: 0.4,
+                                  //                 fontSize: 19.sp),
+                                  //           )),
+                                  //       Container(
+                                  //           alignment: Alignment.centerLeft,
+                                  //           child: Text(
+                                  //             "-",
+                                  //             style: TextStyle(
+                                  //                 color: Colors.black,
+                                  //                 fontFamily: 'lato',
+                                  //                 letterSpacing: 0.4,
+                                  //                 fontWeight: FontWeight.w700,
+                                  //                 fontSize: 19.sp),
+                                  //           ))
+                                  //     ],
+                                  //   ),
+                                  // ),
+                                  // Container(
+                                  //   margin: EdgeInsets.only(
+                                  //       top: SizeConfig.blockVertical * 2),
+                                  //   height: 1,
+                                  //   width: MediaQuery.of(context).size.width,
+                                  //   color: Colors.grey[300],
+                                  // ),
+                                  // Container(
+                                  //   margin: EdgeInsets.only(
+                                  //       top: SizeConfig.blockVertical * 1),
+                                  //   child: Row(
+                                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  //     children: [
+                                  //       Container(
+                                  //           alignment: Alignment.centerLeft,
+                                  //           child: Text(
+                                  //             "Area Pengiriman",
+                                  //             style: TextStyle(
+                                  //                 color: Colors.black,
+                                  //                 fontFamily: 'lato',
+                                  //                 letterSpacing: 0.4,
+                                  //                 fontSize: 19.sp),
+                                  //           )),
+                                  //       Container(
+                                  //           alignment: Alignment.centerLeft,
+                                  //           child: Text(
+                                  //             "-",
+                                  //             style: TextStyle(
+                                  //                 color: Colors.black,
+                                  //                 fontFamily: 'lato',
+                                  //                 letterSpacing: 0.4,
+                                  //                 fontWeight: FontWeight.w700,
+                                  //                 fontSize: 19.sp),
+                                  //           ))
+                                  //     ],
+                                  //   ),
+                                  // ),
+                                  // Container(
+                                  //   margin: EdgeInsets.only(
+                                  //       top: SizeConfig.blockVertical * 2),
+                                  //   height: 1,
+                                  //   width: MediaQuery.of(context).size.width,
+                                  //   color: Colors.grey[300],
+                                  // ),
                                   Container(
                                     margin: EdgeInsets.only(
                                         top: SizeConfig.blockVertical * 2),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Container(
-                                            alignment: Alignment.centerLeft,
-                                            child: Text(
-                                              "Tanggal Pengiriman",
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontFamily: 'lato',
-                                                  letterSpacing: 0.4,
-                                                  fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
-                                            )),
-                                        Container(
-                                            alignment: Alignment.centerLeft,
-                                            child: Text(
-                                              "-",
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontFamily: 'lato',
-                                                  letterSpacing: 0.4,
-                                                  fontWeight: FontWeight.w700,
-                                                  fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
-                                            ))
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(
-                                        top: SizeConfig.blockVertical * 2),
-                                    height: 1,
-                                    width: MediaQuery.of(context).size.width,
-                                    color: Colors.grey[300],
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(
-                                        top: SizeConfig.blockVertical * 1),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Container(
-                                            alignment: Alignment.centerLeft,
-                                            child: Text(
-                                              "Area Pengiriman",
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontFamily: 'lato',
-                                                  letterSpacing: 0.4,
-                                                  fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
-                                            )),
-                                        Container(
-                                            alignment: Alignment.centerLeft,
-                                            child: Text(
-                                              "-",
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontFamily: 'lato',
-                                                  letterSpacing: 0.4,
-                                                  fontWeight: FontWeight.w700,
-                                                  fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
-                                            ))
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(
-                                        top: SizeConfig.blockVertical * 2),
-                                    height: 1,
-                                    width: MediaQuery.of(context).size.width,
-                                    color: Colors.grey[300],
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(
-                                        top: SizeConfig.blockVertical * 1),
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
@@ -656,7 +666,7 @@ class _CheckoutViewState extends State<CheckoutReorder> {
                                                   color: Colors.black,
                                                   fontFamily: 'lato',
                                                   letterSpacing: 0.4,
-                                                  fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
+                                                  fontSize: 19.sp),
                                             )),
                                         Container(
                                             alignment: Alignment.centerLeft,
@@ -667,7 +677,7 @@ class _CheckoutViewState extends State<CheckoutReorder> {
                                                   fontFamily: 'lato',
                                                   letterSpacing: 0.4,
                                                   fontWeight: FontWeight.w700,
-                                                  fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
+                                                  fontSize: 19.sp),
                                             ))
                                       ],
                                     ),
@@ -692,7 +702,7 @@ class _CheckoutViewState extends State<CheckoutReorder> {
                                                   color: Colors.black,
                                                   fontFamily: 'lato',
                                                   letterSpacing: 0.4,
-                                                  fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
+                                                  fontSize: 19.sp),
                                             )),
                                         Container(
                                             padding: EdgeInsets.all(
@@ -715,7 +725,7 @@ class _CheckoutViewState extends State<CheckoutReorder> {
                                                   fontWeight: FontWeight.w500,
                                                   fontFamily: 'poppins',
                                                   letterSpacing: 1.25,
-                                                  fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
+                                                  fontSize: 19.sp),
                                               maxLines: 8,
                                               decoration: InputDecoration.collapsed(
                                                   hintText: "Tambahkan catatan khusus"),
@@ -736,7 +746,7 @@ class _CheckoutViewState extends State<CheckoutReorder> {
                                                 fontFamily: 'lato',
                                                 letterSpacing: 0.4,
                                                 fontWeight: FontWeight.w700,
-                                                fontSize: ScreenUtil(allowFontScaling: false).setSp(45)),
+                                                fontSize: 20.sp),
                                           )),
                                     ],
                                   ),
@@ -754,7 +764,7 @@ class _CheckoutViewState extends State<CheckoutReorder> {
                                                   color: Colors.black,
                                                   fontFamily: 'lato',
                                                   letterSpacing: 0.4,
-                                                  fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
+                                                  fontSize: 19.sp),
                                             )),
                                         Container(
                                             alignment: Alignment.centerLeft,
@@ -765,7 +775,7 @@ class _CheckoutViewState extends State<CheckoutReorder> {
                                                   fontFamily: 'lato',
                                                   letterSpacing: 0.4,
                                                   fontWeight: FontWeight.w700,
-                                                  fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
+                                                  fontSize: 19.sp),
                                             ))
                                       ],
                                     ),
@@ -791,7 +801,7 @@ class _CheckoutViewState extends State<CheckoutReorder> {
                                                   color: Colors.black,
                                                   fontFamily: 'lato',
                                                   letterSpacing: 0.4,
-                                                  fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
+                                                  fontSize: 19.sp),
                                             )),
                                         Container(
                                             alignment: Alignment.centerLeft,
@@ -802,7 +812,7 @@ class _CheckoutViewState extends State<CheckoutReorder> {
                                                   fontFamily: 'lato',
                                                   fontWeight: FontWeight.w700,
                                                   letterSpacing: 0.4,
-                                                  fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
+                                                  fontSize: 19.sp),
                                             ))
                                       ],
                                     ),
@@ -819,7 +829,7 @@ class _CheckoutViewState extends State<CheckoutReorder> {
                                 child: new Align(
                                     alignment: FractionalOffset.bottomCenter,
                                     child: Container(
-                                      height: ScreenUtil().setHeight(200),
+                                      height: 80.h,
                                       width: MediaQuery.of(context).size.width,
                                       color: purpleTextColor,
                                       child: Row(
@@ -842,7 +852,7 @@ class _CheckoutViewState extends State<CheckoutReorder> {
                                                         color: Colors.white,
                                                         fontFamily: 'lato',
                                                         letterSpacing: 0.4,
-                                                        fontSize: ScreenUtil(allowFontScaling: false).setSp(45)),
+                                                        fontSize: 19.sp),
                                                   ),
                                                   Text(
                                                     "Rp.${formatter.format(total_payment)}",
@@ -851,7 +861,7 @@ class _CheckoutViewState extends State<CheckoutReorder> {
                                                         fontFamily: 'poppins',
                                                         letterSpacing: 0.4,
                                                         fontWeight: FontWeight.w700,
-                                                        fontSize: ScreenUtil(allowFontScaling: false).setSp(50)),
+                                                        fontSize: 22.sp),
                                                   )
                                                 ],
                                               )),
@@ -861,9 +871,9 @@ class _CheckoutViewState extends State<CheckoutReorder> {
                                                 right: SizeConfig.blockVertical * 4),
                                             alignment: Alignment.centerLeft,
                                             child: Container(
-                                              height: ScreenUtil().setHeight(100),
+                                              height: 45.h,
                                               child: CustomElevation(
-                                                  height: 35.0,
+                                                  height: 35.h,
                                                   child: RaisedButton(
                                                     highlightColor: Colors.white,
                                                     //Replace with actual colors
@@ -883,7 +893,7 @@ class _CheckoutViewState extends State<CheckoutReorder> {
                                                           fontWeight: FontWeight.w500,
                                                           fontFamily: 'poppins',
                                                           letterSpacing: 1.25,
-                                                          fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
+                                                          fontSize: 19.sp),
                                                     ),
                                                     shape: new RoundedRectangleBorder(
                                                       borderRadius:

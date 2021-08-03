@@ -96,7 +96,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           child:  AppBarContainer(
                               context, "", null, Colors.white),
                         ),
-                        Expanded(
+                        Container(
                           child:Container(
                               margin: EdgeInsets.only(
                                   top: SizeConfig.blockVertical * 10),

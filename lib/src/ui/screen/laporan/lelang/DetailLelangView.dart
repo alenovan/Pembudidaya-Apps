@@ -24,6 +24,7 @@ import 'package:lelenesia_pembudidaya/src/ui/widget/LoadingDialog.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/extensions.dart' as AppExt;
+import 'package:flutter_screenutil/flutter_screenutil.dart' as fltr;
 class DetailLelangView extends StatefulWidget {
   final String idKolam;
   final String idLelang;
@@ -187,7 +188,7 @@ class _DetailLelangViewState extends State<DetailLelangView> {
                     "assets/png/header_laporan.png",
                     fit: BoxFit.cover,
                     width: double.infinity,
-                    height: ScreenUtil().setHeight(550),
+                    height: 200.h,
                   ),
                 ),
                 CustomScrollView(
@@ -206,7 +207,7 @@ class _DetailLelangViewState extends State<DetailLelangView> {
                           },
                           child: Icon(Icons.arrow_back,
                               color: tmblColor,
-                              size: ScreenUtil(allowFontScaling: false).setSp(80)),
+                              size: 30.sp),
                         ),
                       ),
                       floating: true,
@@ -232,8 +233,7 @@ class _DetailLelangViewState extends State<DetailLelangView> {
                                   style: h3.copyWith(
                                       color: blackPrimaryTextColor,
                                       fontWeight: FontWeight.bold,
-                                      fontSize: ScreenUtil(allowFontScaling: false)
-                                          .setSp(60)),
+                                      fontSize: 30.sp),
                                   textAlign: TextAlign.start,
                                 ),
                               ),
@@ -246,7 +246,7 @@ class _DetailLelangViewState extends State<DetailLelangView> {
                                   "Lelang hasil panen ikanmu agar anda segera mendapat keuntungan !",
                                   style: caption.copyWith(
                                       color: greyTextColor,
-                                      fontWeight: FontWeight.w700,fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
+                                      fontWeight: FontWeight.w700,fontSize: 25.sp),
                                   textAlign: TextAlign.start,
                                 ),
                               ),
@@ -261,7 +261,7 @@ class _DetailLelangViewState extends State<DetailLelangView> {
                               right: ScreenUtil().setWidth(100)),
                           child: Text(
                             "Peringkat atas",
-                            style: h3.copyWith(color: blackPrimaryTextColor,fontWeight: FontWeight.bold,fontSize: ScreenUtil(allowFontScaling: false).setSp(50)),
+                            style: h3.copyWith(color: blackPrimaryTextColor,fontWeight: FontWeight.bold,fontSize: 25.sp),
                             textAlign: TextAlign.start,
                           ),
                         ),
@@ -272,6 +272,7 @@ class _DetailLelangViewState extends State<DetailLelangView> {
                         Container(
                             transform: Matrix4.translationValues(0.0, -ScreenUtil().setHeight(60), 0.0),
                             margin: EdgeInsets.only(
+                                top: 10.h,
                                 left: ScreenUtil().setWidth(60),
                                 right: ScreenUtil().setWidth(60)),
                             child: FutureBuilder(
@@ -381,7 +382,7 @@ class _DetailLelangViewState extends State<DetailLelangView> {
                               right: ScreenUtil().setWidth(100)),
                           child: Text(
                             "Lelang berlangsung",
-                            style: h3.copyWith(color: blackPrimaryTextColor,fontWeight: FontWeight.bold,fontSize: ScreenUtil(allowFontScaling: false).setSp(50)),
+                            style: h3.copyWith(color: blackPrimaryTextColor,fontWeight: FontWeight.bold,fontSize:  25.sp),
                             textAlign: TextAlign.start,
                           ),
                         ),
@@ -448,7 +449,7 @@ class _DetailLelangViewState extends State<DetailLelangView> {
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     Container(
-                                      height: 45.0,
+                                      height: 45.h,
                                       width: MediaQuery
                                           .of(context)
                                           .size
@@ -456,7 +457,7 @@ class _DetailLelangViewState extends State<DetailLelangView> {
                                       margin: EdgeInsets.only(
                                           top: 15.0),
                                       child: CustomElevation(
-                                          height: 30.0,
+                                          height: 30.h,
                                           child: RaisedButton(
                                             highlightColor: redTextColor,
                                             //Replace with actual colors
@@ -471,7 +472,7 @@ class _DetailLelangViewState extends State<DetailLelangView> {
                                                   fontWeight: FontWeight.w500,
                                                   fontFamily: 'poppins',
                                                   letterSpacing: 1.25,
-                                                  fontSize: subTitleLogin),
+                                                  fontSize: 20.sp),
                                             ),
                                             shape: new RoundedRectangleBorder(
                                               borderRadius:

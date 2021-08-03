@@ -58,6 +58,7 @@ class _LaporanHomeState extends State<LaporanHome> {
         PageTransition(
             type: PageTransitionType.fade,
             child: DashboardView(
+
             )));
   }
 }

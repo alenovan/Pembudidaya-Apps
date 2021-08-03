@@ -25,7 +25,7 @@ import 'package:lelenesia_pembudidaya/src/LelenesiaText.dart';
 import 'package:flutter/services.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shimmer/shimmer.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart' as fltr;
 class DetailPenentuanPakan extends StatefulWidget {
   final String name;
   final int price;
@@ -248,7 +248,8 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
                                           "Rp.${formatter.format(widget.price)}",
                                           style: subtitle2.copyWith(
                                               fontWeight: FontWeight.bold,
-                                              letterSpacing: 1.25),
+                                              letterSpacing: 1.25,
+                                          fontSize: 19.sp),
                                         )),
                                     Container(
                                         margin: EdgeInsets.only(
@@ -263,7 +264,7 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
                                                 child: Icon(
                                                   Boxicons.bx_dollar_circle,
                                                   color: colorPrimary,
-                                                  size: 20,
+                                                  size: 20.sp,
                                                 )),
                                             Container(
                                               margin:
@@ -285,9 +286,7 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
                                     child: Text(
                                       "${widget.name}",
                                       style: subtitle2.copyWith(
-                                          fontSize: ScreenUtil(
-                                                  allowFontScaling: false)
-                                              .setSp(40)),
+                                          fontSize: 20.sp),
                                     )),
                                 Container(
                                     padding: EdgeInsets.only(top: 5.0),
@@ -296,9 +295,7 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
                                       "Kota Distribusi : ",
                                       style: subtitle2.copyWith(
                                           color: greyTextColor,
-                                          fontSize: ScreenUtil(
-                                                  allowFontScaling: false)
-                                              .setSp(40)),
+                                          fontSize: 19.sp),
                                     )),
                                 Container(
                                     transform: Matrix4.translationValues(
@@ -386,7 +383,7 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
                     child: Wrap(
                       children: [
                         Container(
-                          height: 90,
+                          height: 90.h,
                           child: Container(
                               padding: EdgeInsets.only(left: 10.0, right: 15.0),
                               child: Row(
@@ -474,10 +471,7 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
                                               style: subtitle2.copyWith(
                                                   fontWeight: FontWeight.bold,
                                                   letterSpacing: 1.25,
-                                                  fontSize: ScreenUtil(
-                                                          allowFontScaling:
-                                                              false)
-                                                      .setSp(40)),
+                                                  fontSize: 19.sp),
                                             ),
                                           ),
                                           Container(
@@ -487,10 +481,7 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
                                               overflow: TextOverflow.ellipsis,
                                               style: caption.copyWith(
                                                   color: greyTextColor,
-                                                  fontSize: ScreenUtil(
-                                                          allowFontScaling:
-                                                              false)
-                                                      .setSp(35)),
+                                                  fontSize: 19.sp),
                                             ),
                                           ),
                                         ],
@@ -520,7 +511,8 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
                                     child: Text(
                                       "Info produk",
                                       style: subtitle2.copyWith(
-                                          fontWeight: FontWeight.bold),
+                                          fontWeight: FontWeight.bold,
+                                      fontSize: 19.sp),
                                     )),
                                 Container(
                                   child: Row(
@@ -545,7 +537,7 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
                                                       TextSpan(
                                                         text:
                                                             "Jumlah dalam kg : ",
-                                                        style: caption,
+                                                        style: caption.copyWith(fontSize: 17.sp),
                                                       ),
                                                       TextSpan(
                                                         text:
@@ -556,7 +548,7 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
                                                             fontWeight:
                                                                 FontWeight.bold,
                                                             letterSpacing: 0.25,
-                                                            fontSize: 13.0),
+                                                            fontSize: 19.sp),
                                                       ),
                                                       TextSpan(
                                                         text: "Kg",
@@ -564,7 +556,7 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
                                                             color: Colors.black,
                                                             fontFamily: 'lato',
                                                             letterSpacing: 0.25,
-                                                            fontSize: 13.0),
+                                                            fontSize: 17.sp),
                                                       )
                                                     ]))),
                                             Container(
@@ -578,7 +570,7 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
                                                         TextSpan>[
                                                       TextSpan(
                                                         text: "Ukuran : ",
-                                                        style: caption,
+                                                        style: caption.copyWith(fontSize: 17.sp),
                                                       ),
                                                       TextSpan(
                                                         text:
@@ -589,7 +581,7 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
                                                             fontWeight:
                                                                 FontWeight.bold,
                                                             letterSpacing: 0.25,
-                                                            fontSize: 13.0),
+                                                            fontSize: 17.sp),
                                                       ),
                                                     ]))),
                                             Container(
@@ -603,7 +595,7 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
                                                         TextSpan>[
                                                       TextSpan(
                                                         text: "Jenis produk : ",
-                                                        style: caption,
+                                                        style:caption.copyWith(fontSize: 17.sp),
                                                       ),
                                                       TextSpan(
                                                         text: "${widget.type}",
@@ -613,7 +605,7 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
                                                             fontWeight:
                                                                 FontWeight.bold,
                                                             letterSpacing: 0.25,
-                                                            fontSize: 13.0),
+                                                            fontSize: 17.sp),
                                                       ),
                                                     ]))),
                                             SizedBox(
@@ -643,7 +635,7 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
                           child: Text(
                             "Deskripsi produk",
                             style:
-                                subtitle2.copyWith(fontWeight: FontWeight.bold),
+                                subtitle2.copyWith(fontWeight: FontWeight.bold,fontSize: 20.sp),
                           )),
                       Container(
                           margin: EdgeInsets.only(
@@ -654,18 +646,17 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
                           child: Text(
                             widget.desc,
                             style: body2.copyWith(
-                                fontSize: ScreenUtil(allowFontScaling: false)
-                                    .setSp(45)),
+                                fontSize: 19.sp),
                           )),
                       Container(
-                        height: 45.0,
+                        height: 45.h,
                         width: MediaQuery.of(context).size.width,
                         margin: EdgeInsets.only(
                             left: SizeConfig.blockVertical * 3,
                             right: SizeConfig.blockVertical * 3,
                             top: SizeConfig.blockVertical * 3),
                         child: CustomElevation(
-                            height: 30.0,
+                            height: 30.h,
                             child: RaisedButton(
                               highlightColor: colorPrimary,
                               //Replace with actual colors
@@ -684,7 +675,7 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
                                     fontWeight: FontWeight.w500,
                                     fontFamily: 'poppins',
                                     letterSpacing: 1.25,
-                                    fontSize: subTitleLogin),
+                                    fontSize: 18.sp),
                               ),
                               shape: new RoundedRectangleBorder(
                                 borderRadius: new BorderRadius.circular(30.0),
@@ -719,18 +710,18 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
                     color: blackTextColor,
                     fontFamily: 'poppins',
                     letterSpacing: 0.25,
-                    fontSize: 15.0),
+                    fontSize: 19.sp),
                 textAlign: TextAlign.center,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Container(
-                      height: 35.0,
+                      height: 35.h,
                       margin:
                           EdgeInsets.only(top: SizeConfig.blockVertical * 3),
                       child: CustomElevation(
-                          height: 35.0,
+                          height: 35.h,
                           child: RaisedButton(
                             highlightColor: colorPrimary,
                             //Replace with actual colors
@@ -743,17 +734,17 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
                                   fontWeight: FontWeight.w500,
                                   fontFamily: 'poppins',
                                   letterSpacing: 1.25,
-                                  fontSize: subTitleLogin),
+                                  fontSize: 15.sp),
                             ),
                             shape: new RoundedRectangleBorder(
                               borderRadius: new BorderRadius.circular(30.0),
                             ),
                           ))),
                   Container(
-                    height: 35.0,
+                    height: 35.h,
                     margin: EdgeInsets.only(top: SizeConfig.blockVertical * 3),
                     child: CustomElevation(
-                        height: 35.0,
+                        height: 35.h,
                         child: RaisedButton(
                           highlightColor: colorPrimary,
                           //Replace with actual colors
@@ -766,7 +757,7 @@ class _DetailPenentuanPakanState extends State<DetailPenentuanPakan> {
                                 fontWeight: FontWeight.w500,
                                 fontFamily: 'poppins',
                                 letterSpacing: 1.25,
-                                fontSize: subTitleLogin),
+                                fontSize: 15.sp),
                           ),
                           shape: new RoundedRectangleBorder(
                             borderRadius: new BorderRadius.circular(30.0),

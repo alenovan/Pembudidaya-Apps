@@ -21,6 +21,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/extensions.dart' as AppExt;
 import 'package:lelenesia_pembudidaya/src/bloc/KolamBloc.dart' as kolamBloc;
+import 'package:flutter_screenutil/flutter_screenutil.dart' as fltr;
 class LoginView extends StatefulWidget {
   const LoginView({Key key}) : super(key: key);
 
@@ -84,6 +85,12 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.portraitUp,
+    ]);
     ScreenUtil.instance = ScreenUtil()..init(context);
     SizeConfig().init(context);
     SystemChrome.setSystemUIOverlayStyle(
@@ -165,9 +172,7 @@ class _LoginViewState extends State<LoginView> {
                                     Text(
                                       titleLoginText,
                                       style: h1.copyWith(
-                                          fontSize: ScreenUtil(
-                                                  allowFontScaling: false)
-                                              .setSp(80)),
+                                          fontSize: 40.sp),
                                     ),
                                     Container(
                                       margin: EdgeInsets.only(
@@ -176,9 +181,7 @@ class _LoginViewState extends State<LoginView> {
                                       child: Text(
                                         subTitleLoginText,
                                         style: caption.copyWith(
-                                            fontSize: ScreenUtil(
-                                                    allowFontScaling: false)
-                                                .setSp(40),
+                                            fontSize: 20.sp,
                                             color: greyTextColor),
                                       ),
                                     ),
@@ -195,10 +198,7 @@ class _LoginViewState extends State<LoginView> {
                                             child: Text(
                                               "Nomor Handphone",
                                               style: body2.copyWith(
-                                                  fontSize: ScreenUtil(
-                                                          allowFontScaling:
-                                                              false)
-                                                      .setSp(40)),
+                                                  fontSize: 20.sp),
                                             ),
                                           ),
                                           TextFormField(
@@ -211,9 +211,7 @@ class _LoginViewState extends State<LoginView> {
                                                 color: blackTextColor,
                                                 fontFamily: 'lato',
                                                 letterSpacing: 0.4,
-                                                fontSize: ScreenUtil(
-                                                        allowFontScaling: false)
-                                                    .setSp(45)),
+                                                fontSize:20.sp),
                                           ),
                                         ],
                                       ),
@@ -231,9 +229,7 @@ class _LoginViewState extends State<LoginView> {
                                               color: Colors.red,
                                               fontFamily: 'lato',
                                               letterSpacing: 0.4,
-                                              fontSize: ScreenUtil(
-                                                      allowFontScaling: true)
-                                                  .setSp(45)),
+                                              fontSize: 20.sp),
                                         ),
                                       ),
                                     ),
@@ -243,12 +239,12 @@ class _LoginViewState extends State<LoginView> {
                                     Container(
                                       transform: Matrix4.translationValues(0.0,
                                           -ScreenUtil().setHeight(40), 0.0),
-                                      height: ScreenUtil().setHeight(110),
+                                      height: 40.h,
                                       width: MediaQuery.of(context).size.width,
                                       margin: EdgeInsets.only(
                                           top: ScreenUtil().setHeight(50)),
                                       child: CustomElevation(
-                                          height: ScreenUtil().setHeight(110),
+                                          height:  40.h,
                                           child: RaisedButton(
                                             highlightColor: colorPrimary,
                                             //Replace with actual colors
@@ -266,10 +262,7 @@ class _LoginViewState extends State<LoginView> {
                                                   fontWeight: FontWeight.w500,
                                                   fontFamily: 'poppins',
                                                   letterSpacing: 1.25,
-                                                  fontSize: ScreenUtil(
-                                                          allowFontScaling:
-                                                              true)
-                                                      .setSp(45)),
+                                                  fontSize: 25.sp),
                                             ),
                                             shape: new RoundedRectangleBorder(
                                               borderRadius:
@@ -296,10 +289,7 @@ class _LoginViewState extends State<LoginView> {
                                                 Text(
                                                   "Belum punya akun ?",
                                                   style: body2.copyWith(
-                                                      fontSize: ScreenUtil(
-                                                              allowFontScaling:
-                                                                  false)
-                                                          .setSp(40)),
+                                                      fontSize: 20.sp),
                                                 ),
                                                 InkWell(
                                                     onTap: () {
@@ -316,10 +306,7 @@ class _LoginViewState extends State<LoginView> {
                                                     child: Text(
                                                       " Daftar",
                                                       style: body2.copyWith(
-                                                          fontSize: ScreenUtil(
-                                                                  allowFontScaling:
-                                                                      false)
-                                                              .setSp(40),
+                                                          fontSize: 20.sp,
                                                           color: colorPrimary),
                                                     ))
                                               ],
@@ -337,10 +324,7 @@ class _LoginViewState extends State<LoginView> {
                                                 Text(
                                                   "Hubungi admin ?",
                                                   style: body2.copyWith(
-                                                      fontSize: ScreenUtil(
-                                                              allowFontScaling:
-                                                                  false)
-                                                          .setSp(42)),
+                                                      fontSize: 20.sp),
                                                 ),
                                                 InkWell(
                                                     onTap: () {
@@ -357,10 +341,7 @@ class _LoginViewState extends State<LoginView> {
                                                     child: Text(
                                                       " Klik Disini",
                                                       style: body2.copyWith(
-                                                          fontSize: ScreenUtil(
-                                                                  allowFontScaling:
-                                                                      false)
-                                                              .setSp(42),
+                                                          fontSize: 20.sp,
                                                           color: colorPrimary),
                                                     ))
                                               ],

@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/ScreenUtil.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart' as fltr;
 class LoginWidget extends StatelessWidget {
   const LoginWidget({Key key}) : super(key: key);
 
@@ -128,7 +128,7 @@ InputDecoration EditTextDecorationNumber(BuildContext context, String label) {
     filled: true,
     prefixIcon: Container(
         transform: Matrix4.translationValues(0.0, -2.0, 0.0),
-        width: 20.0,
+        width: 40.w,
         child: Align(
           alignment: Alignment.center,
           child: Text(
@@ -137,13 +137,13 @@ InputDecoration EditTextDecorationNumber(BuildContext context, String label) {
                 color: greyTextColor,
                 fontFamily: 'lato',
                 letterSpacing: 0.25,
-                fontSize: 15.0),
+                fontSize: 20.sp),
           ),
         )),
     fillColor: editTextBgColor,
     hintStyle: TextStyle(
       color: greyIconColor,
-        fontSize: ScreenUtil(allowFontScaling: false).setSp(40)
+        fontSize: 20.sp
     ),
     border: new OutlineInputBorder(
       borderRadius: new BorderRadius.circular(25.0),
@@ -158,13 +158,14 @@ InputDecoration EditTextDecorationText(BuildContext context, String label,
     double leftx, double rightx, double topx, double bottomx) {
   SizeConfig().init(context);
   final InputDecoration decoration = InputDecoration(
-    contentPadding: EdgeInsets.only(left: leftx, right: rightx),
+    contentPadding: EdgeInsets.only(left: leftx, right: rightx,top:10.h,bottom:10.h),
     hintText: label,
     filled: true,
+
     fillColor: editTextBgColor,
     hintStyle: TextStyle(
       color: greyIconColor,
-        fontSize: ScreenUtil(allowFontScaling: false).setSp(40)
+        fontSize: 19.sp
     ),
     border: new OutlineInputBorder(
       borderRadius: new BorderRadius.circular(25.0),

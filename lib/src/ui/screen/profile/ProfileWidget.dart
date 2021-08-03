@@ -8,7 +8,7 @@ import 'package:lelenesia_pembudidaya/src/ui/tools/ScreenUtil.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:page_transition/page_transition.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart' as fltr;
 class ProfileWidget extends StatelessWidget {
   const ProfileWidget({Key key}) : super(key: key);
 
@@ -68,7 +68,7 @@ Widget AppbarForgot(BuildContext context, String title,Color color,String status
               },
               child: IconTheme(
                 data: IconThemeData(color: appBarTextColor),
-                child: Icon(Icons.arrow_back),
+                child: Icon(Icons.arrow_back,size: 20.sp),
               ),
             )),
         Container(
@@ -79,11 +79,11 @@ Widget AppbarForgot(BuildContext context, String title,Color color,String status
             children: [
               Text(
                 title,
-                style: h3,
+                style: h3.copyWith(fontSize: 20.sp),
               ),
               Text(
                 "*Harap isi sesuai Dengan Ktp",
-                style: caption.copyWith(color:Colors.red),
+                style: caption.copyWith(color:Colors.red,fontSize: 15.sp),
               )
             ],
           ),

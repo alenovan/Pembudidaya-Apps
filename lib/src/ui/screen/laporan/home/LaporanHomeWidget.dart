@@ -22,6 +22,7 @@ import 'package:lelenesia_pembudidaya/src/ui/widget/LoadingDialog.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:lelenesia_pembudidaya/src/bloc/KolamBloc.dart' as kolam;
+import 'package:flutter_screenutil/flutter_screenutil.dart' as fltr;
 class LaporanHomeWidget extends StatelessWidget {
   const LaporanHomeWidget({Key key}) : super(key: key);
 
@@ -350,7 +351,7 @@ Widget CardKolamDetail(BuildContext context, String title, String sub,
   }
 
   final Widget svgIcon = Container(
-    height: ScreenUtil().setHeight(300),
+    height: 120.h,
     child: Card(
         elevation: 4,
         shape: RoundedRectangleBorder(
@@ -376,7 +377,7 @@ Widget CardKolamDetail(BuildContext context, String title, String sub,
                             margin: EdgeInsets.only(left: 5.0),
                             child: title != "null"?Text(
                               text,
-                              style: caption.copyWith(color: color,fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
+                              style: caption.copyWith(color: color,fontSize: 20.sp),
                             ):Shimmer.fromColors(
                                 baseColor: Colors.grey[300],
                                 highlightColor: Colors.white,
@@ -397,7 +398,7 @@ Widget CardKolamDetail(BuildContext context, String title, String sub,
                         child: title != "null"?Text(
                           "Kolam "+title,
                           style:
-                              subtitle1.copyWith(fontWeight: FontWeight.bold,fontSize: ScreenUtil(allowFontScaling: false).setSp(50)),
+                              subtitle1.copyWith(fontWeight: FontWeight.bold,fontSize: 20.sp),
                         ):Shimmer.fromColors(
                             baseColor: Colors.grey[300],
                             highlightColor: Colors.white,
@@ -417,7 +418,7 @@ Widget CardKolamDetail(BuildContext context, String title, String sub,
                           sub,
                           style: overline.copyWith(
                               fontWeight: FontWeight.bold,
-                              color: greyTextColor,fontSize: ScreenUtil(allowFontScaling: false).setSp(35)),
+                              color: greyTextColor,fontSize: 15.sp),
                         ):Shimmer.fromColors(
                             baseColor: Colors.grey[300],
                             highlightColor: Colors.white,
@@ -444,15 +445,15 @@ Widget CardKolamDetail(BuildContext context, String title, String sub,
                             style: TextStyle(color: Colors.black),
                             children: <TextSpan>[
                               TextSpan(
-                                  text: 'Stock Pakan :     ',
+                                  text: 'Stock:     ',
                                   style: overline.copyWith(
                                       color: greyTextColor,
-                                      fontSize: ScreenUtil(allowFontScaling: false).setSp(35),
+                                      fontSize: 15.sp,
                                       fontWeight: FontWeight.bold)),
                             stock != "null"?TextSpan(
                                   text: stock == "null Kg" ?"0 Kg":stock,
                                   style: subtitle1.copyWith(
-                                      fontWeight: FontWeight.bold,fontSize: ScreenUtil(allowFontScaling: false).setSp(40))):Shimmer.fromColors(
+                                      fontWeight: FontWeight.bold,fontSize: 15.sp)):Shimmer.fromColors(
                                   baseColor: Colors.grey[300],
                                   highlightColor: Colors.white,
                                   child: Container(
@@ -474,7 +475,7 @@ Widget CardKolamDetail(BuildContext context, String title, String sub,
                                 margin: EdgeInsets.only(top: 10.0),
                                 alignment: Alignment.centerRight,
                                 child: CustomElevation(
-                                    height: ScreenUtil().setHeight(75),
+                                    height: 40.h,
                                     child: RaisedButton(
                                       highlightColor: colorPrimary,
                                       //Replace with actual colors
@@ -511,7 +512,7 @@ Widget CardKolamDetail(BuildContext context, String title, String sub,
                                       child: Text(
                                         checkout == "null"?"....":checkout,
                                         style: overline.copyWith(
-                                            color: Colors.white,fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
+                                            color: Colors.white,fontSize: 15.sp),
                                       ),
                                       shape: new RoundedRectangleBorder(
                                         borderRadius:
@@ -537,11 +538,11 @@ Widget CollapseDetailText(
       children: <TextSpan>[
         TextSpan(
             text: title,
-            style: body2.copyWith(color: textPrimary, fontSize: ScreenUtil(allowFontScaling: false).setSp(38))),
+            style: body2.copyWith(color: textPrimary, fontSize: 18.sp)),
         TextSpan(
             text: Value,
             style: body2.copyWith(
-                fontWeight: FontWeight.bold, color: clr, fontSize: ScreenUtil(allowFontScaling: false).setSp(38))),
+                fontWeight: FontWeight.bold, color: clr, fontSize: 18.sp)),
       ],
     ),
   ));
@@ -556,7 +557,7 @@ Widget DetailCard(BuildContext context, String title, String value, Color clr) {
         baseColor: Colors.grey[300],
         highlightColor: Colors.white,
         child: Container(
-          height: 20.0,
+          height: 20.h,
           decoration: BoxDecoration(
               color: Colors.grey[300],
               borderRadius:
@@ -567,10 +568,10 @@ Widget DetailCard(BuildContext context, String title, String value, Color clr) {
   } else {
     dataValue = Text(value,
         style: body2.copyWith(
-            fontWeight: FontWeight.bold, color: clr, fontSize: ScreenUtil(allowFontScaling: false).setSp(45)));
+            fontWeight: FontWeight.bold, color: clr, fontSize: 20.sp));
   }
   final Widget svgIcon = Container(
-      height: ScreenUtil().setHeight(200),
+      height: 80.h,
       child: Card(
         elevation: 3.0,
         shape: RoundedRectangleBorder(
@@ -584,7 +585,7 @@ Widget DetailCard(BuildContext context, String title, String value, Color clr) {
             children: [
               Text(title,
                   style: overline.copyWith(
-                      fontWeight: FontWeight.bold, color: greyTextColor,fontSize: ScreenUtil(allowFontScaling: false).setSp(35))),
+                      fontWeight: FontWeight.bold, color: greyTextColor,fontSize: 20.sp)),
               SizedBox(
                 height: 5,
               ),

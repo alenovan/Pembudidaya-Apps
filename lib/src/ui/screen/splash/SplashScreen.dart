@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:lelenesia_pembudidaya/src/bloc/KolamBloc.dart';
@@ -23,11 +24,13 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void dispose() {
+    getToken();
     super.dispose();
   }
 
   void getToken() async {
     var token = await logBloc.bloc.getToken();
+
    try{
      if (token != "") {
        bool status = await bloc.getCheckKolam();
@@ -65,6 +68,12 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.portraitUp,
+    ]);
     if(loop == 0){
       getToken();
     }

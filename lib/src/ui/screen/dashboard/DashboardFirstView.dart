@@ -19,7 +19,7 @@ import 'package:lelenesia_pembudidaya/src/LelenesiaText.dart';
 import 'package:flutter/services.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/ImagesSvg.dart';
 import 'package:page_transition/page_transition.dart';
-
+import 'package:lelenesia_pembudidaya/src/ui/tools/ScreenUtil.dart';
 class DashboardFirstView extends StatefulWidget {
   const DashboardFirstView({Key key}) : super(key: key);
 
@@ -66,7 +66,10 @@ class _DashboardFirstViewState extends State<DashboardFirstView> {
 
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.instance = ScreenUtil()..init(context);
     SizeConfig().init(context);
+    SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(statusBarColor: Colors.transparent));
 
     return Scaffold(
         resizeToAvoidBottomInset: false,

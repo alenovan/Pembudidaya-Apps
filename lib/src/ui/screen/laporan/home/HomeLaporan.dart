@@ -23,6 +23,7 @@ import 'package:lelenesia_pembudidaya/src/bloc/KolamBloc.dart' as kolam;
 import 'package:lelenesia_pembudidaya/src/bloc/CheckoutBloc.dart' as checkout;
 import 'package:lelenesia_pembudidaya/src/ui/tools/extensions.dart' as AppExt;
 import 'package:lelenesia_pembudidaya/src/bloc/LoginBloc.dart' as login;
+import 'package:flutter_screenutil/flutter_screenutil.dart' as fltr;
 class HomeLaporan extends StatefulWidget {
   final String idKolam;
 
@@ -255,7 +256,7 @@ class _HomeLaporanState extends State<HomeLaporan> {
                     },
                     child: Icon(Icons.arrow_back,
                         color: tmblColor,
-                        size: ScreenUtil(allowFontScaling: false).setSp(80)),
+                        size: 24.sp),
                   ),
                   floating: true,
                   snap: true,
@@ -339,7 +340,7 @@ class _HomeLaporanState extends State<HomeLaporan> {
                             builder: (context) {
                               var controller = ExpandableController.of(context);
                               return FlatButton(
-                                height: ScreenUtil().setHeight(200),
+                                height: 90.h,
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -353,9 +354,7 @@ class _HomeLaporanState extends State<HomeLaporan> {
                                                   ? Boxicons.bxs_chevron_down_circle
                                                   : Boxicons.bxs_chevron_right_circle,
                                               color: purpleTextColor,
-                                              size: ScreenUtil(
-                                                      allowFontScaling: false)
-                                                  .setSp(60),
+                                              size: 25.sp,
                                             )),
                                         Container(
                                             margin: EdgeInsets.only(
@@ -366,10 +365,7 @@ class _HomeLaporanState extends State<HomeLaporan> {
                                               "Informasi Kolam",
                                               style: subtitle1.copyWith(
                                                   color: Colors.black,
-                                                  fontSize: ScreenUtil(
-                                                          allowFontScaling:
-                                                          false)
-                                                      .setSp(50),
+                                                  fontSize: 25.sp,
                                                   fontWeight: FontWeight.bold),
                                             ))
                                       ],
@@ -457,7 +453,7 @@ class _HomeLaporanState extends State<HomeLaporan> {
                             builder: (context) {
                               var controller = ExpandableController.of(context);
                               return FlatButton(
-                                height: SizeConfig.blockVertical * 10,
+                                height: 90.h,
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -471,9 +467,7 @@ class _HomeLaporanState extends State<HomeLaporan> {
                                                   ? Boxicons.bxs_chevron_down_circle
                                                   : Boxicons.bxs_chevron_right_circle,
                                               color: purpleTextColor,
-                                              size: ScreenUtil(
-                                                  allowFontScaling: false)
-                                                  .setSp(60),
+                                              size: 25.sp,
                                             )),
                                         Container(
                                             margin: EdgeInsets.only(
@@ -484,10 +478,7 @@ class _HomeLaporanState extends State<HomeLaporan> {
                                               "Informasi Pakan",
                                               style: subtitle1.copyWith(
                                                   color: Colors.black,
-                                                  fontSize: ScreenUtil(
-                                                          allowFontScaling:
-                                                          false)
-                                                      .setSp(50),
+                                                  fontSize: 25.sp,
                                                   fontWeight: FontWeight.bold),
                                             ))
                                       ],
@@ -511,7 +502,7 @@ class _HomeLaporanState extends State<HomeLaporan> {
                               children: [
                                 CollapseDetailText(
                                     context,
-                                    "Prediksi Pengeluaran Pakan : ",
+                                    "Target Pengeluaran Pakan : ",
                                     "${_feed_requirement_estimation}",
                                     textPrimary),
                                 SizedBox(
@@ -519,7 +510,7 @@ class _HomeLaporanState extends State<HomeLaporan> {
                                 ),
                                 CollapseDetailText(
                                     context,
-                                    "Prediksi Modal Pakan :  ",
+                                    "Target Modal Pakan :  ",
                                     "${_est_feed_budget}",
                                     colorPrimary),
                                 SizedBox(
@@ -539,11 +530,11 @@ class _HomeLaporanState extends State<HomeLaporan> {
                           left: ScreenUtil().setWidth(50),
                           right: ScreenUtil().setWidth(50)),
                       child: Text(
-                        "Prediksi Panen",
+                        "Detail Panen",
                         style: body2.copyWith(
                             color: textPrimary,
                             fontWeight: FontWeight.bold,
-                            fontSize: ScreenUtil(allowFontScaling: false).setSp(55)),
+                            fontSize:25.sp),
                       ),
                     ),
                     Container(
@@ -599,7 +590,7 @@ class _HomeLaporanState extends State<HomeLaporan> {
                           top: ScreenUtil().setHeight(20),
                           left: ScreenUtil().setWidth(50),
                           right: ScreenUtil().setWidth(40)),
-                      child: DetailCard(context, "Informasi Modal Keseluruhan (Termasuk 5% Ops cost)",
+                      child: DetailCard(context, "Informasi Modal Awal (Termasuk 5% Ops cost)",
                           "${_budget}", textPrimary),
                     ),
                     Container(
@@ -607,7 +598,7 @@ class _HomeLaporanState extends State<HomeLaporan> {
                           top: ScreenUtil().setHeight(20),
                           left: ScreenUtil().setWidth(50),
                           right: ScreenUtil().setWidth(40)),
-                      child: DetailCard(context, "Prediksi Informasi Omset",
+                      child: DetailCard(context, "Target Informasi Omset",
                           "${_omset}", colorPrimary),
                     ),
                     Container(
@@ -617,7 +608,7 @@ class _HomeLaporanState extends State<HomeLaporan> {
                           right: ScreenUtil().setWidth(40)),
                       child: DetailCard(
                           context,
-                          "Prediksi Informasi Keuntungan",
+                          "Target Informasi Keuntungan",
                           "${_profit}",
                           colorPrimary),
                     ),

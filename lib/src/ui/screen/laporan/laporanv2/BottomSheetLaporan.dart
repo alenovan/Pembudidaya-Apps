@@ -21,7 +21,7 @@ import 'package:lelenesia_pembudidaya/src/ui/tools/extensions.dart' as AppExt;
 import 'package:lelenesia_pembudidaya/src/ui/widget/LoadingDialog.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shimmer/shimmer.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart' as fltr;
 class BottomSheetLaporan extends StatefulWidget {
   DateTime date;
 
@@ -258,7 +258,7 @@ class _MyBottomSheetState extends State<BottomSheetLaporan> {
             textAlign: TextAlign.start,
             style: caption.copyWith(
                 color: Colors.black,
-                fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
+                fontSize: 20.sp),
           ),
           SizedBox(
             height: ScreenUtil().setHeight(20),
@@ -290,7 +290,7 @@ class _MyBottomSheetState extends State<BottomSheetLaporan> {
             textAlign: TextAlign.left,
             style: caption.copyWith(
                 color: Colors.black,
-                fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
+                fontSize: 20.sp),
           ),
           SizedBox(
             height: ScreenUtil().setHeight(20),
@@ -321,7 +321,7 @@ class _MyBottomSheetState extends State<BottomSheetLaporan> {
               textAlign: TextAlign.start,
               style: caption.copyWith(
                   color: Colors.black,
-                  fontSize: ScreenUtil(allowFontScaling: false).setSp(40))),
+                  fontSize: 20.sp)),
           SizedBox(
             height: 10,
           ),
@@ -340,18 +340,18 @@ class _MyBottomSheetState extends State<BottomSheetLaporan> {
                   color: blackTextColor,
                   fontFamily: 'lato',
                   letterSpacing: 0.4,
-                  fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
+                  fontSize: 20.sp),
             ),
           ),
           Container(
-            height: ScreenUtil().setHeight(120),
+            height:70.h,
             width: MediaQuery.of(context).size.width,
             margin: EdgeInsets.only(
                 left: SizeConfig.blockVertical * 5,
                 right: SizeConfig.blockVertical * 5,
                 top: 15.0),
             child: CustomElevation(
-                height: ScreenUtil().setHeight(120),
+                height: 80.h,
                 child: RaisedButton(
                   highlightColor: colorPrimary,
                   color: colorPrimary,
@@ -369,7 +369,7 @@ class _MyBottomSheetState extends State<BottomSheetLaporan> {
                         fontFamily: 'poppins',
                         letterSpacing: 1.25,
                         fontSize:
-                            ScreenUtil(allowFontScaling: false).setSp(40)),
+                            20.sp),
                   ),
                   shape: new RoundedRectangleBorder(
                     borderRadius: new BorderRadius.circular(30.0),
@@ -401,25 +401,25 @@ class _MyBottomSheetState extends State<BottomSheetLaporan> {
           textAlign: TextAlign.center,
           style: subtitle2.copyWith(
               color: Colors.black,
-              fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
+              fontSize: 20.sp),
         ),
         Text("Segera buat laporan anda !",
             textAlign: TextAlign.center,
             style: subtitle2.copyWith(
                 color: Colors.black,
-                fontSize: ScreenUtil(allowFontScaling: false).setSp(40))),
+                fontSize: 20.sp)),
         SizedBox(
           height: 10,
         ),
         Container(
-          height: ScreenUtil().setHeight(120),
+          height: 40.h,
           width: MediaQuery.of(context).size.width,
           margin: EdgeInsets.only(
               left: SizeConfig.blockVertical * 5,
               right: SizeConfig.blockVertical * 5,
               top: 15.0),
           child: CustomElevation(
-              height: ScreenUtil().setHeight(120),
+              height: 40.h,
               child: RaisedButton(
                 highlightColor: colorPrimary,
                 //Replace with actual colors
@@ -436,7 +436,7 @@ class _MyBottomSheetState extends State<BottomSheetLaporan> {
                       fontWeight: FontWeight.w700,
                       fontFamily: 'poppins',
                       letterSpacing: 1.25,
-                      fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
+                      fontSize: 20.sp),
                 ),
                 shape: new RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(30.0),
@@ -508,8 +508,7 @@ void message(BuildContext context, String message) {
                     textAlign: TextAlign.center,
                     style: subtitle2.copyWith(
                         color: Colors.black,
-                        fontSize:
-                            ScreenUtil(allowFontScaling: false).setSp(50)),
+                        fontSize:25.sp),
                   ),
                 )
               ],
@@ -553,7 +552,7 @@ Widget bottomSheetInserted(BuildContext context, String date, String pakan,
                   textAlign: TextAlign.start,
                   style: caption.copyWith(
                       color: Colors.black,
-                      fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
+                      fontSize: 20.sp),
                 ),
                 Container(
                   padding: EdgeInsets.only(top: 5.0),
@@ -563,7 +562,7 @@ Widget bottomSheetInserted(BuildContext context, String date, String pakan,
                     style: caption.copyWith(
                         color: greyTextColor,
                         fontSize:
-                            ScreenUtil(allowFontScaling: false).setSp(40)),
+                            20.sp),
                   ),
                 )
               ],
@@ -593,7 +592,7 @@ Widget bottomSheetInserted(BuildContext context, String date, String pakan,
                   textAlign: TextAlign.start,
                   style: caption.copyWith(
                       color: Colors.black,
-                      fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
+                      fontSize: 20.sp),
                 ),
                 Container(
                   padding: EdgeInsets.only(top: 5.0),
@@ -603,7 +602,7 @@ Widget bottomSheetInserted(BuildContext context, String date, String pakan,
                     style: caption.copyWith(
                         color: greyTextColor,
                         fontSize:
-                            ScreenUtil(allowFontScaling: false).setSp(40)),
+                            20.sp),
                   ),
                 )
               ],
@@ -632,7 +631,7 @@ Widget bottomSheetInserted(BuildContext context, String date, String pakan,
                   textAlign: TextAlign.start,
                   style: caption.copyWith(
                       color: Colors.black,
-                      fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
+                      fontSize: 20.sp),
                 ),
                 Container(
                   padding: EdgeInsets.only(top: 5.0),
@@ -642,7 +641,7 @@ Widget bottomSheetInserted(BuildContext context, String date, String pakan,
                     style: caption.copyWith(
                         color: greyTextColor,
                         fontSize:
-                            ScreenUtil(allowFontScaling: false).setSp(40)),
+                            20.sp),
                   ),
                 )
               ],
@@ -671,7 +670,7 @@ Widget bottomSheetInserted(BuildContext context, String date, String pakan,
                   textAlign: TextAlign.start,
                   style: caption.copyWith(
                       color: Colors.black,
-                      fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
+                      fontSize: 20.sp),
                 ),
                 Container(
                   padding: EdgeInsets.only(top: 5.0),
@@ -681,7 +680,7 @@ Widget bottomSheetInserted(BuildContext context, String date, String pakan,
                     style: caption.copyWith(
                         color: greyTextColor,
                         fontSize:
-                            ScreenUtil(allowFontScaling: false).setSp(40)),
+                            20.sp),
                   ),
                 )
               ],

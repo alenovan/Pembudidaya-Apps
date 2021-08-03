@@ -20,6 +20,8 @@ import 'package:lelenesia_pembudidaya/src/ui/widget/LoadingDialog.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:lelenesia_pembudidaya/src/bloc/LelangBloc.dart' as lelang;
 import 'package:shimmer/shimmer.dart';
+
+import 'package:flutter_screenutil/flutter_screenutil.dart' as fltr;
 class DetailPreviewBidder extends StatefulWidget {
   final String idBidder;
   final String idLelang;
@@ -31,12 +33,13 @@ class DetailPreviewBidder extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<DetailPreviewBidder> {
-  var _name="null",_phone="null",_price="null",_alamat="null";
+  var _name="null",_phone="null",_price="null",_alamat="null",_id_bid="null";
   final formatter = new NumberFormat('#,##0', 'ID');
   void fetchData() async{
     var data = await lelang.bloc.getBidderDetail(widget.idBidder);
     print(data);
     setState(() {
+      _id_bid = "LelangPanen-00-"+data['id'].toString();
       _name = data['name'].toString();
       _phone = "-";
       _price = "Rp.${formatter.format(int.parse(data['bid_price']))}";
@@ -85,308 +88,334 @@ class _ProfileScreenState extends State<DetailPreviewBidder> {
             backgroundColor: Colors.white,
             resizeToAvoidBottomInset: false,
             drawer: Drawers(context),
-            body: Stack(
-              children: [
-                new Positioned(
-                  child: ListView(
-                    physics: const NeverScrollableScrollPhysics(),
-                    padding: EdgeInsets.zero,
-                    children: <Widget>[
+            body: ListView(
+              padding: EdgeInsets.zero,
+              children: <Widget>[
+                Container(
+                  color: Colors.white,
+                  child: Stack(
+                    children: [
                       Container(
-                        color: Colors.white,
-                        width: double.infinity,
-                        child: Stack(
-                          children: [
-                            Container(
-                              margin: EdgeInsets.only(
-                                top: SizeConfig.blockHorizotal * 20,
-                                left: SizeConfig.blockHorizotal * 5,
-                                bottom: SizeConfig.blockHorizotal * 3,
-                              ),
-                              child: GestureDetector(
-                                  onTap: ()=>{
-                                    Navigator.of(context).pop()
-                                  },
-                                  child: Icon(Icons.arrow_back,
-                                      color: Colors.black,
-                                      size: ScreenUtil(allowFontScaling: false).setSp(80))),
-                            ),
-                            Expanded(
-                                child: Container(
-                                    margin: EdgeInsets.only(
-                                        top: ScreenUtil()
-                                            .setHeight(240)),
-                                    child: Align(
-                                      alignment: Alignment.center,
-                                      child: Column(
-                                        children: [
-                                          new Container(
-                                              child: Image.asset(
-                                                "assets/png/dummy_profile.png",
-                                                fit: BoxFit.cover,
-                                              )),
-                                        ],
-                                      ),
-                                    ))),
-                          ],
+                        margin: EdgeInsets.only(
+                          top: 40.h,
+                          left: SizeConfig.blockHorizotal * 5,
+                          bottom: SizeConfig.blockHorizotal * 3,
                         ),
-                      ),
-                      SizedBox(
-                        height: 10.0,
+                        child: GestureDetector(
+                            onTap: ()=>{
+                              Navigator.of(context).pop()
+                            },
+                            child: Icon(Icons.arrow_back,
+                                color: Colors.black,
+                                size: 30.sp)),
                       ),
                       Container(
                           margin: EdgeInsets.only(
-                              left: ScreenUtil().setWidth(70),
-                              right: ScreenUtil().setWidth(70)),
-                          child: Text(
-                            "Nama",
-                            style: subtitle1.copyWith(
-                                fontWeight: FontWeight.w700,
-                                color: Colors.black,
-                                fontSize: ScreenUtil(allowFontScaling: false)
-                                    .setSp(50)),
-                          )),
+                              top: ScreenUtil()
+                                  .setHeight(240)),
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Container(
+                                child: Image.asset(
+                                  "assets/png/dummy_profile.png",
+                                  fit: BoxFit.cover,
+                                )),
 
-                      Container(
-                          margin: EdgeInsets.only(
-                              top: ScreenUtil().setHeight(20),
-                              left: ScreenUtil().setWidth(70),
-                              right: ScreenUtil().setWidth(70)),
-                          child: _name != "null"?Text(
-                            "${_name}",
-                            style: body2.copyWith(
-                                fontSize: ScreenUtil(allowFontScaling: false)
-                                    .setSp(45)),
-                          ):Shimmer.fromColors(
-                              baseColor: Colors.grey[300],
-                              highlightColor: Colors.white,
-                              child: Container(
-                                height: 20.0,
-                                width: ScreenUtil().setWidth(300),
-                                decoration: BoxDecoration(
-                                    color: Colors.grey[300],
-                                    borderRadius:
-                                    BorderRadius.all(
-                                        Radius.circular(
-                                            16.0))),
-                              ))),
-                      Container(
-                        margin: EdgeInsets.only(
-                          top: ScreenUtil().setHeight(50),
-                          bottom: ScreenUtil().setHeight(20),
-                        ),
-                        color: editTextField,
-                        height: 0.5,
-                      ),
-                      Container(
-                          margin: EdgeInsets.only(
-                              left: ScreenUtil().setWidth(70),
-                              right: ScreenUtil().setWidth(70)),
-                          child: Text(
-                            "Nomor Handphone",
-                            style: subtitle1.copyWith(
-                                fontWeight: FontWeight.w700,
-                                color: Colors.black,
-                                fontSize: ScreenUtil(allowFontScaling: false)
-                                    .setSp(50)),
                           )),
-                      Container(
-                          margin: EdgeInsets.only(
-                              top: ScreenUtil().setHeight(20),
-                              left: ScreenUtil().setWidth(70),
-                              right: ScreenUtil().setWidth(70)),
-                          child: _phone != "null"?Text(
-                            "${_phone}",
-                            style: body2.copyWith(
-                                fontSize: ScreenUtil(allowFontScaling: false)
-                                    .setSp(45)),
-                          ):Shimmer.fromColors(
-                              baseColor: Colors.grey[300],
-                              highlightColor: Colors.white,
-                              child: Container(
-                                height: 20.0,
-                                width: ScreenUtil().setWidth(300),
-                                decoration: BoxDecoration(
-                                    color: Colors.grey[300],
-                                    borderRadius:
-                                    BorderRadius.all(
-                                        Radius.circular(
-                                            16.0))),
-                              ))),
-                      Container(
-                        margin: EdgeInsets.only(
-                          top: ScreenUtil().setHeight(50),
-                          bottom: ScreenUtil().setHeight(20),
-                        ),
-                        color: editTextField,
-                        height: 0.5,
-                      ),
-                      Container(
-                          margin: EdgeInsets.only(
-                              left: ScreenUtil().setWidth(70),
-                              right: ScreenUtil().setWidth(70)),
-                          child: Text(
-                            "Harga",
-                            style: subtitle1.copyWith(
-                                fontWeight: FontWeight.w700,
-                                color: Colors.black,
-                                fontSize: ScreenUtil(allowFontScaling: false)
-                                    .setSp(50)),
-                          )),
-                      Container(
-                          margin: EdgeInsets.only(
-                              top: ScreenUtil().setHeight(20),
-                              left: ScreenUtil().setWidth(70),
-                              right: ScreenUtil().setWidth(70)),
-                          child: _price != "null"?Text(
-                            "${_price}",
-                            style: body2.copyWith(
-                                fontSize: ScreenUtil(allowFontScaling: false)
-                                    .setSp(45)),
-                          ):Shimmer.fromColors(
-                              baseColor: Colors.grey[300],
-                              highlightColor: Colors.white,
-                              child: Container(
-                                height: 20.0,
-                                width: ScreenUtil().setWidth(300),
-                                decoration: BoxDecoration(
-                                    color: Colors.grey[300],
-                                    borderRadius:
-                                    BorderRadius.all(
-                                        Radius.circular(
-                                            16.0))),
-                              ))),
-                      Container(
-                        margin: EdgeInsets.only(
-                          top: ScreenUtil().setHeight(50),
-                          bottom: ScreenUtil().setHeight(20),
-                        ),
-                        color: editTextField,
-                        height: 0.5,
-                      ),
-                      Container(
-                          margin: EdgeInsets.only(
-                              left: ScreenUtil().setWidth(70),
-                              right: ScreenUtil().setWidth(70)),
-                          child: Text(
-                            "Alamat",
-                            style: subtitle1.copyWith(
-                                fontWeight: FontWeight.w700,
-                                color: Colors.black,
-                                fontSize: ScreenUtil(allowFontScaling: false)
-                                    .setSp(50)),
-                          )),
-                      Container(
-                          margin: EdgeInsets.only(
-                              top: ScreenUtil().setHeight(20),
-                              left: ScreenUtil().setWidth(70),
-                              right: ScreenUtil().setWidth(70)),
-                          child: _alamat != "null"?Text(
-                            "${_alamat}",
-                            style: body2.copyWith(
-                                fontSize: ScreenUtil(allowFontScaling: false)
-                                    .setSp(45)),
-                          ):Shimmer.fromColors(
-                              baseColor: Colors.grey[300],
-                              highlightColor: Colors.white,
-                              child: Container(
-                                height: 20.0,
-                                width: ScreenUtil().setWidth(300),
-                                decoration: BoxDecoration(
-                                    color: Colors.grey[300],
-                                    borderRadius:
-                                    BorderRadius.all(
-                                        Radius.circular(
-                                            16.0))),
-                              ))),
-                      Container(
-                        margin: EdgeInsets.only(
-                          top: ScreenUtil().setHeight(50),
-                          bottom: ScreenUtil().setHeight(20),
-                        ),
-                        color: editTextField,
-                        height: 0.5,
-                      ),
-                      // Container(
-                      //     margin: EdgeInsets.only(
-                      //         left: ScreenUtil().setWidth(70),
-                      //         right: ScreenUtil().setWidth(70)),
-                      //     child: Text(
-                      //       "Perkiraan Keuntungan",
-                      //       style: subtitle1.copyWith(
-                      //           fontWeight: FontWeight.w700,
-                      //           color: Colors.black,
-                      //           fontSize: ScreenUtil(allowFontScaling: false)
-                      //               .setSp(50)),
-                      //     )),
-                      // Container(
-                      //     margin: EdgeInsets.only(
-                      //         top: ScreenUtil().setHeight(20),
-                      //         left: ScreenUtil().setWidth(70),
-                      //         right: ScreenUtil().setWidth(70)),
-                      //     child: Text(
-                      //       "RP.17.500",
-                      //       style: body2.copyWith(
-                      //           fontSize: ScreenUtil(allowFontScaling: false)
-                      //               .setSp(45)),
-                      //     )),
-
-                      // Container(
-                      //   margin: EdgeInsets.only(
-                      //     top: ScreenUtil().setHeight(50),
-                      //     bottom: ScreenUtil().setHeight(20),
-                      //   ),
-                      //   color: editTextField,
-                      //   height: 0.5,
-                      // ),
-                      Container(
-                          margin: EdgeInsets.only(
-                              left: ScreenUtil().setWidth(50),
-                              right: ScreenUtil().setWidth(50)),
-                          child: new Align(
-                              alignment: FractionalOffset.bottomCenter,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Container(
-                                    height: 45.0,
-                                    width: MediaQuery
-                                        .of(context)
-                                        .size
-                                        .width,
-                                    margin: EdgeInsets.only(
-                                        top: 15.0),
-                                    child: CustomElevation(
-                                        height: 30.0,
-                                        child: RaisedButton(
-                                          highlightColor: colorPrimary,
-                                          //Replace with actual colors
-                                          color: colorPrimary,
-                                          onPressed: () => {
-                                            setWinner()
-                                          },
-                                          child: Text(
-                                            "Berikan",
-                                            style: TextStyle(
-                                                color: backgroundColor,
-                                                fontWeight: FontWeight.w500,
-                                                fontFamily: 'poppins',
-                                                letterSpacing: 1.25,
-                                                fontSize: subTitleLogin),
-                                          ),
-                                          shape: new RoundedRectangleBorder(
-                                            borderRadius:
-                                            new BorderRadius.circular(30.0),
-                                          ),
-                                        )),
-                                  ),
-                                ],
-                              ))),
-                      SizedBox(
-                        height: 60,
-                      ),
                     ],
                   ),
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                Container(
+                    margin: EdgeInsets.only(
+                        left: ScreenUtil().setWidth(70),
+                        right: ScreenUtil().setWidth(70)),
+                    child: Text(
+                      "Kode Lelang",
+                      style: subtitle1.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: Colors.black,
+                          fontSize: 20.sp),
+                    )),
+
+                Container(
+                    margin: EdgeInsets.only(
+                        top: ScreenUtil().setHeight(20),
+                        left: ScreenUtil().setWidth(70),
+                        right: ScreenUtil().setWidth(70)),
+                    child: _id_bid != "null"?Text(
+                      "${_id_bid}",
+                      style: body2.copyWith(
+                          fontSize: 20.sp),
+                    ):Shimmer.fromColors(
+                        baseColor: Colors.grey[300],
+                        highlightColor: Colors.white,
+                        child: Container(
+                          height: 20.0,
+                          width: ScreenUtil().setWidth(300),
+                          decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              borderRadius:
+                              BorderRadius.all(
+                                  Radius.circular(
+                                      16.0))),
+                        ))),
+
+                SizedBox(
+                  height: 10.0,
+                ),
+                Container(
+                  margin: EdgeInsets.only(
+                    top: ScreenUtil().setHeight(50),
+                    bottom: ScreenUtil().setHeight(20),
+                  ),
+                  color: editTextField,
+                  height: 0.5,
+                ),
+                Container(
+                    margin: EdgeInsets.only(
+                        left: ScreenUtil().setWidth(70),
+                        right: ScreenUtil().setWidth(70)),
+                    child: Text(
+                      "Nama",
+                      style: subtitle1.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: Colors.black,
+                          fontSize: 20.sp),
+                    )),
+
+                Container(
+                    margin: EdgeInsets.only(
+                        top: ScreenUtil().setHeight(20),
+                        left: ScreenUtil().setWidth(70),
+                        right: ScreenUtil().setWidth(70)),
+                    child: _name != "null"?Text(
+                      "${_name}",
+                      style: body2.copyWith(
+                          fontSize: 20.sp),
+                    ):Shimmer.fromColors(
+                        baseColor: Colors.grey[300],
+                        highlightColor: Colors.white,
+                        child: Container(
+                          height: 20.0,
+                          width: ScreenUtil().setWidth(300),
+                          decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              borderRadius:
+                              BorderRadius.all(
+                                  Radius.circular(
+                                      16.0))),
+                        ))),
+                Container(
+                  margin: EdgeInsets.only(
+                    top: ScreenUtil().setHeight(50),
+                    bottom: ScreenUtil().setHeight(20),
+                  ),
+                  color: editTextField,
+                  height: 0.5,
+                ),
+                Container(
+                    margin: EdgeInsets.only(
+                        left: ScreenUtil().setWidth(70),
+                        right: ScreenUtil().setWidth(70)),
+                    child: Text(
+                      "Nomor Handphone",
+                      style: subtitle1.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: Colors.black,
+                          fontSize:20.sp),
+                    )),
+                Container(
+                    margin: EdgeInsets.only(
+                        top: ScreenUtil().setHeight(20),
+                        left: ScreenUtil().setWidth(70),
+                        right: ScreenUtil().setWidth(70)),
+                    child: _phone != "null"?Text(
+                      "${_phone}",
+                      style: body2.copyWith(
+                          fontSize:20.sp),
+                    ):Shimmer.fromColors(
+                        baseColor: Colors.grey[300],
+                        highlightColor: Colors.white,
+                        child: Container(
+                          height: 20.0,
+                          width: ScreenUtil().setWidth(300),
+                          decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              borderRadius:
+                              BorderRadius.all(
+                                  Radius.circular(
+                                      16.0))),
+                        ))),
+                Container(
+                  margin: EdgeInsets.only(
+                    top: ScreenUtil().setHeight(50),
+                    bottom: ScreenUtil().setHeight(20),
+                  ),
+                  color: editTextField,
+                  height: 0.5,
+                ),
+                Container(
+                    margin: EdgeInsets.only(
+                        left: ScreenUtil().setWidth(70),
+                        right: ScreenUtil().setWidth(70)),
+                    child: Text(
+                      "Harga",
+                      style: subtitle1.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: Colors.black,
+                          fontSize: 20.sp),
+                    )),
+                Container(
+                    margin: EdgeInsets.only(
+                        top: ScreenUtil().setHeight(20),
+                        left: ScreenUtil().setWidth(70),
+                        right: ScreenUtil().setWidth(70)),
+                    child: _price != "null"?Text(
+                      "${_price}",
+                      style: body2.copyWith(
+                          fontSize: 20.sp),
+                    ):Shimmer.fromColors(
+                        baseColor: Colors.grey[300],
+                        highlightColor: Colors.white,
+                        child: Container(
+                          height: 20.0,
+                          width: ScreenUtil().setWidth(300),
+                          decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              borderRadius:
+                              BorderRadius.all(
+                                  Radius.circular(
+                                      16.0))),
+                        ))),
+                Container(
+                  margin: EdgeInsets.only(
+                    top: ScreenUtil().setHeight(50),
+                    bottom: ScreenUtil().setHeight(20),
+                  ),
+                  color: editTextField,
+                  height: 0.5,
+                ),
+                Container(
+                    margin: EdgeInsets.only(
+                        left: ScreenUtil().setWidth(70),
+                        right: ScreenUtil().setWidth(70)),
+                    child: Text(
+                      "Alamat",
+                      style: subtitle1.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: Colors.black,
+                          fontSize:20.sp),
+                    )),
+                Container(
+                    margin: EdgeInsets.only(
+                        top: ScreenUtil().setHeight(20),
+                        left: ScreenUtil().setWidth(70),
+                        right: ScreenUtil().setWidth(70)),
+                    child: _alamat != "null"?Text(
+                      "${_alamat}",
+                      style: body2.copyWith(
+                          fontSize: 20.sp),
+                    ):Shimmer.fromColors(
+                        baseColor: Colors.grey[300],
+                        highlightColor: Colors.white,
+                        child: Container(
+                          height: 20.0,
+                          width: ScreenUtil().setWidth(300),
+                          decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              borderRadius:
+                              BorderRadius.all(
+                                  Radius.circular(
+                                      16.0))),
+                        ))),
+                Container(
+                  margin: EdgeInsets.only(
+                    top: ScreenUtil().setHeight(50),
+                    bottom: ScreenUtil().setHeight(20),
+                  ),
+                  color: editTextField,
+                  height: 0.5,
+                ),
+                // Container(
+                //     margin: EdgeInsets.only(
+                //         left: ScreenUtil().setWidth(70),
+                //         right: ScreenUtil().setWidth(70)),
+                //     child: Text(
+                //       "Perkiraan Keuntungan",
+                //       style: subtitle1.copyWith(
+                //           fontWeight: FontWeight.w700,
+                //           color: Colors.black,
+                //           fontSize: ScreenUtil(allowFontScaling: false)
+                //               .setSp(50)),
+                //     )),
+                // Container(
+                //     margin: EdgeInsets.only(
+                //         top: ScreenUtil().setHeight(20),
+                //         left: ScreenUtil().setWidth(70),
+                //         right: ScreenUtil().setWidth(70)),
+                //     child: Text(
+                //       "RP.17.500",
+                //       style: body2.copyWith(
+                //           fontSize: ScreenUtil(allowFontScaling: false)
+                //               .setSp(45)),
+                //     )),
+
+                // Container(
+                //   margin: EdgeInsets.only(
+                //     top: ScreenUtil().setHeight(50),
+                //     bottom: ScreenUtil().setHeight(20),
+                //   ),
+                //   color: editTextField,
+                //   height: 0.5,
+                // ),
+                Container(
+                    margin: EdgeInsets.only(
+                        left: ScreenUtil().setWidth(50),
+                        right: ScreenUtil().setWidth(50)),
+                    child: new Align(
+                        alignment: FractionalOffset.bottomCenter,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Container(
+                              height: 45.h,
+                              width: MediaQuery
+                                  .of(context)
+                                  .size
+                                  .width,
+                              margin: EdgeInsets.only(
+                                  top: 15.0),
+                              child: CustomElevation(
+                                  height: 30.h,
+                                  child: RaisedButton(
+                                    highlightColor: colorPrimary,
+                                    //Replace with actual colors
+                                    color: colorPrimary,
+                                    onPressed: () => {
+                                      setWinner()
+                                    },
+                                    child: Text(
+                                      "Berikan",
+                                      style: TextStyle(
+                                          color: backgroundColor,
+                                          fontWeight: FontWeight.w500,
+                                          fontFamily: 'poppins',
+                                          letterSpacing: 1.25,
+                                          fontSize: 20.sp),
+                                    ),
+                                    shape: new RoundedRectangleBorder(
+                                      borderRadius:
+                                      new BorderRadius.circular(30.0),
+                                    ),
+                                  )),
+                            ),
+                          ],
+                        ))),
+                SizedBox(
+                  height: 60,
                 ),
               ],
             )));

@@ -27,6 +27,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:lelenesia_pembudidaya/src/bloc/LelangBloc.dart' as lelang;
 import 'package:lelenesia_pembudidaya/src/ui/tools/extensions.dart' as AppExt;
 import 'package:lelenesia_pembudidaya/src/bloc/KolamBloc.dart' as kolam;
+import 'package:flutter_screenutil/flutter_screenutil.dart' as fltr;
 class JualScreen extends StatefulWidget {
   final String idKolam;
 
@@ -178,23 +179,23 @@ class _JualScreenState extends State<JualScreen> {
                       "assets/png/header_laporan.png",
                       fit: BoxFit.cover,
                       width: double.infinity,
-                      height: ScreenUtil().setHeight(500),
+                      height:200.h,
                     ),
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  ListView(
+                    // crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
+                        alignment: Alignment.centerLeft,
                         color: Colors.transparent,
                         margin: EdgeInsets.only(
                             left: ScreenUtil().setWidth(20),
-                            top: ScreenUtil().setHeight(100)),
+                            top: 10.h),
                         child: IconButton(
                           icon: Icon(
                             Icons.arrow_back,
                             color: Colors.black,
-                            size:
-                            ScreenUtil(allowFontScaling: false).setSp(70),
+                            size:25.sp,
                           ),
                           onPressed: () => {
                             Navigator.push(
@@ -219,8 +220,7 @@ class _JualScreenState extends State<JualScreen> {
                           "Jual Hasil Panen ",
                           style: h3.copyWith(color: Colors.black,
                               fontWeight: FontWeight.bold,
-                              fontSize: ScreenUtil(allowFontScaling: false)
-                                  .setSp(70)),
+                              fontSize: 25.sp),
                           textAlign: TextAlign.start,
                         ),
                       ),
@@ -234,547 +234,525 @@ class _JualScreenState extends State<JualScreen> {
                           style: caption.copyWith(
                               color: Colors.grey,
                               fontWeight: FontWeight.w700,
-                              fontSize: ScreenUtil(allowFontScaling: false)
-                                  .setSp(40)),
+                              fontSize: 20.sp),
                           textAlign: TextAlign.start,
                         ),
                       ),
-                      Expanded(
-                          child: SingleChildScrollView(
-                              physics: new BouncingScrollPhysics(),
+                      Container(
+                        margin: EdgeInsets.only(
+                            left: ScreenUtil().setWidth(100),
+                            right: ScreenUtil().setWidth(100)),
+                        child: Text(
+                          "Nama Produk",
+                          style: TextStyle(
+                              color: appBarTextColor,
+                              fontFamily: 'lato',
+                              letterSpacing: 0.4,
+                              fontSize: 25.sp),
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(
+                            left: ScreenUtil().setWidth(100),
+                            top: SizeConfig.blockVertical * 1,
+                            right: ScreenUtil().setWidth(100)),
+                        child: TextFormField(
+                          controller: namaProdukController,
+                          decoration: EditTextDecorationText(
+                              context, "", 20.0, 0, 0,
+                              0),
+                          keyboardType: TextInputType.text,
+                          style: TextStyle(
+                              color: blackTextColor,
+                              fontFamily: 'lato',
+                              letterSpacing: 0.4,
+                              fontSize: 20.sp),
+                        ),
+                      ),
+                      // Container(
+                      //   margin: EdgeInsets.only(
+                      //       left: ScreenUtil().setWidth(100),
+                      //       top: SizeConfig.blockVertical * 2,
+                      //       right: ScreenUtil().setWidth(100)),
+                      //   child: Text(
+                      //     "Kategori",
+                      //     style: TextStyle(
+                      //         color: appBarTextColor,
+                      //         fontFamily: 'lato',
+                      //         letterSpacing: 0.4,
+                      //         fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
+                      //   ),
+                      // ),
+                      // Container(
+                      //   margin: EdgeInsets.only(
+                      //       left: ScreenUtil().setWidth(100),
+                      //       top: SizeConfig.blockVertical * 1,
+                      //       right: ScreenUtil().setWidth(100)),
+                      //   child: TextFormField(
+                      //     controller: feedConvController,
+                      //     decoration: EditTextDecorationText(
+                      //         context, "1", 20.0, 0, 0, 0),
+                      //     keyboardType: TextInputType.number,
+                      //     style: TextStyle(
+                      //         color: blackTextColor,
+                      //         fontFamily: 'lato',
+                      //         letterSpacing: 0.4,
+                      //         fontSize: 20.sp),
+                      //   ),
+                      // ),
+                      Container(
+                        margin: EdgeInsets.only(
+                            left: ScreenUtil().setWidth(100),
+                            top: SizeConfig.blockVertical * 2,
+                            right: ScreenUtil().setWidth(100)),
+                        child: Text(
+                          "Jumlah Ikan Per Kilo",
+                          style: TextStyle(
+                              color: appBarTextColor,
+                              fontFamily: 'lato',
+                              letterSpacing: 0.4,
+                              fontSize: 25.sp),
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(
+                            left: ScreenUtil().setWidth(100),
+                            top: SizeConfig.blockVertical * 1,
+                            right: ScreenUtil().setWidth(100)),
+                        child: TextFormField(
+                          controller: beratProdukController,
+                          decoration: EditTextDecorationText(
+                              context, "", 20.0, 0, 0, 0),
+                          keyboardType: TextInputType.number,
+                          style: TextStyle(
+                              color: blackTextColor,
+                              fontFamily: 'lato',
+                              letterSpacing: 0.4,
+                              fontSize: 20.sp),
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(
+                            left: ScreenUtil().setWidth(100),
+                            top: SizeConfig.blockVertical * 2,
+                            right: ScreenUtil().setWidth(100)),
+                        child: Text(
+                          "Jumlah Stock (Kilogram)",
+                          style: TextStyle(
+                              color: appBarTextColor,
+                              fontFamily: 'lato',
+                              letterSpacing: 0.4,
+                              fontSize: 25.sp),
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(
+                            left: ScreenUtil().setWidth(100),
+                            top: SizeConfig.blockVertical * 1,
+                            right:ScreenUtil().setWidth(100)),
+                        child: Row(
+                          children: [
+                            Flexible(
+                                flex: 3,
+                                child: SizedBox(
+                                  child: Column(
+                                    children: [
+                                      SliderTheme(
+                                        data:  SliderThemeData(
+                                            thumbColor: colorPrimary,
+                                            activeTrackColor: colorPrimary,
+                                            inactiveTrackColor: Colors.purple[50],
+                                            thumbShape: RoundSliderThumbShape(enabledThumbRadius: 10)),
+                                        child:Slider(
+                                          min: 0,
+                                          max: _max,
+                                          value: _value,
+                                          label: _value.toString(),
+                                          // divisions: 15,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _value = value;
+                                              stockProdukController.text =
+                                                  value.floor().toStringAsFixed(0);
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Container(
+                                            margin: EdgeInsets.only(
+                                              left: SizeConfig.blockVertical * 3,),
+                                            child: Text(
+                                              '0',
+                                              style: TextStyle(
+                                                  color: appBarTextColor,
+                                                  fontFamily: 'lato',
+                                                  letterSpacing: 0.4,
+                                                  fontSize: 25.sp),
+                                            ),
+                                          ),
+                                          Container(
+                                            margin: EdgeInsets.only(
+                                              right: SizeConfig.blockVertical * 3,),
+                                            child: Text(
+                                              '${_max.floor().toStringAsFixed(0)}',
+                                              style: TextStyle(
+                                                  color: appBarTextColor,
+                                                  fontFamily: 'lato',
+                                                  letterSpacing: 0.4,
+                                                  fontSize: 25.sp),
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                )),
+                            Flexible(
+                                child: SizedBox(
+                                  width: 100,
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    child: TextFormField(
+                                      readOnly: true,
+                                      textAlign: TextAlign.center,
+                                      controller: stockProdukController,
+                                      decoration: EditTextDecorationText(
+                                          context, "", 0.0, 0, 0, 0),
+                                      keyboardType: TextInputType.number,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          if(double.parse(value) > _max){
+                                            debugPrint("kena ini");
+                                            try {
+                                              if(int.parse(value) >= 0 && int.parse(value) <= _max) {
+                                                stockProdukController.text = value;
+                                              }else{
+                                                stockProdukController.text = _max.toString();
+                                              }
+                                            } catch (e) {
+                                              stockProdukController.text = _max.toString();
+                                            }
+                                          }else{
+                                            _value = double.parse(value);
+                                          }
+                                        });
+                                      },
+                                      style: TextStyle(
+                                          color: blackTextColor,
+                                          fontFamily: 'lato',
+                                          letterSpacing: 0.4,
+                                          fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
+                                    ),
+                                  ),
+                                ))
+                          ],
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(
+                            left: ScreenUtil().setWidth(100),
+                            top: SizeConfig.blockVertical * 2,
+                            right: ScreenUtil().setWidth(100)),
+                        child: Text(
+                          "Harga per 1 Kg",
+                          style: TextStyle(
+                              color: appBarTextColor,
+                              fontFamily: 'lato',
+                              letterSpacing: 0.4,
+                              fontSize: 25.sp),
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(
+                            left: ScreenUtil().setWidth(100),
+                            top: SizeConfig.blockVertical * 1,
+                            right: ScreenUtil().setWidth(100)),
+                        child: TextFormField(
+                          controller: hargaProdukController,
+                          decoration: EditTextDecorationText(
+                              context, "", 20.0, 0, 0, 0),
+                          keyboardType: TextInputType.number,
+                          style: TextStyle(
+                              color: blackTextColor,
+                              fontFamily: 'lato',
+                              letterSpacing: 0.4,
+                              fontSize: 20.sp),
+                        ),
+                      ),
+
+                      Container(
+                        margin: EdgeInsets.only(
+                            left: ScreenUtil().setWidth(100),
+                            top: SizeConfig.blockVertical * 2,
+                            right: ScreenUtil().setWidth(100)),
+                        child: Column(
+                          children: [
+                            Container(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  "Deskripsi Produk",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontFamily: 'lato',
+                                      letterSpacing: 0.4,
+                                      fontSize: 25.sp),
+                                )),
+                            Container(
+                                padding: EdgeInsets.all(
+                                    SizeConfig.blockVertical * 2),
+                                height: 150.0,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius
+                                      .circular(20),
+                                  color: Colors.grey[100],
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Colors.grey[100],
+                                        spreadRadius: 0.4),
+                                  ],
+                                ),
+                                margin: EdgeInsets.only(
+                                    top: SizeConfig.blockVertical *
+                                        2),
+                                alignment: Alignment.centerLeft,
+                                child: TextField(
+                                  controller: descProdukController,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: 'poppins',
+                                      letterSpacing: 1.25,
+                                      fontSize: 20.sp),
+                                  maxLines: 8,
+                                  decoration: InputDecoration
+                                      .collapsed(
+                                      hintText: ""),
+                                ))
+                          ],
+                        ),
+                      ),
+
+                      Container(
+                        margin: EdgeInsets.only(
+                            left: ScreenUtil().setWidth(100),
+                            top: SizeConfig.blockVertical * 2,
+                            right: ScreenUtil().setWidth(100)),
+                        child: Column(
+                          children: [
+                            Container(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  "Foto Produk",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontFamily: 'lato',
+                                      letterSpacing: 0.4,
+                                      fontSize: 25.sp),
+                                )),
+                            Container(
+                                height: ScreenUtil().setHeight(500),
+                                margin: EdgeInsets.only(
+                                    top: SizeConfig.blockVertical *
+                                        2),
+                                alignment: Alignment.centerLeft,
+                                child: InkWell(
+                                  onTap: () {
+                                    _showPicker(context);
+                                  },
+                                  child:
+                                  roundedRectBorderWidget(
+                                      context, _imageProduk),
+                                ))
+                          ],
+                        ),
+                      ),
+                      // Container(
+                      //   margin: EdgeInsets.only(
+                      //       left: ScreenUtil().setWidth(100),
+                      //       top: ScreenUtil().setHeight(10),
+                      //       right: ScreenUtil().setWidth(100)),
+                      //   child: Row(
+                      //     children: [
+                      //       Transform.scale( scale: 1.5,
+                      //         child: Switch(
+                      //           value: isSwitched,
+                      //           onChanged: (value) {
+                      //             setState(() {
+                      //               isSwitched = value;
+                      //               print(isSwitched);
+                      //             });
+                      //           },
+                      //           activeTrackColor: colorPrimary,
+                      //           activeColor: Colors.white,
+                      //         ),
+                      //       ),
+                      //       Container(
+                      //         margin: EdgeInsets.only(
+                      //             left: ScreenUtil().setWidth(30),),
+                      //         child: Text(
+                      //           "Channel distribusi",
+                      //           style: caption.copyWith(
+                      //               color: Colors.grey,
+                      //               fontWeight: FontWeight.w700),
+                      //           textAlign: TextAlign.start,
+                      //         ),
+                      //       ),
+                      //
+                      //     ],
+                      //   ),
+                      // ),
+                      // Container(
+                      //   margin: EdgeInsets.only(
+                      //       left: ScreenUtil().setWidth(100),
+                      //       top: ScreenUtil().setHeight(20),
+                      //       right: ScreenUtil().setWidth(100)),
+                      //   child: Text(
+                      //     "Fee / Kg",
+                      //     style: TextStyle(
+                      //         color: appBarTextColor,
+                      //         fontFamily: 'lato',
+                      //         letterSpacing: 0.4,
+                      //         fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
+                      //   ),
+                      // ),
+                      // Container(
+                      //   margin: EdgeInsets.only(
+                      //       left: ScreenUtil().setWidth(100),
+                      //       top: SizeConfig.blockVertical * 1,
+                      //       right: ScreenUtil().setWidth(100)),
+                      //   child: TextFormField(
+                      //     enabled: isSwitched,
+                      //     controller: survivalRateController,
+                      //     decoration: EditTextDecorationText(
+                      //         context, "Nama Produk", 20.0, 0, 0, 0),
+                      //     keyboardType: TextInputType.number,
+                      //     style: TextStyle(
+                      //         color: blackTextColor,
+                      //         fontFamily: 'lato',
+                      //         letterSpacing: 0.4,
+                      //         fontSize: 20.sp),
+                      //   ),
+                      // ),
+                      Container(
+                          margin: EdgeInsets.only(bottom: 20.0),
+                          child: new Align(
+                              alignment: FractionalOffset
+                                  .bottomCenter,
                               child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment
+                                    .end,
                                 children: [
                                   Container(
+                                    height: 45.h,
+                                    width:
+                                    MediaQuery
+                                        .of(context)
+                                        .size
+                                        .width,
                                     margin: EdgeInsets.only(
-                                        left: ScreenUtil().setWidth(100),
-                                        right: ScreenUtil().setWidth(100)),
-                                    child: Text(
-                                      "Nama Produk",
-                                      style: TextStyle(
-                                          color: appBarTextColor,
-                                          fontFamily: 'lato',
-                                          letterSpacing: 0.4,
-                                          fontSize: ScreenUtil(
-                                              allowFontScaling: false).setSp(
-                                              40)),
-                                    ),
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(
-                                        left: ScreenUtil().setWidth(100),
-                                        top: SizeConfig.blockVertical * 1,
-                                        right: ScreenUtil().setWidth(100)),
-                                    child: TextFormField(
-                                      controller: namaProdukController,
-                                      decoration: EditTextDecorationText(
-                                          context, "", 20.0, 0, 0,
-                                          0),
-                                      keyboardType: TextInputType.text,
-                                      style: TextStyle(
-                                          color: blackTextColor,
-                                          fontFamily: 'lato',
-                                          letterSpacing: 0.4,
-                                          fontSize: subTitleLogin),
-                                    ),
-                                  ),
-                                  // Container(
-                                  //   margin: EdgeInsets.only(
-                                  //       left: ScreenUtil().setWidth(100),
-                                  //       top: SizeConfig.blockVertical * 2,
-                                  //       right: ScreenUtil().setWidth(100)),
-                                  //   child: Text(
-                                  //     "Kategori",
-                                  //     style: TextStyle(
-                                  //         color: appBarTextColor,
-                                  //         fontFamily: 'lato',
-                                  //         letterSpacing: 0.4,
-                                  //         fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
-                                  //   ),
-                                  // ),
-                                  // Container(
-                                  //   margin: EdgeInsets.only(
-                                  //       left: ScreenUtil().setWidth(100),
-                                  //       top: SizeConfig.blockVertical * 1,
-                                  //       right: ScreenUtil().setWidth(100)),
-                                  //   child: TextFormField(
-                                  //     controller: feedConvController,
-                                  //     decoration: EditTextDecorationText(
-                                  //         context, "1", 20.0, 0, 0, 0),
-                                  //     keyboardType: TextInputType.number,
-                                  //     style: TextStyle(
-                                  //         color: blackTextColor,
-                                  //         fontFamily: 'lato',
-                                  //         letterSpacing: 0.4,
-                                  //         fontSize: subTitleLogin),
-                                  //   ),
-                                  // ),
-                                  Container(
-                                    margin: EdgeInsets.only(
-                                        left: ScreenUtil().setWidth(100),
-                                        top: SizeConfig.blockVertical * 2,
-                                        right: ScreenUtil().setWidth(100)),
-                                    child: Text(
-                                      "Berat",
-                                      style: TextStyle(
-                                          color: appBarTextColor,
-                                          fontFamily: 'lato',
-                                          letterSpacing: 0.4,
-                                          fontSize: ScreenUtil(
-                                              allowFontScaling: false).setSp(
-                                              40)),
-                                    ),
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(
-                                        left: ScreenUtil().setWidth(100),
-                                        top: SizeConfig.blockVertical * 1,
-                                        right: ScreenUtil().setWidth(100)),
-                                    child: TextFormField(
-                                      controller: beratProdukController,
-                                      decoration: EditTextDecorationText(
-                                          context, "", 20.0, 0, 0, 0),
-                                      keyboardType: TextInputType.number,
-                                      style: TextStyle(
-                                          color: blackTextColor,
-                                          fontFamily: 'lato',
-                                          letterSpacing: 0.4,
-                                          fontSize: subTitleLogin),
-                                    ),
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(
-                                        left: ScreenUtil().setWidth(100),
-                                        top: SizeConfig.blockVertical * 2,
-                                        right: ScreenUtil().setWidth(100)),
-                                    child: Text(
-                                      "Jumlah Stock (Kilogram)",
-                                      style: TextStyle(
-                                          color: appBarTextColor,
-                                          fontFamily: 'lato',
-                                          letterSpacing: 0.4,
-                                          fontSize: ScreenUtil(
-                                              allowFontScaling: false).setSp(
-                                              40)),
-                                    ),
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(
-                                        left: SizeConfig.blockVertical * 5,
-                                        top: SizeConfig.blockVertical * 1,
-                                        right: SizeConfig.blockVertical * 5),
-                                    child: Row(
-                                      children: [
-                                        Flexible(
-                                            flex: 3,
-                                            child: SizedBox(
-                                              child: Column(
-                                                children: [
-                                                  SliderTheme(
-                                                    data:  SliderThemeData(
-                                                        thumbColor: colorPrimary,
-                                                        activeTrackColor: colorPrimary,
-                                                        inactiveTrackColor: Colors.purple[50],
-                                                        thumbShape: RoundSliderThumbShape(enabledThumbRadius: 10)),
-                                                    child:Slider(
-                                                      min: 0,
-                                                      max: _max,
-                                                      value: _value,
-                                                      label: _value.toString(),
-                                                      // divisions: 15,
-                                                      onChanged: (value) {
-                                                        setState(() {
-                                                          _value = value;
-                                                          stockProdukController.text =
-                                                              value.floor().toStringAsFixed(0);
-                                                        });
-                                                      },
-                                                    ),
-                                                  ),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                    MainAxisAlignment.spaceBetween,
-                                                    children: <Widget>[
-                                                      Container(
-                                                        margin: EdgeInsets.only(
-                                                          left: SizeConfig.blockVertical * 3,),
-                                                        child: Text(
-                                                          '0',
-                                                          style: TextStyle(
-                                                              color: appBarTextColor,
-                                                              fontFamily: 'lato',
-                                                              letterSpacing: 0.4,
-                                                              fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        margin: EdgeInsets.only(
-                                                          right: SizeConfig.blockVertical * 3,),
-                                                        child: Text(
-                                                          '${_max.floor().toStringAsFixed(0)}',
-                                                          style: TextStyle(
-                                                              color: appBarTextColor,
-                                                              fontFamily: 'lato',
-                                                              letterSpacing: 0.4,
-                                                              fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  )
-                                                ],
+                                        left: ScreenUtil().setWidth(
+                                            100),
+                                        right: ScreenUtil()
+                                            .setWidth(100),
+                                        top: 20.0),
+                                    child: CustomElevation(
+                                        height: 30.h,
+                                        child: RaisedButton(
+                                          highlightColor: colorPrimary,
+                                          //Replace with actual colors
+                                          color: _clickForgot
+                                              ? colorPrimary
+                                              : editTextBgColor,
+                                          onPressed: () =>
+                                              showDialog(
+                                                context: context,
+                                                builder:
+                                                    (
+                                                    BuildContext context) =>
+                                                    AlertMessage(
+                                                        context),
                                               ),
-                                            )),
-                                        Flexible(
-                                            child: SizedBox(
-                                              width: 100,
-                                              child: Container(
-                                                alignment: Alignment.center,
-                                                child: TextFormField(
-                                                  readOnly: true,
-                                                  textAlign: TextAlign.center,
-                                                  controller: stockProdukController,
-                                                  decoration: EditTextDecorationText(
-                                                      context, "", 0.0, 0, 0, 0),
-                                                  keyboardType: TextInputType.number,
-                                                  onChanged: (value) {
-                                                    setState(() {
-                                                      if(double.parse(value) > _max){
-                                                        debugPrint("kena ini");
-                                                        try {
-                                                          if(int.parse(value) >= 0 && int.parse(value) <= _max) {
-                                                            stockProdukController.text = value;
-                                                          }else{
-                                                            stockProdukController.text = _max.toString();
-                                                          }
-                                                        } catch (e) {
-                                                          stockProdukController.text = _max.toString();
-                                                        }
-                                                      }else{
-                                                        _value = double.parse(value);
-                                                      }
-                                                    });
-                                                  },
-                                                  style: TextStyle(
-                                                      color: blackTextColor,
-                                                      fontFamily: 'lato',
-                                                      letterSpacing: 0.4,
-                                                      fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
-                                                ),
-                                              ),
-                                            ))
-                                      ],
-                                    ),
+                                          child: Text(
+                                            "SIMPAN PRODUK",
+                                            style: TextStyle(
+                                                color: _clickForgot
+                                                    ? backgroundColor
+                                                    : blackTextColor,
+                                                fontWeight: FontWeight
+                                                    .w700,
+                                                fontFamily: 'poppins',
+                                                letterSpacing: 1.25,
+                                                fontSize: 20.sp),
+                                          ),
+                                          shape: new RoundedRectangleBorder(
+                                            borderRadius:
+                                            new BorderRadius
+                                                .circular(
+                                                30.0),
+                                          ),
+                                        )),
                                   ),
                                   Container(
+                                    height: 45.h,
+                                    width:
+                                    MediaQuery
+                                        .of(context)
+                                        .size
+                                        .width,
                                     margin: EdgeInsets.only(
-                                        left: ScreenUtil().setWidth(100),
-                                        top: SizeConfig.blockVertical * 2,
-                                        right: ScreenUtil().setWidth(100)),
-                                    child: Text(
-                                      "Harga",
-                                      style: TextStyle(
-                                          color: appBarTextColor,
-                                          fontFamily: 'lato',
-                                          letterSpacing: 0.4,
-                                          fontSize: ScreenUtil(
-                                              allowFontScaling: false).setSp(
-                                              40)),
-                                    ),
+                                        left: ScreenUtil().setWidth(
+                                            100),
+                                        right: ScreenUtil()
+                                            .setWidth(100),
+                                        top: 15.0),
+                                    child: CustomElevation(
+                                        height: 30.h,
+                                        child: RaisedButton(
+                                          highlightColor: redTextColor,
+                                          //Replace with actual colors
+                                          color: _clickForgot
+                                              ? redTextColor
+                                              : editTextBgColor,
+                                          onPressed: () =>
+                                          {
+                                            Navigator.push(
+                                                context,
+                                                PageTransition(
+                                                    type: PageTransitionType
+                                                        .fade,
+                                                    child: LaporanMain(
+                                                      idKolam: widget
+                                                          .idKolam
+                                                          .toString(),
+                                                      page: 1,
+                                                      laporan_page:
+                                                      "jual",
+                                                    )))
+                                          },
+                                          // _toggleButtonForgot(),
+                                          child: Text(
+                                            "BATAL",
+                                            style: TextStyle(
+                                                color: _clickForgot
+                                                    ? backgroundColor
+                                                    : blackTextColor,
+                                                fontWeight: FontWeight
+                                                    .w700,
+                                                fontFamily: 'poppins',
+                                                letterSpacing: 1.25,
+                                                fontSize: 20.sp),
+                                          ),
+                                          shape: new RoundedRectangleBorder(
+                                            borderRadius:
+                                            new BorderRadius
+                                                .circular(
+                                                30.0),
+                                          ),
+                                        )),
                                   ),
-                                  Container(
-                                    margin: EdgeInsets.only(
-                                        left: ScreenUtil().setWidth(100),
-                                        top: SizeConfig.blockVertical * 1,
-                                        right: ScreenUtil().setWidth(100)),
-                                    child: TextFormField(
-                                      controller: hargaProdukController,
-                                      decoration: EditTextDecorationText(
-                                          context, "", 20.0, 0, 0, 0),
-                                      keyboardType: TextInputType.number,
-                                      style: TextStyle(
-                                          color: blackTextColor,
-                                          fontFamily: 'lato',
-                                          letterSpacing: 0.4,
-                                          fontSize: subTitleLogin),
-                                    ),
-                                  ),
-
-                                  Container(
-                                    margin: EdgeInsets.only(
-                                        left: ScreenUtil().setWidth(100),
-                                        top: SizeConfig.blockVertical * 2,
-                                        right: ScreenUtil().setWidth(100)),
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                            alignment: Alignment.centerLeft,
-                                            child: Text(
-                                              "Deskripsi Produk",
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontFamily: 'lato',
-                                                  letterSpacing: 0.4,
-                                                  fontSize: ScreenUtil(
-                                                      allowFontScaling: false)
-                                                      .setSp(40)),
-                                            )),
-                                        Container(
-                                            padding: EdgeInsets.all(
-                                                SizeConfig.blockVertical * 2),
-                                            height: 150.0,
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius
-                                                  .circular(20),
-                                              color: Colors.grey[100],
-                                              boxShadow: [
-                                                BoxShadow(
-                                                    color: Colors.grey[100],
-                                                    spreadRadius: 0.4),
-                                              ],
-                                            ),
-                                            margin: EdgeInsets.only(
-                                                top: SizeConfig.blockVertical *
-                                                    2),
-                                            alignment: Alignment.centerLeft,
-                                            child: TextField(
-                                              controller: descProdukController,
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontFamily: 'poppins',
-                                                  letterSpacing: 1.25,
-                                                  fontSize: 13.0),
-                                              maxLines: 8,
-                                              decoration: InputDecoration
-                                                  .collapsed(
-                                                  hintText: ""),
-                                            ))
-                                      ],
-                                    ),
-                                  ),
-
-                                  Container(
-                                    margin: EdgeInsets.only(
-                                        left: ScreenUtil().setWidth(100),
-                                        top: SizeConfig.blockVertical * 2,
-                                        right: ScreenUtil().setWidth(100)),
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                            alignment: Alignment.centerLeft,
-                                            child: Text(
-                                              "Foto Produk",
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontFamily: 'lato',
-                                                  letterSpacing: 0.4,
-                                                  fontSize: ScreenUtil(
-                                                      allowFontScaling: false)
-                                                      .setSp(40)),
-                                            )),
-                                        Container(
-                                            height: ScreenUtil().setHeight(500),
-                                            margin: EdgeInsets.only(
-                                                top: SizeConfig.blockVertical *
-                                                    2),
-                                            alignment: Alignment.centerLeft,
-                                            child: InkWell(
-                                              onTap: () {
-                                                _showPicker(context);
-                                              },
-                                              child:
-                                              roundedRectBorderWidget(
-                                                  context, _imageProduk),
-                                            ))
-                                      ],
-                                    ),
-                                  ),
-                                  // Container(
-                                  //   margin: EdgeInsets.only(
-                                  //       left: ScreenUtil().setWidth(100),
-                                  //       top: ScreenUtil().setHeight(10),
-                                  //       right: ScreenUtil().setWidth(100)),
-                                  //   child: Row(
-                                  //     children: [
-                                  //       Transform.scale( scale: 1.5,
-                                  //         child: Switch(
-                                  //           value: isSwitched,
-                                  //           onChanged: (value) {
-                                  //             setState(() {
-                                  //               isSwitched = value;
-                                  //               print(isSwitched);
-                                  //             });
-                                  //           },
-                                  //           activeTrackColor: colorPrimary,
-                                  //           activeColor: Colors.white,
-                                  //         ),
-                                  //       ),
-                                  //       Container(
-                                  //         margin: EdgeInsets.only(
-                                  //             left: ScreenUtil().setWidth(30),),
-                                  //         child: Text(
-                                  //           "Channel distribusi",
-                                  //           style: caption.copyWith(
-                                  //               color: Colors.grey,
-                                  //               fontWeight: FontWeight.w700),
-                                  //           textAlign: TextAlign.start,
-                                  //         ),
-                                  //       ),
-                                  //
-                                  //     ],
-                                  //   ),
-                                  // ),
-                                  // Container(
-                                  //   margin: EdgeInsets.only(
-                                  //       left: ScreenUtil().setWidth(100),
-                                  //       top: ScreenUtil().setHeight(20),
-                                  //       right: ScreenUtil().setWidth(100)),
-                                  //   child: Text(
-                                  //     "Fee / Kg",
-                                  //     style: TextStyle(
-                                  //         color: appBarTextColor,
-                                  //         fontFamily: 'lato',
-                                  //         letterSpacing: 0.4,
-                                  //         fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
-                                  //   ),
-                                  // ),
-                                  // Container(
-                                  //   margin: EdgeInsets.only(
-                                  //       left: ScreenUtil().setWidth(100),
-                                  //       top: SizeConfig.blockVertical * 1,
-                                  //       right: ScreenUtil().setWidth(100)),
-                                  //   child: TextFormField(
-                                  //     enabled: isSwitched,
-                                  //     controller: survivalRateController,
-                                  //     decoration: EditTextDecorationText(
-                                  //         context, "Nama Produk", 20.0, 0, 0, 0),
-                                  //     keyboardType: TextInputType.number,
-                                  //     style: TextStyle(
-                                  //         color: blackTextColor,
-                                  //         fontFamily: 'lato',
-                                  //         letterSpacing: 0.4,
-                                  //         fontSize: subTitleLogin),
-                                  //   ),
-                                  // ),
-                                  Container(
-                                      margin: EdgeInsets.only(bottom: 20.0),
-                                      child: new Align(
-                                          alignment: FractionalOffset
-                                              .bottomCenter,
-                                          child: Column(
-                                            mainAxisAlignment: MainAxisAlignment
-                                                .end,
-                                            children: [
-                                              Container(
-                                                height: 45.0,
-                                                width:
-                                                MediaQuery
-                                                    .of(context)
-                                                    .size
-                                                    .width,
-                                                margin: EdgeInsets.only(
-                                                    left: ScreenUtil().setWidth(
-                                                        100),
-                                                    right: ScreenUtil()
-                                                        .setWidth(100),
-                                                    top: 20.0),
-                                                child: CustomElevation(
-                                                    height: 30.0,
-                                                    child: RaisedButton(
-                                                      highlightColor: colorPrimary,
-                                                      //Replace with actual colors
-                                                      color: _clickForgot
-                                                          ? colorPrimary
-                                                          : editTextBgColor,
-                                                      onPressed: () =>
-                                                          showDialog(
-                                                            context: context,
-                                                            builder:
-                                                                (
-                                                                BuildContext context) =>
-                                                                AlertMessage(
-                                                                    context),
-                                                          ),
-                                                      child: Text(
-                                                        "SIMPAN PRODUK",
-                                                        style: TextStyle(
-                                                            color: _clickForgot
-                                                                ? backgroundColor
-                                                                : blackTextColor,
-                                                            fontWeight: FontWeight
-                                                                .w700,
-                                                            fontFamily: 'poppins',
-                                                            letterSpacing: 1.25,
-                                                            fontSize: subTitleLogin),
-                                                      ),
-                                                      shape: new RoundedRectangleBorder(
-                                                        borderRadius:
-                                                        new BorderRadius
-                                                            .circular(
-                                                            30.0),
-                                                      ),
-                                                    )),
-                                              ),
-                                              Container(
-                                                height: 45.0,
-                                                width:
-                                                MediaQuery
-                                                    .of(context)
-                                                    .size
-                                                    .width,
-                                                margin: EdgeInsets.only(
-                                                    left: ScreenUtil().setWidth(
-                                                        100),
-                                                    right: ScreenUtil()
-                                                        .setWidth(100),
-                                                    top: 15.0),
-                                                child: CustomElevation(
-                                                    height: 30.0,
-                                                    child: RaisedButton(
-                                                      highlightColor: redTextColor,
-                                                      //Replace with actual colors
-                                                      color: _clickForgot
-                                                          ? redTextColor
-                                                          : editTextBgColor,
-                                                      onPressed: () =>
-                                                      {
-                                                        Navigator.push(
-                                                            context,
-                                                            PageTransition(
-                                                                type: PageTransitionType
-                                                                    .fade,
-                                                                child: LaporanMain(
-                                                                  idKolam: widget
-                                                                      .idKolam
-                                                                      .toString(),
-                                                                  page: 1,
-                                                                  laporan_page:
-                                                                  "jual",
-                                                                )))
-                                                      },
-                                                      // _toggleButtonForgot(),
-                                                      child: Text(
-                                                        "BATAL",
-                                                        style: TextStyle(
-                                                            color: _clickForgot
-                                                                ? backgroundColor
-                                                                : blackTextColor,
-                                                            fontWeight: FontWeight
-                                                                .w700,
-                                                            fontFamily: 'poppins',
-                                                            letterSpacing: 1.25,
-                                                            fontSize: subTitleLogin),
-                                                      ),
-                                                      shape: new RoundedRectangleBorder(
-                                                        borderRadius:
-                                                        new BorderRadius
-                                                            .circular(
-                                                            30.0),
-                                                      ),
-                                                    )),
-                                              ),
-                                            ],
-                                          ))),
-
                                 ],
                               ))),
                     ],
@@ -818,18 +796,18 @@ class _JualScreenState extends State<JualScreen> {
                     color: blackTextColor,
                     fontFamily: 'poppins',
                     letterSpacing: 0.25,
-                    fontSize: 15.0),
+                    fontSize: 15.sp),
                 textAlign: TextAlign.center,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Container(
-                      height: 40.0,
+                      height: 40.h,
                       margin: EdgeInsets.only(
                           top: SizeConfig.blockVertical * 3),
                       child: CustomElevation(
-                          height: 40.0,
+                          height: 40.h,
                           child: RaisedButton(
                             highlightColor: colorPrimary,
                             //Replace with actual colors
@@ -845,18 +823,18 @@ class _JualScreenState extends State<JualScreen> {
                                   fontWeight: FontWeight.w500,
                                   fontFamily: 'poppins',
                                   letterSpacing: 1.25,
-                                  fontSize: subTitleLogin),
+                                  fontSize: 20.sp),
                             ),
                             shape: new RoundedRectangleBorder(
                               borderRadius: new BorderRadius.circular(30.0),
                             ),
                           ))),
                   Container(
-                    height: 40.0,
+                    height: 40.h,
                     margin: EdgeInsets.only(
                         top: SizeConfig.blockVertical * 3),
                     child: CustomElevation(
-                        height: 40.0,
+                        height: 40.h,
                         child: RaisedButton(
                           highlightColor: colorPrimary,
                           //Replace with actual colors
@@ -869,7 +847,7 @@ class _JualScreenState extends State<JualScreen> {
                                 fontWeight: FontWeight.w500,
                                 fontFamily: 'poppins',
                                 letterSpacing: 1.25,
-                                fontSize: subTitleLogin),
+                                fontSize: 20.sp),
                           ),
                           shape: new RoundedRectangleBorder(
                             borderRadius: new BorderRadius.circular(30.0),
@@ -942,7 +920,7 @@ class _JualScreenState extends State<JualScreen> {
         builder: (BuildContext bc) {
           return SafeArea(
             child: Container(
-              height: ScreenUtil().setHeight(350),
+              height: 120.h,
               padding: const EdgeInsets.all(30),
               decoration: BoxDecoration(
                 color: Colors.white,

@@ -28,7 +28,7 @@ import 'package:lelenesia_pembudidaya/src/ui/widget/CustomElevation.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:lelenesia_pembudidaya/src/bloc/ProfilBloc.dart' as profile;
-
+import 'package:flutter_screenutil/flutter_screenutil.dart' as fltr;
 class DashboardView extends StatefulWidget {
   const DashboardView({Key key}) : super(key: key);
 
@@ -172,8 +172,7 @@ class _DashboardViewState extends State<DashboardView> {
                         child: IconButton(
                           icon: Icon(FontAwesomeIcons.bars,
                               color: Colors.black,
-                              size:
-                                  ScreenUtil(allowFontScaling: true).setSp(80)),
+                              size:20.sp),
                           onPressed: () =>
                               {_scaffoldKey.currentState.openDrawer()},
                         ),
@@ -190,8 +189,7 @@ class _DashboardViewState extends State<DashboardView> {
                               "Hallo, Pembudidaya ",
                               style: h3.copyWith(
                                   color: Colors.black,
-                                  fontSize: ScreenUtil(allowFontScaling: false)
-                                      .setSp(65)),
+                                  fontSize: 20.sp),
                               textAlign: TextAlign.start,
                             ),
                             Text(
@@ -199,12 +197,11 @@ class _DashboardViewState extends State<DashboardView> {
                               style: caption.copyWith(
                                   color: Colors.grey,
                                   fontWeight: FontWeight.w700,
-                                  fontSize: ScreenUtil(allowFontScaling: false)
-                                      .setSp(40)),
+                                  fontSize: 19.sp),
                               textAlign: TextAlign.start,
                             ),
                             SizedBox(
-                              height: ScreenUtil().setHeight(60),
+                              height: 20.h,
                             ),
                             new Theme(
                               data: new ThemeData(
@@ -220,7 +217,7 @@ class _DashboardViewState extends State<DashboardView> {
                                     20.0,
                                     0,
                                     0,
-                                    ScreenUtil().setHeight(80),
+                                    20.h,
                                     gs),
                                 keyboardType: TextInputType.text,
                                 style: TextStyle(
@@ -569,17 +566,17 @@ Widget AlertquestionAktivasi(BuildContext context) {
                   color: blackTextColor,
                   fontFamily: 'poppins',
                   letterSpacing: 0.25,
-                  fontSize: 15.0),
+                  fontSize: 15.sp),
               textAlign: TextAlign.center,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Container(
-                    height: 35.0,
+                    height: 35.h,
                     margin: EdgeInsets.only(top: SizeConfig.blockVertical * 3),
                     child: CustomElevation(
-                        height: 35.0,
+                        height: 35.h,
                         child: RaisedButton(
                           highlightColor: colorPrimary,
                           //Replace with actual colors
@@ -608,18 +605,17 @@ Widget AlertquestionAktivasi(BuildContext context) {
                                 fontWeight: FontWeight.w500,
                                 fontFamily: 'poppins',
                                 letterSpacing: 1.25,
-                                fontSize: ScreenUtil(allowFontScaling: false)
-                                    .setSp(45)),
+                                fontSize: 20.sp),
                           ),
                           shape: new RoundedRectangleBorder(
                             borderRadius: new BorderRadius.circular(30.0),
                           ),
                         ))),
                 Container(
-                  height: 35.0,
+                  height: 35.h,
                   margin: EdgeInsets.only(top: SizeConfig.blockVertical * 3),
                   child: CustomElevation(
-                      height: 35.0,
+                      height: 35.h,
                       child: RaisedButton(
                         highlightColor: colorPrimary,
                         //Replace with actual colors
@@ -632,8 +628,7 @@ Widget AlertquestionAktivasi(BuildContext context) {
                               fontWeight: FontWeight.w500,
                               fontFamily: 'poppins',
                               letterSpacing: 1.25,
-                              fontSize: ScreenUtil(allowFontScaling: false)
-                                  .setSp(45)),
+                              fontSize: 20.sp),
                         ),
                         shape: new RoundedRectangleBorder(
                           borderRadius: new BorderRadius.circular(30.0),

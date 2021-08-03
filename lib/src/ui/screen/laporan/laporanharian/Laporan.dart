@@ -19,6 +19,7 @@ import 'package:lelenesia_pembudidaya/src/ui/widget/LoadingDialog.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:lelenesia_pembudidaya/src/bloc/KolamBloc.dart' as kolam;
 import 'package:lelenesia_pembudidaya/src/ui/tools/extensions.dart' as AppExt;
+import 'package:flutter_screenutil/flutter_screenutil.dart' as fltr;
 class Laporan extends StatefulWidget {
   final String idKolam;
 
@@ -187,7 +188,7 @@ class _LaporanState extends State<Laporan> {
                   ),
                   elevation: 0,
                   leading: IconButton(
-                    icon: Icon(Icons.arrow_back, color: Colors.black),
+                    icon: Icon(Icons.arrow_back, color: Colors.black,size: 24.sp,),
                     onPressed: () => {
                       Navigator.push(
                           context,

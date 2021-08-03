@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/forgot/ForgotVerifView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/splash/SplashScreen.dart';
@@ -13,7 +14,9 @@ void main() async {
       visualDensity: VisualDensity.adaptivePlatformDensity,
       //change the color for CircularProgressIndicator color here
     ),
-    home: SplashScreen(),
+    home: ScreenUtilInit(
+      allowFontScaling: true,
+      builder: () =>SplashScreen()),
   ));
 }
 

@@ -17,7 +17,7 @@ import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:flutter/services.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shimmer/shimmer.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart' as fltr;
 class PenentuanPakanView extends StatefulWidget {
   final String idKolam;
   final String idIkan;
@@ -98,7 +98,7 @@ class _PenentuanPakanViewState extends State<PenentuanPakanView> {
       child: Icon(
         Icons.search,
         color: colorPrimary,
-        size: ScreenUtil(allowFontScaling: false).setSp(55),
+        size: 15.sp,
       ));
 
   Future<Null> refreshList() async {
@@ -153,7 +153,7 @@ class _PenentuanPakanViewState extends State<PenentuanPakanView> {
                         "assets/png/header_laporan.png",
                         fit: BoxFit.cover,
                         width: double.infinity,
-                        height: ScreenUtil().setHeight(530),
+                        height:200.h,
                       ),
                     ),
                     Column(
@@ -177,8 +177,7 @@ class _PenentuanPakanViewState extends State<PenentuanPakanView> {
                             style: h3.copyWith(
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
-                                fontSize: ScreenUtil(allowFontScaling: false)
-                                    .setSp(60)),
+                                fontSize: 20.sp),
                             textAlign: TextAlign.start,
                           ),
                         ),
@@ -192,15 +191,14 @@ class _PenentuanPakanViewState extends State<PenentuanPakanView> {
                             style: caption.copyWith(
                                 color: Colors.grey,
                                 fontWeight: FontWeight.w700,
-                                fontSize: ScreenUtil(allowFontScaling: false)
-                                    .setSp(40)),
+                                fontSize: 19.sp),
                             textAlign: TextAlign.start,
                           ),
                         ),
                         Container(
                           margin: EdgeInsets.only(
-                              left: SizeConfig.blockVertical * 2,
-                              right: SizeConfig.blockVertical * 2),
+                              left: 10.w,
+                              right: 10.w),
                           child: Column(
                             children: [
                               Container(
@@ -212,16 +210,14 @@ class _PenentuanPakanViewState extends State<PenentuanPakanView> {
                                   decoration: EditText(
                                       context,
                                       "Cari Pabrik Pakan",
-                                      20.0,
+                                      10.w,
                                       0,
                                       0,
-                                      ScreenUtil().setHeight(80),
+                                      20.h,
                                       gs),
                                   keyboardType: TextInputType.text,
                                   style: body2.copyWith(
-                                      fontSize:
-                                          ScreenUtil(allowFontScaling: false)
-                                              .setSp(45)),
+                                      fontSize:19.sp),
                                 ),
                               ),
                             ],

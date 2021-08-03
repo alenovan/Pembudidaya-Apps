@@ -19,6 +19,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:lelenesia_pembudidaya/src/bloc/MonitorBloc.dart' as monitor;
 import 'package:lelenesia_pembudidaya/src/ui/tools/extensions.dart' as AppExt;
+import 'package:flutter_screenutil/flutter_screenutil.dart' as fltr;
 class LaporanScreen extends StatefulWidget {
   final String idKolam;
 
@@ -192,20 +193,21 @@ class _HomeLaporanState extends State<LaporanScreen> {
                 "assets/png/header_laporan.png",
                 fit: BoxFit.cover,
                 width: double.infinity,
-                height: ScreenUtil().setHeight(500),
+                height: 200.h,
               ),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            ListView(
+              // crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
+                  alignment: Alignment.centerLeft,
                   margin: EdgeInsets.only(
                       left: SizeConfig.blockVertical * 3,
-                      top: SizeConfig.blockHorizotal * 10),
+                      top: 10.h),
                   child: IconButton(
                     icon: Icon(Icons.arrow_back,
                         color: Colors.black,
-                        size: ScreenUtil(allowFontScaling: true).setSp(80)),
+                        size: 25.sp),
                     onPressed: () => {
                       Navigator.push(
                           context,
@@ -242,8 +244,7 @@ class _HomeLaporanState extends State<LaporanScreen> {
                               Icon(
                                 FontAwesomeIcons.squareFull,
                                 color: Colors.red,
-                                size: ScreenUtil(allowFontScaling: true)
-                                    .setSp(40),
+                                size: 25.sp,
                               ),
                               Container(
                                 padding: EdgeInsets.only(
@@ -255,9 +256,7 @@ class _HomeLaporanState extends State<LaporanScreen> {
                                   style: overline.copyWith(
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold,
-                                      fontSize:
-                                          ScreenUtil(allowFontScaling: true)
-                                              .setSp(40)),
+                                      fontSize:20.sp),
                                 ),
                               )
                             ],
@@ -270,8 +269,7 @@ class _HomeLaporanState extends State<LaporanScreen> {
                               Icon(
                                 FontAwesomeIcons.squareFull,
                                 color: colorPrimary,
-                                size: ScreenUtil(allowFontScaling: true)
-                                    .setSp(40),
+                                size: 25.sp,
                               ),
                               Container(
                                 padding: EdgeInsets.only(
@@ -282,9 +280,7 @@ class _HomeLaporanState extends State<LaporanScreen> {
                                   style: overline.copyWith(
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold,
-                                      fontSize:
-                                          ScreenUtil(allowFontScaling: true)
-                                              .setSp(40)),
+                                      fontSize:20.sp),
                                 ),
                               )
                             ],
@@ -318,52 +314,52 @@ class _HomeLaporanState extends State<LaporanScreen> {
         todayColor: Colors.deepOrange[200],
         weekendStyle: TextStyle().copyWith(
             color: Colors.black,
-            fontSize: ScreenUtil(allowFontScaling: true).setSp(40)),
+            fontSize:20.sp),
         weekdayStyle: TextStyle().copyWith(
             color: Colors.black,
-            fontSize: ScreenUtil(allowFontScaling: true).setSp(40)),
+            fontSize:20.sp),
         markersColor: colorPrimary,
         holidayStyle: TextStyle().copyWith(
             color: Colors.transparent,
-            fontSize: ScreenUtil(allowFontScaling: true).setSp(40)),
+            fontSize:20.sp),
         outsideStyle: TextStyle().copyWith(
             color: Colors.grey,
-            fontSize: ScreenUtil(allowFontScaling: true).setSp(40)),
+            fontSize:20.sp),
         outsideWeekendStyle: TextStyle().copyWith(
             color: Colors.grey,
-            fontSize: ScreenUtil(allowFontScaling: true).setSp(40)),
+            fontSize:20.sp),
       ),
       daysOfWeekStyle: DaysOfWeekStyle(
         weekdayStyle: TextStyle().copyWith(
             color: Colors.black,
-            fontSize: ScreenUtil(allowFontScaling: true).setSp(40)),
+            fontSize:20.sp),
         weekendStyle: TextStyle().copyWith(
             color: Colors.red[600],
-            fontSize: ScreenUtil(allowFontScaling: true).setSp(40)),
+            fontSize:20.sp),
       ),
       headerVisible: true,
       headerStyle: HeaderStyle(
         titleTextStyle: h3.copyWith(
             color: tmblColor,
-            fontSize: ScreenUtil(allowFontScaling: true).setSp(50)),
+            fontSize: 25.sp),
         formatButtonShowsNext: false,
         centerHeaderTitle: true,
         leftChevronIcon: Icon(
           FontAwesomeIcons.angleLeft,
           color: tmblColor,
-          size: ScreenUtil(allowFontScaling: true).setSp(70),
+          size: 25.sp,
         ),
         rightChevronIcon: Icon(
           FontAwesomeIcons.angleRight,
           color: tmblColor,
-          size: ScreenUtil(allowFontScaling: true).setSp(70),
+          size: 25.sp,
         ),
         headerPadding: EdgeInsets.only(
             top: ScreenUtil().setHeight(100),
             bottom: ScreenUtil().setHeight(300)),
-        leftChevronPadding: EdgeInsets.only(left: ScreenUtil().setWidth(80)),
+        leftChevronPadding: EdgeInsets.only(left: 25.w),
         rightChevronPadding:
-            EdgeInsets.only(right: ScreenUtil().setWidth(80)),
+            EdgeInsets.only(right: 25.w),
       ),
       builders: CalendarBuilders(
         selectedDayBuilder: (context, date, _) {
@@ -390,22 +386,22 @@ class _HomeLaporanState extends State<LaporanScreen> {
               '${date.day}',
               style: TextStyle().copyWith(
                   color: colorPrimary,
-                  fontSize: ScreenUtil(allowFontScaling: true).setSp(40)),
+                  fontSize:20.sp),
             ),
           ));
         },
         todayDayBuilder: (context, date, _) {
           return Container(
             color: colorPrimary,
-            height: ScreenUtil().setHeight(100),
-            width: ScreenUtil().setHeight(100),
+            height: 50.h,
+            width: 50.w,
             child: Align(
               alignment: Alignment.center,
               child: Text(
                 date.day.toString(),
                 style: TextStyle().copyWith(
                     color: Colors.white,
-                    fontSize: ScreenUtil(allowFontScaling: true).setSp(40)),
+                    fontSize:20.sp),
               ),
             ),
           );
@@ -420,7 +416,7 @@ class _HomeLaporanState extends State<LaporanScreen> {
                 'Cuk',
                 style: TextStyle().copyWith(
                     color: Colors.grey,
-                    fontSize: ScreenUtil(allowFontScaling: true).setSp(40)),
+                    fontSize:20.sp),
               ),
             );
           }else{
@@ -432,7 +428,7 @@ class _HomeLaporanState extends State<LaporanScreen> {
                   '${date.day}',
                   style: TextStyle().copyWith(
                       color: Colors.grey,
-                      fontSize: ScreenUtil(allowFontScaling: true).setSp(40)),
+                      fontSize:20.sp),
                 ),
               );
             }else{
@@ -444,7 +440,7 @@ class _HomeLaporanState extends State<LaporanScreen> {
                     '${date.day}',
                     style: TextStyle().copyWith(
                         color: Colors.grey,
-                        fontSize: ScreenUtil(allowFontScaling: true).setSp(40)),
+                        fontSize:20.sp),
                   ),
                 );
               }else{
@@ -460,7 +456,7 @@ class _HomeLaporanState extends State<LaporanScreen> {
                       '${date.day}',
                       style: TextStyle().copyWith(
                           color: Colors.white,
-                          fontSize: ScreenUtil(allowFontScaling: true).setSp(40)),
+                          fontSize:20.sp),
                     ),
                   ),
                 );
@@ -509,15 +505,15 @@ class _HomeLaporanState extends State<LaporanScreen> {
       },
       child: Container(
         color: Colors.white,
-        height: ScreenUtil().setHeight(100),
-        width: ScreenUtil().setHeight(100),
+        height: 50.h,
+        width: 50.h,
         child: Align(
           alignment: Alignment.center,
           child: Text(
             date.day.toString(),
             style: TextStyle().copyWith(
                 color: Colors.black,
-                fontSize: ScreenUtil(allowFontScaling: true).setSp(40)),
+                fontSize:20.sp),
           ),
         ),
       ),

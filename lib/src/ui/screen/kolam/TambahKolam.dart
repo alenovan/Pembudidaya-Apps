@@ -22,6 +22,7 @@ import 'package:lelenesia_pembudidaya/src/ui/widget/LoadingDialog.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/extensions.dart' as AppExt;
+import 'package:flutter_screenutil/flutter_screenutil.dart' as fltr;
 class TambahKolam extends StatefulWidget {
   final String idKolam;
 
@@ -104,12 +105,11 @@ class _TambahKolamState extends State<TambahKolam> {
                 "assets/png/header_laporan.png",
                 fit: BoxFit.cover,
                 width: double.infinity,
-                height: ScreenUtil().setHeight(550),
+                height: 200.h,
               ),
             ),
             Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: ListView(
                   children: [
                     AppBarContainer(context, "", DashboardView(),Colors.transparent),
                     Container(
@@ -119,7 +119,7 @@ class _TambahKolamState extends State<TambahKolam> {
                           right: ScreenUtil().setWidth(50)),
                       child:  Text(
                         "Aktivasi Kolam ",
-                        style:  h3.copyWith(color: Colors.black,fontWeight: FontWeight.bold,fontSize: ScreenUtil(allowFontScaling: false).setSp(60)),
+                        style:  h3.copyWith(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 20.sp),
                         textAlign: TextAlign.start,
                       ),
                     ),
@@ -132,7 +132,7 @@ class _TambahKolamState extends State<TambahKolam> {
                         "Hai Fotokan kolam anda agar kami tau bahwa anda mempunyai kolam !",
                         style: caption.copyWith(
                             color: Colors.grey,
-                            fontWeight: FontWeight.w700,fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
+                            fontWeight: FontWeight.w700,fontSize: 20.sp),
                         textAlign: TextAlign.start,
                       ),
                     ),
@@ -147,7 +147,7 @@ class _TambahKolamState extends State<TambahKolam> {
                             color: appBarTextColor,
                             fontFamily: 'lato',
                             letterSpacing: 0.4,
-                            fontSize: ScreenUtil(allowFontScaling: false).setSp(45)),
+                            fontSize: 20.sp),
                       ),
                     ),
                     Container(
@@ -162,98 +162,96 @@ class _TambahKolamState extends State<TambahKolam> {
                         child: roundedRectBorderWidget(context, _image),
                       ),
                     ),
+                    Container(
+                        margin: EdgeInsets.only(bottom: 20.0),
+                        child: new Align(
+                            alignment: FractionalOffset.bottomCenter,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Container(
+                                  height: 45.h,
+                                  width: MediaQuery
+                                      .of(context)
+                                      .size
+                                      .width,
+                                  margin: EdgeInsets.only(
+                                      left: SizeConfig.blockVertical * 5,
+                                      right: SizeConfig.blockVertical * 5,
+                                      top: 15.0),
+                                  child: CustomElevation(
+                                      height: 30.h,
+                                      child: RaisedButton(
+                                        highlightColor: colorPrimary,
+                                        //Replace with actual colors
+                                        color: _clickForgot
+                                            ? colorPrimary
+                                            : editTextBgColor,
+                                        onPressed: () => _toggleButtonForgot(),
+                                        child: Text(
+                                          "Tambahkan",
+                                          style: TextStyle(
+                                              color: _clickForgot
+                                                  ? backgroundColor
+                                                  : blackTextColor,
+                                              fontWeight: FontWeight.w500,
+                                              fontFamily: 'poppins',
+                                              letterSpacing: 1.25,
+                                              fontSize: 20.sp),
+                                        ),
+                                        shape: new RoundedRectangleBorder(
+                                          borderRadius:
+                                          new BorderRadius.circular(30.0),
+                                        ),
+                                      )),
+                                ),
+                                Container(
+                                  height: 45.h,
+                                  width: MediaQuery
+                                      .of(context)
+                                      .size
+                                      .width,
+                                  margin: EdgeInsets.only(
+                                      left: SizeConfig.blockVertical * 5,
+                                      right: SizeConfig.blockVertical * 5,
+                                      top: 15.0),
+                                  child: CustomElevation(
+                                      height: 30.h,
+                                      child: RaisedButton(
+                                        highlightColor: redTextColor,
+                                        //Replace with actual colors
+                                        color: _clickForgot
+                                            ? redTextColor
+                                            : editTextBgColor,
+                                        onPressed: () => {
+                                          Navigator.push(
+                                              context,
+                                              PageTransition(
+                                                  type: PageTransitionType.fade,
+                                                  // duration: Duration(microseconds: 1000),
+                                                  child: DashboardView())),
+                                        },
+                                        child: Text(
+                                          "Batal",
+                                          style: TextStyle(
+                                              color: _clickForgot
+                                                  ? backgroundColor
+                                                  : blackTextColor,
+                                              fontWeight: FontWeight.w500,
+                                              fontFamily: 'poppins',
+                                              letterSpacing: 1.25,
+                                              fontSize: 20.sp),
+                                        ),
+                                        shape: new RoundedRectangleBorder(
+                                          borderRadius:
+                                          new BorderRadius.circular(30.0),
+                                        ),
+                                      )),
+                                ),
+                              ],
+                            )))
                   ],
                 )),
-            new Positioned(
-              child: Container(
-                  margin: EdgeInsets.only(bottom: 20.0),
-                  child: new Align(
-                      alignment: FractionalOffset.bottomCenter,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Container(
-                            height: 45.0,
-                            width: MediaQuery
-                                .of(context)
-                                .size
-                                .width,
-                            margin: EdgeInsets.only(
-                                left: SizeConfig.blockVertical * 5,
-                                right: SizeConfig.blockVertical * 5,
-                                top: 15.0),
-                            child: CustomElevation(
-                                height: 30.0,
-                                child: RaisedButton(
-                                  highlightColor: colorPrimary,
-                                  //Replace with actual colors
-                                  color: _clickForgot
-                                      ? colorPrimary
-                                      : editTextBgColor,
-                                  onPressed: () => _toggleButtonForgot(),
-                                  child: Text(
-                                    "Tambahkan",
-                                    style: TextStyle(
-                                        color: _clickForgot
-                                            ? backgroundColor
-                                            : blackTextColor,
-                                        fontWeight: FontWeight.w500,
-                                        fontFamily: 'poppins',
-                                        letterSpacing: 1.25,
-                                        fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
-                                  ),
-                                  shape: new RoundedRectangleBorder(
-                                    borderRadius:
-                                    new BorderRadius.circular(30.0),
-                                  ),
-                                )),
-                          ),
-                          Container(
-                            height: 45.0,
-                            width: MediaQuery
-                                .of(context)
-                                .size
-                                .width,
-                            margin: EdgeInsets.only(
-                                left: SizeConfig.blockVertical * 5,
-                                right: SizeConfig.blockVertical * 5,
-                                top: 15.0),
-                            child: CustomElevation(
-                                height: 30.0,
-                                child: RaisedButton(
-                                  highlightColor: redTextColor,
-                                  //Replace with actual colors
-                                  color: _clickForgot
-                                      ? redTextColor
-                                      : editTextBgColor,
-                                  onPressed: () => {
-                                  Navigator.push(
-                                  context,
-                                  PageTransition(
-                                  type: PageTransitionType.fade,
-                                  // duration: Duration(microseconds: 1000),
-                                  child: DashboardView())),
-                                  },
-                                  child: Text(
-                                    "Batal",
-                                    style: TextStyle(
-                                        color: _clickForgot
-                                            ? backgroundColor
-                                            : blackTextColor,
-                                        fontWeight: FontWeight.w500,
-                                        fontFamily: 'poppins',
-                                        letterSpacing: 1.25,
-                                        fontSize: ScreenUtil(allowFontScaling: false).setSp(40)),
-                                  ),
-                                  shape: new RoundedRectangleBorder(
-                                    borderRadius:
-                                    new BorderRadius.circular(30.0),
-                                  ),
-                                )),
-                          ),
-                        ],
-                      ))),
-            )
           ],
         )));
   }
@@ -265,7 +263,7 @@ class _TambahKolamState extends State<TambahKolam> {
         builder: (BuildContext bc) {
           return SafeArea(
             child: Container(
-              height: ScreenUtil().setHeight(380),
+              height: 120.h,
               padding: const EdgeInsets.all(30),
               decoration: BoxDecoration(
                 color: Colors.white,

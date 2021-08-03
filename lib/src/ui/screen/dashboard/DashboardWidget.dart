@@ -15,7 +15,7 @@ import 'package:lelenesia_pembudidaya/src/ui/tools/ScreenUtil.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:page_transition/page_transition.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart' as fltr;
 class DashboardWidget extends StatelessWidget {
   const DashboardWidget({Key key}) : super(key: key);
 
@@ -51,15 +51,15 @@ Widget CardKolam(BuildContext context, String title, String sub, String status,
     color = Colors.redAccent;
   }
   final Widget svgIcon = Container(
-    height: ScreenUtil().setHeight(310),
+    height: 120.h,
     child: Card(
         elevation: 4,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(ScreenUtil().setWidth(50)),
         ),
         child: Container(
-            padding: EdgeInsets.only(left: ScreenUtil().setWidth(50),
-                right: ScreenUtil().setWidth(50)),
+            padding: EdgeInsets.only(left: 30.w,
+                right: 30.w),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -72,32 +72,30 @@ Widget CardKolam(BuildContext context, String title, String sub, String status,
                         Icon(
                           Icons.circle,
                           color: color,
-                          size: 15.0,
+                          size: 15.sp,
                         ),
                         Container(
-                            margin: EdgeInsets.only(left: ScreenUtil().setWidth(20)),
+                            margin: EdgeInsets.only(left: 10.w),
                             child: Text(
                               text,
                               style: caption.copyWith(color: color,
-                                  fontSize: SizeConfig.blockVertical * 1.5),
+                                  fontSize: 12.sp),
                             ))
                       ],
                     ),
                     Container(
-                        margin: EdgeInsets.only(top: ScreenUtil().setWidth(20), left: ScreenUtil().setWidth(60)),
+                        margin: EdgeInsets.only(top: 5.h, left: 10.w),
                         child: Text(
                           "Kolam " + title,
                           style: subtitle1.copyWith(
-                              fontSize: ScreenUtil(allowFontScaling: false)
-                                  .setSp(50)),
+                              fontSize: 18.sp),
                         )),
                     Container(
-                        margin: EdgeInsets.only(top: ScreenUtil().setWidth(20), left: ScreenUtil().setWidth(60)),
+                        margin: EdgeInsets.only(top: 5.h, left: 10.w),
                         child: Text(
                           sub,
                           style: overline.copyWith(
-                              fontSize: ScreenUtil(allowFontScaling: false)
-                                  .setSp(40)),
+                              fontSize:12.sp),
                         )),
                   ],
                 ),
@@ -110,20 +108,17 @@ Widget CardKolam(BuildContext context, String title, String sub, String status,
                         Text(
                           "SR : ${sr}",
                           style: overline.copyWith(color: blueAqua,
-                              fontSize: ScreenUtil(allowFontScaling: false)
-                                  .setSp(40)),
+                              fontSize: 12.sp),
                         ),
                         Text(
                           "FCR : ${fcr}",
                           style: overline.copyWith(color: blueAqua,
-                              fontSize: ScreenUtil(allowFontScaling: false)
-                                  .setSp(40)),
+                              fontSize: 12.sp),
                         ),
                         Text(
                           "Jumlah Ikan : ${current_amount}",
                           style: overline.copyWith(color: blueAqua,
-                              fontSize: ScreenUtil(allowFontScaling: false)
-                                  .setSp(40)),
+                              fontSize: 12.sp),
                         )
                       ],
                     )):Text(""),

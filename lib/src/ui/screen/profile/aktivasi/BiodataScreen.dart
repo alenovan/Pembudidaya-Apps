@@ -20,6 +20,7 @@ import 'package:flutter/services.dart';
 import 'package:lelenesia_pembudidaya/src/ui/widget/LoadingDialog.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/extensions.dart' as AppExt;
 import 'package:page_transition/page_transition.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart' as fltr;
 class BiodataScreen extends StatefulWidget {
   final String from;
   const BiodataScreen({Key key, this.from}) : super(key: key);
@@ -76,7 +77,13 @@ class _BiodataScreenState extends State<BiodataScreen> {
           PageTransition(
               type: PageTransitionType.fade,
               // duration: Duration(microseconds: 1000),
-              child: BiodataMapsScreen(from:widget.from,latitude: latitude,longtitude: longtitude,)));
+              child: KtpScreen(from:widget.from)));
+      // Navigator.push(
+      //     context,
+      //     PageTransition(
+      //         type: PageTransitionType.fade,
+      //         // duration: Duration(microseconds: 1000),
+      //         child: BiodataMapsScreen(from:widget.from,latitude: latitude,longtitude: longtitude,)));
     } else {
       AppExt.popScreen(context);
       BottomSheetFeedback.show(context,
@@ -184,7 +191,7 @@ class _BiodataScreenState extends State<BiodataScreen> {
                           color: appBarTextColor,
                           fontFamily: 'lato',
                           letterSpacing: 0.4,
-                          fontSize: 14.0),
+                          fontSize: 15.sp),
                     ),
                   ),
                   Container(
@@ -204,7 +211,7 @@ class _BiodataScreenState extends State<BiodataScreen> {
                           color: blackTextColor,
                           fontFamily: 'lato',
                           letterSpacing: 0.4,
-                          fontSize: subTitleLogin),
+                          fontSize: 15.sp),
                     ),
                   ),
 
@@ -222,7 +229,7 @@ class _BiodataScreenState extends State<BiodataScreen> {
                           color: appBarTextColor,
                           fontFamily: 'lato',
                           letterSpacing: 0.4,
-                          fontSize: 14.0),
+                          fontSize: 15.sp),
                     ),
                   ),
                   Container(
@@ -263,7 +270,7 @@ class _BiodataScreenState extends State<BiodataScreen> {
                           color: appBarTextColor,
                           fontFamily: 'lato',
                           letterSpacing: 0.4,
-                          fontSize: 14.0),
+                          fontSize: 15.sp),
                     ),
                   ),
                   Container(
@@ -303,7 +310,7 @@ class _BiodataScreenState extends State<BiodataScreen> {
                           color: appBarTextColor,
                           fontFamily: 'lato',
                           letterSpacing: 0.4,
-                          fontSize: 14.0),
+                          fontSize: 15.sp),
                     ),
                   ),
                   Container(
@@ -341,7 +348,7 @@ class _BiodataScreenState extends State<BiodataScreen> {
                   //         color: appBarTextColor,
                   //         fontFamily: 'lato',
                   //         letterSpacing: 0.4,
-                  //         fontSize: 14.0),
+                  //         fontSize: 15.sp),
                   //   ),
                   // ),
                   // Container(
@@ -361,7 +368,7 @@ class _BiodataScreenState extends State<BiodataScreen> {
                   //         color: blackTextColor,
                   //         fontFamily: 'lato',
                   //         letterSpacing: 0.4,
-                  //         fontSize: subTitleLogin),
+                  //         fontSize: 15.sp),
                   //   ),
                   // ),
                   Container(
@@ -375,7 +382,7 @@ class _BiodataScreenState extends State<BiodataScreen> {
                           color: appBarTextColor,
                           fontFamily: 'lato',
                           letterSpacing: 0.4,
-                          fontSize: 14.0),
+                          fontSize: 15.sp),
                     ),
                   ),
                   Container(
@@ -395,7 +402,7 @@ class _BiodataScreenState extends State<BiodataScreen> {
                           color: blackTextColor,
                           fontFamily: 'lato',
                           letterSpacing: 0.4,
-                          fontSize: subTitleLogin),
+                          fontSize: 15.sp),
                     ),
                   ),
                   Container(
@@ -406,14 +413,14 @@ class _BiodataScreenState extends State<BiodataScreen> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Container(
-                                height: 45.0,
+                                height: 45.h,
                                 width: MediaQuery.of(context).size.width,
                                 margin: EdgeInsets.only(
                                     left: SizeConfig.blockVertical * 5,
                                     right: SizeConfig.blockVertical * 5,
-                                    top: 15.0),
+                                    top: 15.sp),
                                 child: CustomElevation(
-                                    height: 30.0,
+                                    height: 30.h,
                                     child: RaisedButton(
                                       highlightColor: colorPrimary,
                                       //Replace with actual colors
@@ -435,7 +442,7 @@ class _BiodataScreenState extends State<BiodataScreen> {
                                             fontWeight: FontWeight.w500,
                                             fontFamily: 'poppins',
                                             letterSpacing: 1.25,
-                                            fontSize: 15.0),
+                                            fontSize: 15.sp),
                                       ),
                                       shape: new RoundedRectangleBorder(
                                         borderRadius:
@@ -444,14 +451,14 @@ class _BiodataScreenState extends State<BiodataScreen> {
                                     )),
                               ),
                               Container(
-                                height: 45.0,
+                                height: 45.h,
                                 width: MediaQuery.of(context).size.width,
                                 margin: EdgeInsets.only(
                                     left: SizeConfig.blockVertical * 5,
                                     right: SizeConfig.blockVertical * 5,
-                                    top: 15.0),
+                                    top: 15.sp),
                                 child: CustomElevation(
-                                    height: 30.0,
+                                    height: 30.h,
                                     child: RaisedButton(
                                       highlightColor: redTextColor,
                                       //Replace with actual colors
@@ -468,7 +475,7 @@ class _BiodataScreenState extends State<BiodataScreen> {
                                             fontWeight: FontWeight.w500,
                                             fontFamily: 'poppins',
                                             letterSpacing: 1.25,
-                                            fontSize: subTitleLogin),
+                                            fontSize: 15.sp),
                                       ),
                                       shape: new RoundedRectangleBorder(
                                         borderRadius:

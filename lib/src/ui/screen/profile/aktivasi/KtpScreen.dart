@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart' as fltr;
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -156,7 +156,7 @@ class _KtpScreenState extends State<KtpScreen> {
                                   color: appBarTextColor,
                                   fontFamily: 'lato',
                                   letterSpacing: 0.4,
-                                  fontSize: 14.0),
+                                  fontSize: 15.sp),
                             ),
                           ),
                           Container(
@@ -173,7 +173,7 @@ class _KtpScreenState extends State<KtpScreen> {
                                   color: blackTextColor,
                                   fontFamily: 'lato',
                                   letterSpacing: 0.4,
-                                  fontSize: subTitleLogin),
+                                  fontSize: 15.sp),
                             ),
                           ),
                           Container(
@@ -187,7 +187,7 @@ class _KtpScreenState extends State<KtpScreen> {
                                   color: appBarTextColor,
                                   fontFamily: 'lato',
                                   letterSpacing: 0.4,
-                                  fontSize: 14.0),
+                                  fontSize: 15.sp),
                             ),
                           ),
                           Container(
@@ -214,7 +214,7 @@ class _KtpScreenState extends State<KtpScreen> {
                                   color: appBarTextColor,
                                   fontFamily: 'lato',
                                   letterSpacing: 0.4,
-                                  fontSize: 14.0),
+                                  fontSize: 15.sp),
                             ),
                           ),
                           Container(
@@ -261,7 +261,7 @@ class _KtpScreenState extends State<KtpScreen> {
                                                 fontWeight: FontWeight.w500,
                                                 fontFamily: 'poppins',
                                                 letterSpacing: 1.25,
-                                                fontSize: subTitleLogin),
+                                                fontSize: 15.sp),
                                           ),
                                           shape: new RoundedRectangleBorder(
                                             borderRadius:
@@ -295,7 +295,7 @@ class _KtpScreenState extends State<KtpScreen> {
                                                 fontWeight: FontWeight.w500,
                                                 fontFamily: 'poppins',
                                                 letterSpacing: 1.25,
-                                                fontSize: subTitleLogin),
+                                                fontSize: 15.sp),
                                           ),
                                           shape: new RoundedRectangleBorder(
                                             borderRadius:

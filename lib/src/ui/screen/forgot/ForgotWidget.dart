@@ -6,7 +6,7 @@ import 'package:lelenesia_pembudidaya/src/ui/tools/ScreenUtil.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/SizingConfig.dart';
 import 'package:lelenesia_pembudidaya/src/LelenesiaColors.dart';
 import 'package:page_transition/page_transition.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart' as fltr;
 class LoginWidget extends StatelessWidget {
   const LoginWidget({Key key}) : super(key: key);
 
@@ -101,7 +101,7 @@ Widget AppBarContainer(BuildContext context, String title, Widget page,Color col
               },
               child: IconTheme(
                 data: IconThemeData(color: appBarTextColor),
-                child: Icon(Icons.arrow_back,size: ScreenUtil(allowFontScaling: true).setSp(80)),
+                child: Icon(Icons.arrow_back,size: 30.sp),
               ),
             )),
        Container(

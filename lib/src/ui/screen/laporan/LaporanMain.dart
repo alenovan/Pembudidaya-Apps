@@ -11,7 +11,7 @@ import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/laporanv2/LaporanScr
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/lelang/DetailLelangView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/lelang/LelangView.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/ScreenUtil.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart' as fltr;
 class LaporanMain extends StatefulWidget {
   final int page;
   final String laporan_page;
@@ -72,27 +72,27 @@ class _LaporanMainState extends State<LaporanMain> {
         ),child:BottomNavigationBar(
         items: [
           BottomNavigationBarItem(
-              icon: Icon(Boxicons.bxs_report,size: ScreenUtil(allowFontScaling: true).setSp(75),),
+              icon: Icon(Boxicons.bxs_report,size: 30.sp,),
               title: Text(
                 "Detail Kolam",
                 style: TextStyle(
-                    fontFamily: 'lato', letterSpacing: 0.25, fontSize: ScreenUtil(allowFontScaling: true).setSp(35)),
+                    fontFamily: 'lato', letterSpacing: 0.25, fontSize: 20.sp),
               )),
           BottomNavigationBarItem(
             icon: Icon(
-              Boxicons.bx_calendar,size: ScreenUtil(allowFontScaling: true).setSp(75),),
+              Boxicons.bx_calendar,size: 30.sp,),
             title: Text(
               "Laporan",
               style: TextStyle(
-                  fontFamily: 'lato', letterSpacing: 0.25, fontSize: ScreenUtil(allowFontScaling: true).setSp(35)),
+                  fontFamily: 'lato', letterSpacing: 0.25, fontSize: 20.sp),
             ),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.store,size: ScreenUtil(allowFontScaling: true).setSp(75),),
+            icon: Icon(Icons.store,size: 30.sp,),
             title: Text(
               "Pasarkan",
               style: TextStyle(
-                  fontFamily: 'lato', letterSpacing: 0.25, fontSize: ScreenUtil(allowFontScaling: true).setSp(35)),
+                  fontFamily: 'lato', letterSpacing: 0.25, fontSize: 20.sp),
             ),
           ),
         ],

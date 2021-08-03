@@ -23,7 +23,7 @@ import 'package:lelenesia_pembudidaya/src/ui/screen/laporan/LaporanWidget.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:lelenesia_pembudidaya/src/bloc/LelangBloc.dart' as lelang;
 import 'package:shimmer/shimmer.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart' as fltr;
 class LelangView extends StatefulWidget {
   final String idKolam;
   final String halaman;
@@ -119,7 +119,7 @@ class _LelangViewState extends State<LelangView> {
                   "assets/png/header_laporan.png",
                   fit: BoxFit.cover,
                   width: double.infinity,
-                  height: ScreenUtil().setHeight(550),
+                  height: 200.h,
                 ),
               ),
               CustomScrollView(
@@ -147,8 +147,7 @@ class _LelangViewState extends State<LelangView> {
                         },
                         child: Icon(Icons.arrow_back,
                             color: tmblColor,
-                            size:
-                                ScreenUtil(allowFontScaling: false).setSp(80)),
+                            size:25.sp),
                       ),
                     ),
                     floating: true,
@@ -174,9 +173,7 @@ class _LelangViewState extends State<LelangView> {
                                 style: h3.copyWith(
                                     color: blackPrimaryTextColor,
                                     fontWeight: FontWeight.bold,
-                                    fontSize:
-                                        ScreenUtil(allowFontScaling: false)
-                                            .setSp(60)),
+                                    fontSize:25.sp),
                                 textAlign: TextAlign.start,
                               ),
                             ),
@@ -190,9 +187,7 @@ class _LelangViewState extends State<LelangView> {
                                 style: caption.copyWith(
                                     color: greyTextColor,
                                     fontWeight: FontWeight.w700,
-                                    fontSize:
-                                        ScreenUtil(allowFontScaling: false)
-                                            .setSp(40)),
+                                    fontSize:20.sp),
                                 textAlign: TextAlign.start,
                               ),
                             ),
@@ -209,7 +204,7 @@ class _LelangViewState extends State<LelangView> {
                                       left: ScreenUtil().setWidth(100),
                                       right: ScreenUtil().setWidth(40)),
                                   child: CustomElevation(
-                                      height: ScreenUtil().setHeight(110),
+                                      height: 40.h,
                                       child: RaisedButton(
                                         highlightColor: colorPrimary,
                                         //Replace with actual colors
@@ -228,6 +223,7 @@ class _LelangViewState extends State<LelangView> {
                                           "Jual",
                                           style: subtitle2.copyWith(
                                               color: Colors.white,
+                                              fontSize: 15.sp,
                                               fontWeight: FontWeight.w700),
                                         ),
                                         shape: new RoundedRectangleBorder(
@@ -243,7 +239,7 @@ class _LelangViewState extends State<LelangView> {
                                       left: ScreenUtil().setWidth(40),
                                       right: ScreenUtil().setWidth(100)),
                                   child: CustomElevation(
-                                      height: ScreenUtil().setHeight(110),
+                                      height: 40.h,
                                       child: RaisedButton(
                                         highlightColor: colorPrimary,
                                         //Replace with actual colors
@@ -262,6 +258,7 @@ class _LelangViewState extends State<LelangView> {
                                           "Lelang",
                                           style: subtitle2.copyWith(
                                               color: Colors.white,
+                                              fontSize: 15.sp,
                                               fontWeight: FontWeight.w700),
                                         ),
                                         shape: new RoundedRectangleBorder(
@@ -286,8 +283,7 @@ class _LelangViewState extends State<LelangView> {
                           style: h3.copyWith(
                               color: blackPrimaryTextColor,
                               fontWeight: FontWeight.bold,
-                              fontSize: ScreenUtil(allowFontScaling: false)
-                                  .setSp(50)),
+                              fontSize: 25.sp),
                           textAlign: TextAlign.start,
                         ),
                       ),
@@ -295,6 +291,7 @@ class _LelangViewState extends State<LelangView> {
                           transform: Matrix4.translationValues(
                               0.0, -ScreenUtil().setHeight(60), 0.0),
                           margin: EdgeInsets.only(
+                            top: 10.h,
                               left: ScreenUtil().setWidth(60),
                               right: ScreenUtil().setWidth(60)),
                           child: FutureBuilder(

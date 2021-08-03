@@ -9,7 +9,7 @@ import 'package:lelenesia_pembudidaya/src/ui/screen/kolam/PenentuanPanenView.dar
 import 'package:lelenesia_pembudidaya/src/ui/screen/kolam/menu/menu_list_item.dart';
 import 'package:lelenesia_pembudidaya/src/ui/tools/ScreenUtil.dart';
 import 'package:page_transition/page_transition.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart' as fltr;
 class MenuScreen extends StatefulWidget {
   final String idKolam;
 
@@ -39,7 +39,7 @@ class _MenuScreenState extends State<MenuScreen> {
                   "assets/png/header_laporan.png",
                   fit: BoxFit.cover,
                   width: double.infinity,
-                  height: ScreenUtil().setHeight(530),
+                  height: 200.h,
                 ),
               ),
               Column(
@@ -57,8 +57,7 @@ class _MenuScreenState extends State<MenuScreen> {
                       style: h3.copyWith(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
-                          fontSize:
-                              ScreenUtil(allowFontScaling: false).setSp(60)),
+                          fontSize:20.sp),
                       textAlign: TextAlign.start,
                     ),
                   ),
@@ -72,8 +71,7 @@ class _MenuScreenState extends State<MenuScreen> {
                       style: caption.copyWith(
                           color: Colors.grey,
                           fontWeight: FontWeight.w700,
-                          fontSize:
-                              ScreenUtil(allowFontScaling: false).setSp(40)),
+                          fontSize:19.sp),
                       textAlign: TextAlign.start,
                     ),
                   ),
@@ -109,78 +107,78 @@ class _MenuScreenState extends State<MenuScreen> {
                               height: 10,
                             ),
 
-                            menu_list_item(
-                              label: "Mas",
-                              color: Color(0xFF98ACF8),
-                              image: AssetImage("assets/menu/mas.png"),
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    PageTransition(
-                                        type: PageTransitionType.fade,
-                                        child: PenentuanPanenView(
-                                          idIkan: "3",
-                                          idKolam: widget.idKolam,
-                                        )));
-                              },
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            menu_list_item(
-                              label: "Nila",
-                              color: Color(0xFF98ACF8),
-                              image: AssetImage("assets/menu/nila.png"),
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    PageTransition(
-                                        type: PageTransitionType.fade,
-                                        child: PenentuanPanenView(
-                                          idIkan: "2",
-                                          idKolam: widget.idKolam,
-                                        )));
-                              },
-                            ),
+                            // menu_list_item(
+                            //   label: "Mas",
+                            //   color: Color(0xFF98ACF8),
+                            //   image: AssetImage("assets/menu/mas.png"),
+                            //   onTap: () {
+                            //     Navigator.push(
+                            //         context,
+                            //         PageTransition(
+                            //             type: PageTransitionType.fade,
+                            //             child: PenentuanPanenView(
+                            //               idIkan: "3",
+                            //               idKolam: widget.idKolam,
+                            //             )));
+                            //   },
+                            // ),
                             // SizedBox(
                             //   height: 10,
                             // ),
                             // menu_list_item(
-                            //   label: "Mujaer",
+                            //   label: "Nila",
                             //   color: Color(0xFF98ACF8),
-                            //   image: AssetImage("assets/menu/menu_ikan_mujaer_mask.png"),
+                            //   image: AssetImage("assets/menu/nila.png"),
+                            //   onTap: () {
+                            //     Navigator.push(
+                            //         context,
+                            //         PageTransition(
+                            //             type: PageTransitionType.fade,
+                            //             child: PenentuanPanenView(
+                            //               idIkan: "2",
+                            //               idKolam: widget.idKolam,
+                            //             )));
+                            //   },
+                            // ),
+                            // // SizedBox(
+                            // //   height: 10,
+                            // // ),
+                            // // menu_list_item(
+                            // //   label: "Mujaer",
+                            // //   color: Color(0xFF98ACF8),
+                            // //   image: AssetImage("assets/menu/menu_ikan_mujaer_mask.png"),
+                            // //   onTap: () => {},
+                            // // ),
+                            // // SizedBox(
+                            // //   height: 10,
+                            // // ),
+                            // // menu_list_item(
+                            // //   label: "Bawal",
+                            // //   color: Color(0xFF98ACF8),
+                            // //   image: AssetImage("assets/menu/menu_ikan_bawal_mask.png"),
+                            // //   onTap: () => {},
+                            // // ),
+                            // SizedBox(
+                            //   height: 10,
+                            // ),
+                            // menu_list_item(
+                            //   label: "Bandeng",
+                            //   color: Color(0xFF98ACF8),
+                            //   image: AssetImage("assets/menu/bandeng.png"),
                             //   onTap: () => {},
                             // ),
                             // SizedBox(
                             //   height: 10,
                             // ),
                             // menu_list_item(
-                            //   label: "Bawal",
+                            //   label: "Patin",
                             //   color: Color(0xFF98ACF8),
-                            //   image: AssetImage("assets/menu/menu_ikan_bawal_mask.png"),
+                            //   image: AssetImage("assets/menu/patin.png"),
                             //   onTap: () => {},
                             // ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            menu_list_item(
-                              label: "Bandeng",
-                              color: Color(0xFF98ACF8),
-                              image: AssetImage("assets/menu/bandeng.png"),
-                              onTap: () => {},
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            menu_list_item(
-                              label: "Patin",
-                              color: Color(0xFF98ACF8),
-                              image: AssetImage("assets/menu/patin.png"),
-                              onTap: () => {},
-                            ),
-                            SizedBox(
-                              height: 10.0,
-                            )
+                            // SizedBox(
+                            //   height: 10.0,
+                            // )
                           ],
                         ),
                       ),
