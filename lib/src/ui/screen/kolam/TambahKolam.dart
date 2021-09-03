@@ -105,7 +105,7 @@ class _TambahKolamState extends State<TambahKolam> {
                 "assets/png/header_laporan.png",
                 fit: BoxFit.cover,
                 width: double.infinity,
-                height: 200.h,
+                height: 230.h,
               ),
             ),
             Container(
@@ -114,7 +114,6 @@ class _TambahKolamState extends State<TambahKolam> {
                     AppBarContainer(context, "", DashboardView(),Colors.transparent),
                     Container(
                       margin: EdgeInsets.only(
-                          top: ScreenUtil().setHeight(10),
                           left: ScreenUtil().setWidth(70),
                           right: ScreenUtil().setWidth(50)),
                       child:  Text(
@@ -132,7 +131,7 @@ class _TambahKolamState extends State<TambahKolam> {
                         "Hai Fotokan kolam anda agar kami tau bahwa anda mempunyai kolam !",
                         style: caption.copyWith(
                             color: Colors.grey,
-                            fontWeight: FontWeight.w700,fontSize: 20.sp),
+                            fontWeight: FontWeight.w700,fontSize: 15.sp),
                         textAlign: TextAlign.start,
                       ),
                     ),
@@ -147,7 +146,7 @@ class _TambahKolamState extends State<TambahKolam> {
                             color: appBarTextColor,
                             fontFamily: 'lato',
                             letterSpacing: 0.4,
-                            fontSize: 20.sp),
+                            fontSize: 15.sp),
                       ),
                     ),
                     Container(
@@ -197,7 +196,7 @@ class _TambahKolamState extends State<TambahKolam> {
                                               fontWeight: FontWeight.w500,
                                               fontFamily: 'poppins',
                                               letterSpacing: 1.25,
-                                              fontSize: 20.sp),
+                                              fontSize: 15.sp),
                                         ),
                                         shape: new RoundedRectangleBorder(
                                           borderRadius:
@@ -240,7 +239,7 @@ class _TambahKolamState extends State<TambahKolam> {
                                               fontWeight: FontWeight.w500,
                                               fontFamily: 'poppins',
                                               letterSpacing: 1.25,
-                                              fontSize: 20.sp),
+                                              fontSize: 15.sp),
                                         ),
                                         shape: new RoundedRectangleBorder(
                                           borderRadius:
@@ -263,7 +262,7 @@ class _TambahKolamState extends State<TambahKolam> {
         builder: (BuildContext bc) {
           return SafeArea(
             child: Container(
-              height: 120.h,
+              height: 130.h,
               padding: const EdgeInsets.all(30),
               decoration: BoxDecoration(
                 color: Colors.white,

@@ -172,7 +172,7 @@ class _LoginViewState extends State<LoginView> {
                                     Text(
                                       titleLoginText,
                                       style: h1.copyWith(
-                                          fontSize: 40.sp),
+                                          fontSize: 25.sp),
                                     ),
                                     Container(
                                       margin: EdgeInsets.only(
@@ -181,7 +181,7 @@ class _LoginViewState extends State<LoginView> {
                                       child: Text(
                                         subTitleLoginText,
                                         style: caption.copyWith(
-                                            fontSize: 20.sp,
+                                            fontSize: 15.sp,
                                             color: greyTextColor),
                                       ),
                                     ),
@@ -198,7 +198,7 @@ class _LoginViewState extends State<LoginView> {
                                             child: Text(
                                               "Nomor Handphone",
                                               style: body2.copyWith(
-                                                  fontSize: 20.sp),
+                                                  fontSize: 15.sp),
                                             ),
                                           ),
                                           TextFormField(
@@ -211,7 +211,7 @@ class _LoginViewState extends State<LoginView> {
                                                 color: blackTextColor,
                                                 fontFamily: 'lato',
                                                 letterSpacing: 0.4,
-                                                fontSize:20.sp),
+                                                fontSize:15.sp),
                                           ),
                                         ],
                                       ),
@@ -229,7 +229,7 @@ class _LoginViewState extends State<LoginView> {
                                               color: Colors.red,
                                               fontFamily: 'lato',
                                               letterSpacing: 0.4,
-                                              fontSize: 20.sp),
+                                              fontSize: 15.sp),
                                         ),
                                       ),
                                     ),
@@ -262,7 +262,7 @@ class _LoginViewState extends State<LoginView> {
                                                   fontWeight: FontWeight.w500,
                                                   fontFamily: 'poppins',
                                                   letterSpacing: 1.25,
-                                                  fontSize: 25.sp),
+                                                  fontSize: 15.sp),
                                             ),
                                             shape: new RoundedRectangleBorder(
                                               borderRadius:
@@ -289,7 +289,7 @@ class _LoginViewState extends State<LoginView> {
                                                 Text(
                                                   "Belum punya akun ?",
                                                   style: body2.copyWith(
-                                                      fontSize: 20.sp),
+                                                      fontSize: 15.sp),
                                                 ),
                                                 InkWell(
                                                     onTap: () {
@@ -306,7 +306,7 @@ class _LoginViewState extends State<LoginView> {
                                                     child: Text(
                                                       " Daftar",
                                                       style: body2.copyWith(
-                                                          fontSize: 20.sp,
+                                                          fontSize: 15.sp,
                                                           color: colorPrimary),
                                                     ))
                                               ],
@@ -324,7 +324,7 @@ class _LoginViewState extends State<LoginView> {
                                                 Text(
                                                   "Hubungi admin ?",
                                                   style: body2.copyWith(
-                                                      fontSize: 20.sp),
+                                                      fontSize: 15.sp),
                                                 ),
                                                 InkWell(
                                                     onTap: () {
@@ -341,7 +341,7 @@ class _LoginViewState extends State<LoginView> {
                                                     child: Text(
                                                       " Klik Disini",
                                                       style: body2.copyWith(
-                                                          fontSize: 20.sp,
+                                                          fontSize: 15.sp,
                                                           color: colorPrimary),
                                                     ))
                                               ],

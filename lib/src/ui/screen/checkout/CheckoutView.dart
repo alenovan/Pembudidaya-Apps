@@ -342,7 +342,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                                         fontFamily: 'lato',
                                         letterSpacing: 0.4,
                                         fontWeight: FontWeight.w700,
-                                        fontSize: 20.sp),
+                                        fontSize: 15.sp),
                                   )),
                               Container(
                                   alignment: Alignment.centerLeft,
@@ -411,7 +411,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                                                 style: TextStyle(
                                                     fontFamily: 'poppins',
                                                     letterSpacing: 0.4,
-                                                    fontSize: 18.sp),
+                                                    fontSize: 15.sp),
                                               ),
                                             ),
                                             // Container(
@@ -420,7 +420,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                                             //     style: TextStyle(
                                             //         fontFamily: 'poppins',
                                             //         letterSpacing: 0.4,
-                                            //         fontSize: 19.sp),
+                                            //         fontSize: 15.sp),
                                             //   ),
                                             // ),
                                             // Container(
@@ -429,7 +429,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                                             //     style: TextStyle(
                                             //         fontFamily: 'poppins',
                                             //         letterSpacing: 0.4,
-                                            //         fontSize: 19.sp),
+                                            //         fontSize: 15.sp),
                                             //   ),
                                             // ),
                                             Container(
@@ -444,7 +444,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                                                 style: TextStyle(
                                                     fontFamily: 'poppins',
                                                     letterSpacing: 0.4,
-                                                    fontSize: 14.sp),
+                                                    fontSize: 12.sp),
                                               ),
                                             )
                                           ],
@@ -489,7 +489,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                                         fontFamily: 'lato',
                                         letterSpacing: 0.4,
                                         fontWeight: FontWeight.w700,
-                                        fontSize: 20.sp),
+                                        fontSize: 16.sp),
                                   )),
                             ],
                           ),
@@ -503,6 +503,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                                   children: [
                                     Container(
                                       width: 80.w,
+                                      margin: EdgeInsets.only(right: 10),
                                       child: ClipRRect(
                                           borderRadius: BorderRadius.circular(8.0),
                                           child: Image.network(
@@ -556,7 +557,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                                                     color: purpleTextColor,
                                                     fontFamily: 'poppins',
                                                     letterSpacing: 0.4,
-                                                    fontSize: 19.sp),
+                                                    fontSize: 15.sp),
                                               )),
                                           Container(
                                               margin: EdgeInsets.only(top: 1),
@@ -572,7 +573,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                                                               color: Colors.black,
                                                               fontFamily: 'lato',
                                                               letterSpacing: 0.4,
-                                                              fontSize: 19.sp),
+                                                              fontSize: 14.sp),
                                                         ),
                                                       )
                                                     ],
@@ -583,7 +584,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                                                         child: Container(
                                                           child: Icon(
                                                             Boxicons.bx_minus_circle,
-                                                            color: colorPrimary, size: 40.sp,
+                                                            color: colorPrimary, size: 20.sp,
                                                           ),
                                                         ),
                                                         onTap: () {
@@ -605,14 +606,14 @@ class _CheckoutViewState extends State<CheckoutView> {
                                                               color: Colors.black,
                                                               fontFamily: 'lato',
                                                               letterSpacing: 0.4,
-                                                              fontSize: 23.sp),
+                                                              fontSize: 14.sp),
                                                         ),
                                                       ),
                                                       InkWell(
                                                         child: Container(
                                                           child: Icon(
                                                             Boxicons.bx_plus_circle,
-                                                            color: colorPrimary, size: 40.sp,
+                                                            color: colorPrimary, size: 20.sp,
                                                           ),
                                                         ),
                                                         onTap: () {
@@ -643,7 +644,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                                         fontFamily: 'lato',
                                         letterSpacing: 0.4,
                                         fontWeight: FontWeight.w700,
-                                        fontSize: 20.sp),
+                                        fontSize: 16.sp),
                                   )),
                             ],
                           ),
@@ -661,7 +662,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                           //                 color: Colors.black,
                           //                 fontFamily: 'lato',
                           //                 letterSpacing: 0.4,
-                          //                 fontSize: 19.sp),
+                          //                 fontSize: 15.sp),
                           //           )),
                           //       Container(
                           //           alignment: Alignment.centerLeft,
@@ -672,7 +673,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                           //                 fontFamily: 'lato',
                           //                 letterSpacing: 0.4,
                           //                 fontWeight: FontWeight.w700,
-                          //                 fontSize: 19.sp),
+                          //                 fontSize: 15.sp),
                           //           ))
                           //     ],
                           //   ),
@@ -698,7 +699,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                           //                 color: Colors.black,
                           //                 fontFamily: 'lato',
                           //                 letterSpacing: 0.4,
-                          //                 fontSize: 19.sp),
+                          //                 fontSize: 15.sp),
                           //           )),
                           //       Container(
                           //           alignment: Alignment.centerLeft,
@@ -709,7 +710,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                           //                 fontFamily: 'lato',
                           //                 letterSpacing: 0.4,
                           //                 fontWeight: FontWeight.w700,
-                          //                 fontSize: 19.sp),
+                          //                 fontSize: 15.sp),
                           //           ))
                           //     ],
                           //   ),
@@ -735,7 +736,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                                           color: Colors.black,
                                           fontFamily: 'lato',
                                           letterSpacing: 0.4,
-                                          fontSize: 19.sp),
+                                          fontSize: 15.sp),
                                     )),
                                 Container(
                                     alignment: Alignment.centerLeft,
@@ -746,7 +747,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                                           fontFamily: 'lato',
                                           letterSpacing: 0.4,
                                           fontWeight: FontWeight.w700,
-                                          fontSize: 19.sp),
+                                          fontSize: 15.sp),
                                     ))
                               ],
                             ),
@@ -771,7 +772,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                                           color: Colors.black,
                                           fontFamily: 'lato',
                                           letterSpacing: 0.4,
-                                          fontSize: 19.sp),
+                                          fontSize: 15.sp),
                                     )),
                                 Container(
                                     padding: EdgeInsets.all(
@@ -794,7 +795,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                                           fontWeight: FontWeight.w500,
                                           fontFamily: 'poppins',
                                           letterSpacing: 1.25,
-                                          fontSize: 19.sp),
+                                          fontSize: 15.sp),
                                       maxLines: 8,
                                       decoration: InputDecoration.collapsed(
                                           hintText: "Tambahkan catatan khusus"),
@@ -815,7 +816,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                                         fontFamily: 'lato',
                                         letterSpacing: 0.4,
                                         fontWeight: FontWeight.w700,
-                                        fontSize: 20.sp),
+                                        fontSize: 15.sp),
                                   )),
                             ],
                           ),
@@ -833,7 +834,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                                           color: Colors.black,
                                           fontFamily: 'lato',
                                           letterSpacing: 0.4,
-                                          fontSize: 19.sp),
+                                          fontSize: 15.sp),
                                     )),
                                 Container(
                                     alignment: Alignment.centerLeft,
@@ -844,7 +845,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                                           fontFamily: 'lato',
                                           letterSpacing: 0.4,
                                           fontWeight: FontWeight.w700,
-                                          fontSize: 19.sp),
+                                          fontSize: 15.sp),
                                     ))
                               ],
                             ),
@@ -870,7 +871,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                                           color: Colors.black,
                                           fontFamily: 'lato',
                                           letterSpacing: 0.4,
-                                          fontSize: 19.sp),
+                                          fontSize: 15.sp),
                                     )),
                                 Container(
                                     alignment: Alignment.centerLeft,
@@ -881,7 +882,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                                           fontFamily: 'lato',
                                           fontWeight: FontWeight.w700,
                                           letterSpacing: 0.4,
-                                          fontSize: 19.sp),
+                                          fontSize: 15.sp),
                                     ))
                               ],
                             ),
@@ -921,7 +922,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                                                 color: Colors.white,
                                                 fontFamily: 'lato',
                                                 letterSpacing: 0.4,
-                                                fontSize: 19.sp),
+                                                fontSize: 15.sp),
                                           ),
                                           Text(
                                             "Rp.${formatter.format(total_payment)}",
@@ -962,7 +963,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                                                   fontWeight: FontWeight.w500,
                                                   fontFamily: 'poppins',
                                                   letterSpacing: 1.25,
-                                                  fontSize: 19.sp),
+                                                  fontSize: 15.sp),
                                             ),
                                             shape: new RoundedRectangleBorder(
                                               borderRadius:
@@ -1014,7 +1015,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                     color: blackTextColor,
                     fontFamily: 'poppins',
                     letterSpacing: 0.25,
-                    fontSize: 19.sp),
+                    fontSize: 15.sp),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1041,7 +1042,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                                   fontWeight: FontWeight.w500,
                                   fontFamily: 'poppins',
                                   letterSpacing: 1.25,
-                                  fontSize: 18.sp),
+                                  fontSize: 15.sp),
                             ),
                             shape: new RoundedRectangleBorder(
                               borderRadius: new BorderRadius.circular(30.0),
@@ -1069,7 +1070,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                                   fontWeight: FontWeight.w500,
                                   fontFamily: 'poppins',
                                   letterSpacing: 1.25,
-                                  fontSize: 18.sp),
+                                  fontSize: 15.sp),
                             ),
                             shape: new RoundedRectangleBorder(
                               borderRadius: new BorderRadius.circular(30.0),

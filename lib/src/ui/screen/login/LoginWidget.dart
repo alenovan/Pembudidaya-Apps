@@ -137,13 +137,13 @@ InputDecoration EditTextDecorationNumber(BuildContext context, String label) {
                 color: greyTextColor,
                 fontFamily: 'lato',
                 letterSpacing: 0.25,
-                fontSize: 20.sp),
+                fontSize: 15.sp),
           ),
         )),
     fillColor: editTextBgColor,
     hintStyle: TextStyle(
       color: greyIconColor,
-        fontSize: 20.sp
+        fontSize: 15.sp
     ),
     border: new OutlineInputBorder(
       borderRadius: new BorderRadius.circular(25.0),
@@ -165,7 +165,7 @@ InputDecoration EditTextDecorationText(BuildContext context, String label,
     fillColor: editTextBgColor,
     hintStyle: TextStyle(
       color: greyIconColor,
-        fontSize: 19.sp
+        fontSize: 15.sp
     ),
     border: new OutlineInputBorder(
       borderRadius: new BorderRadius.circular(25.0),

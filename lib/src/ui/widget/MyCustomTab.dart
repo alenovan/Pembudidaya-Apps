@@ -143,15 +143,15 @@ class _TabStyle extends AnimatedWidget {
   Widget build(BuildContext context) {
     final ThemeData themeData = Theme.of(context);
     final TextStyle defaultStyle =
-        labelStyle ?? themeData.primaryTextTheme.body2;
+        labelStyle ?? themeData.primaryTextTheme.bodyText2;
     final TextStyle defaultUnselectedStyle =
-        unselectedLabelStyle ?? labelStyle ?? themeData.primaryTextTheme.body2;
+        unselectedLabelStyle ?? labelStyle ?? themeData.primaryTextTheme.bodyText1;
     final Animation<double> animation = listenable;
     final TextStyle textStyle = selected
         ? TextStyle.lerp(defaultStyle, defaultUnselectedStyle, animation.value)
         : TextStyle.lerp(defaultUnselectedStyle, defaultStyle, animation.value);
     final Color selectedColor =
-        labelColor ?? themeData.primaryTextTheme.body2.color;
+        labelColor ?? themeData.primaryTextTheme.bodyText2.color;
     final Color unselectedColor =
         unselectedLabelColor ?? selectedColor.withAlpha(0xB2); // 70% alpha
     final Color color = selected

@@ -221,7 +221,7 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
                           "Tentukan Berapa SR,FCR, dan Harga target anda !",
                           style: caption.copyWith(
                               color: Colors.grey,
-                              fontWeight: FontWeight.w700,fontSize: 19.sp),
+                              fontWeight: FontWeight.w700,fontSize: 15.sp),
                           textAlign: TextAlign.start,
                         ),
                       ),
@@ -234,15 +234,15 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
                                   Container(
                                     margin: EdgeInsets.only(
                                         top: ScreenUtil().setHeight(20),
-                                        left: SizeConfig.blockVertical * 5,
-                                        right: SizeConfig.blockVertical * 5),
+                                        left: SizeConfig.blockVertical * 3,
+                                        right: SizeConfig.blockVertical * 3),
                                     child: Text(
                                       "Tanggal Tebar Bibit",
                                       style: TextStyle(
                                           color: appBarTextColor,
                                           fontFamily: 'lato',
                                           letterSpacing: 0.4,
-                                          fontSize: 19.sp),
+                                          fontSize: 15.sp),
                                     ),
                                   ),
                                   Theme(
@@ -251,12 +251,12 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
                                           builder: (context) => Container(
                                             margin: EdgeInsets.only(
                                                 left: SizeConfig.blockVertical *
-                                                    5,
+                                                    3,
                                                 top: SizeConfig.blockVertical *
                                                     1,
                                                 right:
                                                 SizeConfig.blockVertical *
-                                                    5),
+                                                    3),
                                             child: DateTimeField(
                                               controller: tglTebarController,
                                               decoration:
@@ -273,7 +273,7 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
                                                     color: blackTextColor,
                                                     fontFamily: 'lato',
                                                     letterSpacing: 0.4,
-                                                    fontSize: 19.sp),
+                                                    fontSize: 15.sp),
                                               format: format,
                                               onShowPicker: (context,
                                                   currentValue) async {
@@ -317,29 +317,29 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
                                             color: blackTextColor,
                                             fontFamily: 'lato',
                                             letterSpacing: 0.4,
-                                            fontSize: 19.sp),
+                                            fontSize: 15.sp),
                                       ),
                                     ),
                                   ),
                                   Container(
                                     margin: EdgeInsets.only(
-                                        left: SizeConfig.blockVertical * 5,
+                                        left: SizeConfig.blockVertical * 3,
                                         top: SizeConfig.blockVertical * 2,
-                                        right: SizeConfig.blockVertical * 5),
+                                        right: SizeConfig.blockVertical * 3),
                                     child: Text(
                                       "Harga Bibit (Rupiah/Ekor)",
                                       style: TextStyle(
                                           color: appBarTextColor,
                                           fontFamily: 'lato',
                                           letterSpacing: 0.4,
-                                          fontSize: 19.sp),
+                                          fontSize: 15.sp),
                                     ),
                                   ),
                                   Container(
                                     margin: EdgeInsets.only(
-                                        left: SizeConfig.blockVertical * 5,
+                                        left: SizeConfig.blockVertical * 3,
                                         top: SizeConfig.blockVertical * 1,
-                                        right: SizeConfig.blockVertical * 5),
+                                        right: SizeConfig.blockVertical * 3),
                                     child: TextFormField(
                                       controller: hargaBibitController,
                                       decoration: EditTextDecorationText(
@@ -349,7 +349,7 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
                                           color: blackTextColor,
                                           fontFamily: 'lato',
                                           letterSpacing: 0.4,
-                                          fontSize: 19.sp),
+                                          fontSize: 15.sp),
                                     ),
                                   ),
                                   Visibility(
@@ -371,23 +371,23 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
                                   ),
                                   Container(
                                     margin: EdgeInsets.only(
-                                        left: SizeConfig.blockVertical * 5,
+                                        left: SizeConfig.blockVertical * 3,
                                         top: SizeConfig.blockVertical * 2,
-                                        right: SizeConfig.blockVertical * 5),
+                                        right: SizeConfig.blockVertical * 3),
                                     child: Text(
                                       "Jumlah Bibit (ekor)",
                                       style: TextStyle(
                                           color: appBarTextColor,
                                           fontFamily: 'lato',
                                           letterSpacing: 0.4,
-                                          fontSize: 19.sp),
+                                          fontSize: 15.sp),
                                     ),
                                   ),
                                   Container(
                                     margin: EdgeInsets.only(
-                                        left: SizeConfig.blockVertical * 5,
+                                        left: SizeConfig.blockVertical * 3,
                                         top: SizeConfig.blockVertical * 1,
-                                        right: SizeConfig.blockVertical * 5),
+                                        right: SizeConfig.blockVertical * 3),
                                     child: TextFormField(
                                       controller: jumlahBibitController,
                                       decoration: EditTextDecorationText(
@@ -397,7 +397,7 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
                                           color: blackTextColor,
                                           fontFamily: 'lato',
                                           letterSpacing: 0.4,
-                                          fontSize: 19.sp),
+                                          fontSize: 15.sp),
                                     ),
                                   ),
                                   Visibility(
@@ -419,23 +419,23 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
                                   ),
                                   Container(
                                     margin: EdgeInsets.only(
-                                        left: SizeConfig.blockVertical * 5,
+                                        left: SizeConfig.blockVertical * 3,
                                         top: SizeConfig.blockVertical * 2,
-                                        right: SizeConfig.blockVertical * 5),
+                                        right: SizeConfig.blockVertical * 3),
                                     child: Text(
                                       "Berat Benih per Ekor",
                                       style: TextStyle(
                                           color: appBarTextColor,
                                           fontFamily: 'lato',
                                           letterSpacing: 0.4,
-                                          fontSize: 19.sp),
+                                          fontSize: 15.sp),
                                     ),
                                   ),
                                   Container(
                                     margin: EdgeInsets.only(
-                                        left: SizeConfig.blockVertical * 5,
+                                        left: SizeConfig.blockVertical * 3,
                                         top: SizeConfig.blockVertical * 1,
-                                        right: SizeConfig.blockVertical * 5),
+                                        right: SizeConfig.blockVertical * 3),
                                     child: TextFormField(
                                       controller: gramPerEkorController,
                                       decoration: EditTextDecorationText(
@@ -445,7 +445,7 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
                                           color: blackTextColor,
                                           fontFamily: 'lato',
                                           letterSpacing: 0.4,
-                                          fontSize: 19.sp),
+                                          fontSize: 15.sp),
                                     ),
                                   ),
                                   Visibility(
@@ -461,29 +461,29 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
                                             color: Colors.red,
                                             fontFamily: 'lato',
                                             letterSpacing: 0.4,
-                                            fontSize: 19.sp),
+                                            fontSize: 15.sp),
                                       ),
                                     ),
                                   ),
                                   Container(
                                     margin: EdgeInsets.only(
-                                        left: SizeConfig.blockVertical * 5,
+                                        left: SizeConfig.blockVertical * 3,
                                         top: SizeConfig.blockVertical * 2,
-                                        right: SizeConfig.blockVertical * 5),
+                                        right: SizeConfig.blockVertical * 3),
                                     child: Text(
                                       "Survival Rate (%)",
                                       style: TextStyle(
                                           color: appBarTextColor,
                                           fontFamily: 'lato',
                                           letterSpacing: 0.4,
-                                          fontSize: 19.sp),
+                                          fontSize: 15.sp),
                                     ),
                                   ),
                                   Container(
                                     margin: EdgeInsets.only(
-                                        left: SizeConfig.blockVertical * 5,
+                                        left: SizeConfig.blockVertical * 3,
                                         top: SizeConfig.blockVertical * 1,
-                                        right: SizeConfig.blockVertical * 5),
+                                        right: SizeConfig.blockVertical * 3),
                                     child: TextFormField(
                                       controller: survivalRateController,
                                       decoration: EditTextDecorationText(
@@ -493,28 +493,28 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
                                           color: blackTextColor,
                                           fontFamily: 'lato',
                                           letterSpacing: 0.4,
-                                          fontSize: 19.sp),
+                                          fontSize: 15.sp),
                                     ),
                                   ),
                                   Container(
                                     margin: EdgeInsets.only(
-                                        left: SizeConfig.blockVertical * 5,
+                                        left: SizeConfig.blockVertical * 3,
                                         top: SizeConfig.blockVertical * 2,
-                                        right: SizeConfig.blockVertical * 5),
+                                        right: SizeConfig.blockVertical * 3),
                                     child: Text(
                                       "Feed Conv Ratio (FCR)",
                                       style: TextStyle(
                                           color: appBarTextColor,
                                           fontFamily: 'lato',
                                           letterSpacing: 0.4,
-                                          fontSize: 19.sp),
+                                          fontSize: 15.sp),
                                     ),
                                   ),
                                   Container(
                                     margin: EdgeInsets.only(
-                                        left: SizeConfig.blockVertical * 5,
+                                        left: SizeConfig.blockVertical * 3,
                                         top: SizeConfig.blockVertical * 1,
-                                        right: SizeConfig.blockVertical * 5),
+                                        right: SizeConfig.blockVertical * 3),
                                     child: TextFormField(
                                       controller: feedConvController,
                                       decoration: EditTextDecorationText(
@@ -524,28 +524,28 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
                                           color: blackTextColor,
                                           fontFamily: 'lato',
                                           letterSpacing: 0.4,
-                                          fontSize: 19.sp),
+                                          fontSize: 15.sp),
                                     ),
                                   ),
                                   Container(
                                     margin: EdgeInsets.only(
-                                        left: SizeConfig.blockVertical * 5,
+                                        left: SizeConfig.blockVertical * 3,
                                         top: SizeConfig.blockVertical * 2,
-                                        right: SizeConfig.blockVertical * 5),
+                                        right: SizeConfig.blockVertical * 3),
                                     child: Text(
                                       "Target jumlah panen per Kilogram (ekor)",
                                       style: TextStyle(
                                           color: appBarTextColor,
                                           fontFamily: 'lato',
                                           letterSpacing: 0.4,
-                                          fontSize: 19.sp),
+                                          fontSize: 15.sp),
                                     ),
                                   ),
                                   Container(
                                     margin: EdgeInsets.only(
-                                        left: SizeConfig.blockVertical * 5,
+                                        left: SizeConfig.blockVertical * 3,
                                         top: SizeConfig.blockVertical * 1,
-                                        right: SizeConfig.blockVertical * 5),
+                                        right: SizeConfig.blockVertical * 3),
                                     child: TextFormField(
                                       controller: targetJumlahController,
                                       decoration: EditTextDecorationText(context,
@@ -555,7 +555,7 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
                                           color: blackTextColor,
                                           fontFamily: 'lato',
                                           letterSpacing: 0.4,
-                                          fontSize: 19.sp),
+                                          fontSize: 15.sp),
                                     ),
                                   ),
                                   Visibility(
@@ -571,29 +571,29 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
                                             color: Colors.red,
                                             fontFamily: 'lato',
                                             letterSpacing: 0.4,
-                                            fontSize: 19.sp),
+                                            fontSize: 15.sp),
                                       ),
                                     ),
                                   ),
                                   Container(
                                     margin: EdgeInsets.only(
-                                        left: SizeConfig.blockVertical * 5,
+                                        left: SizeConfig.blockVertical * 3,
                                         top: SizeConfig.blockVertical * 2,
-                                        right: SizeConfig.blockVertical * 5),
+                                        right: SizeConfig.blockVertical * 3),
                                     child: Text(
                                       "Target harga panen per Kilogram",
                                       style: TextStyle(
                                           color: appBarTextColor,
                                           fontFamily: 'lato',
                                           letterSpacing: 0.4,
-                                          fontSize: 19.sp),
+                                          fontSize: 15.sp),
                                     ),
                                   ),
                                   Container(
                                     margin: EdgeInsets.only(
-                                        left: SizeConfig.blockVertical * 5,
+                                        left: SizeConfig.blockVertical * 3,
                                         top: SizeConfig.blockVertical * 1,
-                                        right: SizeConfig.blockVertical * 5),
+                                        right: SizeConfig.blockVertical * 3),
                                     child: TextFormField(
                                       controller: targetHargaController,
                                       decoration: EditTextDecorationText(context,
@@ -603,7 +603,7 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
                                           color: blackTextColor,
                                           fontFamily: 'lato',
                                           letterSpacing: 0.4,
-                                          fontSize: 19.sp),
+                                          fontSize: 15.sp),
                                     ),
                                   ),
                                   Visibility(
@@ -619,7 +619,7 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
                                             color: Colors.red,
                                             fontFamily: 'lato',
                                             letterSpacing: 0.4,
-                                            fontSize: 19.sp),
+                                            fontSize: 15.sp),
                                       ),
                                     ),
                                   ),
@@ -638,10 +638,10 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
                                                     .width,
                                                 margin: EdgeInsets.only(
                                                     left: SizeConfig.blockVertical *
-                                                        5,
+                                                        3,
                                                     right:
                                                     SizeConfig.blockVertical *
-                                                        5,
+                                                        3,
                                                     top: 10.w),
                                                 child: CustomElevation(
                                                     height: 30.h,
@@ -667,7 +667,7 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
                                                             FontWeight.w500,
                                                             fontFamily: 'poppins',
                                                             letterSpacing: 1.25,
-                                                            fontSize: 19.sp),
+                                                            fontSize: 15.sp),
                                                       ),
                                                       shape:
                                                       new RoundedRectangleBorder(
@@ -684,10 +684,10 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
                                                     .width,
                                                 margin: EdgeInsets.only(
                                                     left: SizeConfig.blockVertical *
-                                                        5,
+                                                        3,
                                                     right:
                                                     SizeConfig.blockVertical *
-                                                        5,
+                                                        3,
                                                     top: 15.0),
                                                 child: CustomElevation(
                                                     height: 30.h,
@@ -718,7 +718,7 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
                                                             FontWeight.w500,
                                                             fontFamily: 'poppins',
                                                             letterSpacing: 1.25,
-                                                            fontSize: 19.sp),
+                                                            fontSize: 15.sp),
                                                       ),
                                                       shape:
                                                       new RoundedRectangleBorder(
@@ -788,7 +788,7 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
                                   fontWeight: FontWeight.w500,
                                   fontFamily: 'poppins',
                                   letterSpacing: 1.25,
-                                  fontSize: 19.sp),
+                                  fontSize: 15.sp),
                             ),
                             shape: new RoundedRectangleBorder(
                               borderRadius: new BorderRadius.circular(30.0),
@@ -811,7 +811,7 @@ class _PenentuanPanenViewState extends State<PenentuanPanenView> {
                                 fontWeight: FontWeight.w500,
                                 fontFamily: 'poppins',
                                 letterSpacing: 1.25,
-                                fontSize: 19.sp),
+                                fontSize: 15.sp),
                           ),
                           shape: new RoundedRectangleBorder(
                             borderRadius: new BorderRadius.circular(30.0),

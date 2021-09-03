@@ -53,7 +53,7 @@ class menu_list_item extends StatelessWidget {
                             style: subtitle2.copyWith(
                               fontWeight: FontWeight.w700,
                               color: colorPrimary,
-                              fontSize: 19.sp
+                              fontSize: 18.sp
                             ),
                           ),
                           TextSpan(
@@ -61,7 +61,7 @@ class menu_list_item extends StatelessWidget {
                             style: subtitle2.copyWith(
                               fontWeight: FontWeight.w400,
                               color: colorPrimary,
-                                fontSize: 19.sp
+                                fontSize: 18.sp
                             ),
                           ),
                         ],
@@ -69,7 +69,7 @@ class menu_list_item extends StatelessWidget {
                     ),
                     Text(
                       label,
-                      style: subtitle2.copyWith(color: greyTextColor,fontSize:  20.sp),
+                      style: subtitle2.copyWith(color: greyTextColor,fontSize:  12.sp),
                     )
                   ],
                 ),

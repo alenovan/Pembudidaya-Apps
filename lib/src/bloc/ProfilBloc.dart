@@ -76,6 +76,7 @@ class ProfilBloc {
   Future<List<ProvinsiModel>> getProvinsi() async {
     var pakan = await _repository.getProvinsi();
     var enc = json.encode(json.decode(pakan.body)['data']);
+    debugPrint("${json.decode(pakan.body)['data']}");
     var data = provinsiModelFromJson(enc);
     return data;
   }

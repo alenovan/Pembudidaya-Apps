@@ -170,7 +170,7 @@ class _DetailKolamViewState extends State<DetailKolam> {
                                   icon: Icon(
                                     Icons.arrow_back,
                                     color: Colors.black,
-                                    size: 19.sp,
+                                    size: 15.sp,
                                   ),
                                   onPressed: () => {
                                     Navigator.push(
@@ -191,7 +191,7 @@ class _DetailKolamViewState extends State<DetailKolam> {
                                   style: h3.copyWith(
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 24.sp),
+                                      fontSize: 15.sp),
                                   textAlign: TextAlign.start,
                                 ),
                               ),
@@ -279,7 +279,7 @@ class _DetailKolamViewState extends State<DetailKolam> {
                                                             color: colorPrimary,
                                                             fontWeight:
                                                                 FontWeight.bold,
-                                                            fontSize: 20.sp),
+                                                            fontSize: 15.sp),
                                                         textAlign:
                                                             TextAlign.start,
                                                       ),
@@ -293,7 +293,7 @@ class _DetailKolamViewState extends State<DetailKolam> {
                                                                       color: Colors
                                                                           .black,
                                                                       fontSize:
-                                                                          19.sp),
+                                                                          15.sp),
                                                               textAlign:
                                                                   TextAlign
                                                                       .start,
@@ -340,7 +340,7 @@ class _DetailKolamViewState extends State<DetailKolam> {
                                                         100.h),
                                                     color: colorPrimary),
                                                 child: Icon(
-                                                    Boxicons.bx_calendar,
+                                                    Boxicons.bx_chart,
                                                     color: Colors.white,
                                                     size: 25.sp),
                                               ),
@@ -356,7 +356,7 @@ class _DetailKolamViewState extends State<DetailKolam> {
                                                             color: colorPrimary,
                                                             fontWeight:
                                                                 FontWeight.bold,
-                                                            fontSize: 20.sp),
+                                                            fontSize: 15.sp),
                                                         textAlign:
                                                             TextAlign.start,
                                                       ),
@@ -370,7 +370,7 @@ class _DetailKolamViewState extends State<DetailKolam> {
                                                                       color: Colors
                                                                           .black,
                                                                       fontSize:
-                                                                          19.sp),
+                                                                          15.sp),
                                                               textAlign:
                                                                   TextAlign
                                                                       .start,
@@ -417,7 +417,7 @@ class _DetailKolamViewState extends State<DetailKolam> {
                                                         100.h),
                                                     color: colorPrimary),
                                                 child: Icon(
-                                                    Boxicons.bx_calendar,
+                                                    Boxicons.bxs_check_circle,
                                                     color: Colors.white,
                                                     size: 25.sp),
                                               ),
@@ -433,7 +433,7 @@ class _DetailKolamViewState extends State<DetailKolam> {
                                                             color: colorPrimary,
                                                             fontWeight:
                                                                 FontWeight.bold,
-                                                            fontSize: 19.sp),
+                                                            fontSize: 15.sp),
                                                         textAlign:
                                                             TextAlign.start,
                                                       ),
@@ -448,7 +448,7 @@ class _DetailKolamViewState extends State<DetailKolam> {
                                                                       color: Colors
                                                                           .black,
                                                                       fontSize:
-                                                                          19.sp),
+                                                                          15.sp),
                                                               textAlign:
                                                                   TextAlign
                                                                       .start,
@@ -508,7 +508,7 @@ class _DetailKolamViewState extends State<DetailKolam> {
                                                           100.h),
                                                       color: colorPrimary),
                                                   child: Icon(
-                                                      Boxicons.bx_calendar,
+                                                      Boxicons.bx_dots_vertical_rounded,
                                                       color: Colors.white,
                                                       size: 25.sp),
                                                 ),
@@ -527,7 +527,7 @@ class _DetailKolamViewState extends State<DetailKolam> {
                                                               fontWeight:
                                                                   FontWeight
                                                                       .bold,
-                                                              fontSize: 24.sp),
+                                                              fontSize: 15.sp),
                                                           textAlign:
                                                               TextAlign.start,
                                                         ),
@@ -588,7 +588,7 @@ class _DetailKolamViewState extends State<DetailKolam> {
                                                               fontWeight:
                                                               FontWeight
                                                                   .bold,
-                                                              fontSize: 24.sp),
+                                                              fontSize: 15.sp),
                                                           textAlign:
                                                           TextAlign.start,
                                                         ),

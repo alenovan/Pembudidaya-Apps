@@ -49,7 +49,6 @@ class _MenuScreenState extends State<MenuScreen> {
                       context, "", DashboardView(), Colors.transparent),
                   Container(
                     margin: EdgeInsets.only(
-                        top: ScreenUtil().setHeight(10),
                         left: ScreenUtil().setWidth(70),
                         right: ScreenUtil().setWidth(50)),
                     child: Text(
@@ -71,7 +70,7 @@ class _MenuScreenState extends State<MenuScreen> {
                       style: caption.copyWith(
                           color: Colors.grey,
                           fontWeight: FontWeight.w700,
-                          fontSize:19.sp),
+                          fontSize:15.sp),
                       textAlign: TextAlign.start,
                     ),
                   ),

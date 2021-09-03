@@ -106,7 +106,7 @@ Widget AppBarContainer(BuildContext context, String title, Widget page,Color col
             )),
        Container(
          margin: EdgeInsets.only(
-             top: SizeConfig.blockHorizotal*3,
+             top: SizeConfig.blockHorizotal*1,
              left: SizeConfig.blockHorizotal*5),
          child:  Text(
            title,

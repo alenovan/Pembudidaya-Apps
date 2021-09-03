@@ -191,7 +191,7 @@ class _PenentuanPakanViewState extends State<PenentuanPakanView> {
                             style: caption.copyWith(
                                 color: Colors.grey,
                                 fontWeight: FontWeight.w700,
-                                fontSize: 19.sp),
+                                fontSize: 15.sp),
                             textAlign: TextAlign.start,
                           ),
                         ),
@@ -217,7 +217,7 @@ class _PenentuanPakanViewState extends State<PenentuanPakanView> {
                                       gs),
                                   keyboardType: TextInputType.text,
                                   style: body2.copyWith(
-                                      fontSize:19.sp),
+                                      fontSize:15.sp),
                                 ),
                               ),
                             ],

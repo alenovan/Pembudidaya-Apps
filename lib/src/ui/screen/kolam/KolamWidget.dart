@@ -65,7 +65,7 @@ Widget CardPenentuanPakan(BuildContext context, String title, String rating,
                           ),
                           child: Text(
                             title,
-                            style: subtitle2.copyWith(fontSize: 20.sp),
+                            style: subtitle2.copyWith(fontSize: 15.sp),
                           )),
                       Container(
                           margin: EdgeInsets.only(
@@ -74,7 +74,7 @@ Widget CardPenentuanPakan(BuildContext context, String title, String rating,
                           ),
                           child: Text(
                         "Rp."+formatter.format(price),
-                        style: subtitle2.copyWith(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 19.sp),
+                        style: subtitle2.copyWith(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 15.sp),
                       )),
                       Container(
                           margin: EdgeInsets.only(
@@ -94,7 +94,7 @@ Widget CardPenentuanPakan(BuildContext context, String title, String rating,
                                 margin: EdgeInsets.only(left: ScreenUtil().setWidth(20), top: ScreenUtil().setWidth(4)),
                                 child: Text(
                                   " COD",
-                                  style: caption.copyWith(color: colorPrimary,fontWeight: FontWeight.bold,fontSize: 15.sp),
+                                  style: caption.copyWith(color: colorPrimary,fontWeight: FontWeight.bold,fontSize: 12.sp),
                                 ),
                               )
                             ],

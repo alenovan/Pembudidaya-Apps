@@ -197,7 +197,7 @@ class _DashboardViewState extends State<DashboardView> {
                               style: caption.copyWith(
                                   color: Colors.grey,
                                   fontWeight: FontWeight.w700,
-                                  fontSize: 19.sp),
+                                  fontSize: 15.sp),
                               textAlign: TextAlign.start,
                             ),
                             SizedBox(
